@@ -53,7 +53,7 @@ public class HomepageMANController {
 	    m.addAttribute("startDate", startDate);
 	    m.addAttribute("endDate", endDate);
 
-	    return "/admin/index";
+	    return "admin/index";
 	}
 	
 	@PostMapping("/index/thongke")
