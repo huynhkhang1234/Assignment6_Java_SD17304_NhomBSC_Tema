@@ -9,7 +9,7 @@
 	<title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-	<th:block th:include="/admin/fragments/_linkCSS :: cssLinks" />
+	<th:block th:include="/admin/component/_linkCSS :: cssLinks" />
 
 <!-- Link To Own CSS -->
 <link rel="stylesheet" th:href="@{/css/News_MAN.css}">
@@ -18,13 +18,13 @@
 
 <body>
 	<!-- Start Header -->
-	<nav th:replace="~{/admin/fragments/_header :: nav}" ></nav>
+	<nav th:replace="~{/admin/component/_header :: nav}" ></nav>
 	<!-- End Header -->
 
 	<main>
 
 		<!-- Start Menu Aside -->
-		<aside th:replace="~{/admin/fragments/_menu :: aside}" ></aside>
+		<aside th:replace="~{/admin/component/_menu :: aside}" ></aside>
 		<!-- End Menu Aside -->
 
 <section class="middle" style="width: 1200px;">
@@ -67,7 +67,7 @@
                                                     <div class="card-body" style="height: 285px;">
                                                         <div class="form-group">
                                                             <label for="title">Tên bài viết</label>
-                                                            <input type="text" id="title" name="titles"
+                                                            <input type="text" id="title" th:value="${news.titles}" name="titles"
                                                                    class="form-control"/>
                                                         </div>
                                                         <br>
@@ -97,15 +97,15 @@
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="username">Tài khoản</label>
-                                                                        <input th:if="${#fields.hasErrors('users')}" th:errors="*{users}" class="form-control is-invalid" type="text"/>
-                                                                        <input th:unless="${#fields.hasErrors('users')}" readonly th:value="${sessionScope.userLogin.user_names}" class="form-control" type="text"/>
+                                                                        <input th:if="${#fields.hasErrors('news.users.user_names')}" th:errors="*{users.user_names}" class="form-control is-invalid" type="text"/>
+                                                                        <input th:unless="${#fields.hasErrors('news.users.user_names')}" readonly th:value="${session.userLogin.user_names}" class="form-control" type="text"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="category">Thể loại</label>
                                                                         <select name="categories_news" class="form-control">
-                                                                            <option th:each="item : ${listLoai}" th:value="${item.id}" th:selected="${item.id == news.categories_news.id}" th:text="${item.titles}"></option>
+                                                                            <option th:each="item : ${listLoai}" th:value="${item.id}" th:text="${item.titles}"></option> <!-- th:selected="${item.id == news.categories_news.id}" -->
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -125,9 +125,9 @@
                                     </div>
                                     <div class="col-10" style="margin: 25px; width: 90%">
                                         <div style="width: 100%; height: 200px; border: 1px dotted gray;">
-                                            <img th:if="${empty name}" th:src="@{/images/news-img/${news.images}}" id="img"
+                                            <img th:if="${news.images}" th:src="@{/images/news-img/${news.images}}" id="img"
                                                  width="100%" height="100%" style="object-fit: contain;"/>
-                                            <img th:unless="${empty name}" th:src="${name}" id="img"
+                                            <img th:unless="${news.images}" th:src="${name}" id="img"
                                                  width="100%" height="100%" style="object-fit: contain;"/>
                                         </div>
                                     </div>
@@ -144,13 +144,7 @@
                     <!-- /.container-fluid -->
                 </form>
             </section>
-        </div>
-    </div>
-</section>
-
-		
-		<br>
-		<section class="content-header">
+            <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-12" style="padding: 0px;">
@@ -162,7 +156,7 @@
                                 <label for="">Nội dung chính</label>
                             </div>
                             <div class="card-body">
-                                <textarea id="editor" name="contents" class="form-control" rows="4"></textarea>
+                                <textarea id="editor" name="contents" th:value="${news.contents}" class="form-control" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
@@ -170,21 +164,25 @@
             </div>
         </div>
     </div>
-    <form action="/admin/save" modelAttribute="news" method="POST">
-        <button type="submit" class="btn btn-success">Đăng Bài</button>
-    </form>
-    <form action="/admin/update/${news.id}" method="POST">
-        <button type="submit" class="btn btn-warning">Lưu</button>
-    </form>
-    <button class="btn btn-primary">
-        <a href="/admin/reset"></a>
-        Làm mới
-    </button>
+    <div class="row">
+    	<form th:action="@{/admin/news/save}" modelAttribute="news" method="POST" class="col-md-1">
+        	<button type="submit" class="btn btn-success">Đăng Bài</button>
+    	</form>
+    	<form th:action="@{|/admin/news/update/${news.id}|}" method="POST" class="col-md-1">
+        	<button type="submit" class="btn btn-warning">Lưu</button>
+    	</form>
+	    <a th:href="@{/admin/news}" class="btn btn-primary col-md-1">
+	        Làm mới
+	    </a>
+    </div>
 </section>
 		
+        </div>
+    
+    
 
 		<!-- Danh sách bài viết -->
-<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
     <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand">
@@ -222,7 +220,7 @@
                         <td th:text="${item.create_date}"></td>
                         <td class="text-center">
                             <!-- Modal update -->
-                            <a th:href="@{/admin/edit/{id}(id=${item.id})}" class="btn btn-primary">
+                            <a th:href="@{/admin/news/edit/{id}(id=${item.id})}" class="btn btn-primary">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                         </td>
@@ -258,6 +256,9 @@
         </div>
     </div>
 </div>
+    
+    </div>
+</section>
 		
 
 	</main>
@@ -285,7 +286,7 @@
 
 
 	<!-- Link To Base JS -->
-	<th:block th:include="/admin/fragments/_jsCSS :: jsLinks" />
+	<th:block th:include="/admin/component/_linkJS :: jsLinks" />
 
 	<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 

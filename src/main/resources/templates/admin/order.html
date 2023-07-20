@@ -6,10 +6,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>B.S.C.Team - CarService</title>
+<title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-	<th:block th:include="/admin/fragments/_linkCSS :: cssLinks" />
+<th:block th:include="/admin/component/_linkCSS :: cssLinks" />
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
@@ -36,12 +36,12 @@
 <body>
 
 	<!-- Start Header -->
-	<nav th:replace="~{/admin/fragments/_header :: nav}" ></nav>
+	<nav th:replace="~{/admin/component/_header :: nav}"></nav>
 	<!-- End Header -->
 
 	<main style="grid-template-columns: 16rem auto 0;">
 		<!-- Start Menu Aside -->
-		<aside th:replace="~{/admin/fragments/_menu :: aside}" ></aside>
+		<aside th:replace="~{/admin/component/_menu :: aside}"></aside>
 		<!-- End Menu Aside -->
 
 		<section class="middle">
@@ -86,36 +86,43 @@
 				</div>
 				<div class="table-responsive mt-5" style="overflow-x: auto">
 					<div class="table-responsive mt-5" style="overflow-x: auto">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Người đặt</th>
-                <th>Tổng tiền</th>
-                <th>Ngày đặt</th>
-                <th>Chi tiết</th>
-                <th colspan="2">#</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item : ${list}">
-                <td th:text="${item.id}"></td>
-                <td th:text="${item.users.user_names}"></td>
-                <td><span th:text="${#numbers.formatDecimal(item.sum_money, 0, 'DEFAULT')}"></span> VNĐ</td>
-                <td><span th:text="${#dates.format(item.create_date, 'dd-MM-yyyy hh:mm')}"></span></td>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Người đặt</th>
+									<th>Tổng tiền</th>
+									<th>Ngày đặt</th>
+									<th>Chi tiết</th>
+									<th colspan="2">#</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${list}">
+									<td th:text="${item.id}"></td>
+									<td th:text="${item.users.user_names}"></td>
+									<td><span
+										th:text="${#numbers.formatDecimal(item.sum_money, 0, 'COMMA', 0, 'POINT')}"></span>
+										VNĐ</td>
+									<td><span
+										th:text="${#dates.format(item.create_date, 'dd-MM-yyyy hh:mm')}"></span></td>
 
-                <td th:text="${item.notes}"></td>
-					
+									<td th:text="${item.notes}"></td>
+
 
 									<td>
-										 <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalviews"
-                        th:attr="data-item-id=${item.id}">
-                        <i class="fa-solid fa-eye" style="color: #ffffff;"></i>
-                    </button>
+										<!-- Button trigger modal -->
+										<button type="button" class="btn btn-warning"
+											data-bs-toggle="modal"
+											th:data-bs-target="'#modalviews' + ${item.id}"
+											th:attr="data-item-id=${item.id}">
+											<i class="fa-solid fa-eye" style="color: #ffffff;"></i>
+										</button>
 
-										<div class="modal fade" th:id="'modalviews' + ${item.id}" data-bs-backdrop="static" data-bs-keyboard="false"
-                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+										<div class="modal fade" th:id="'modalviews' + ${item.id}"
+											data-bs-backdrop="static" data-bs-keyboard="false"
+											tabindex="-1" aria-labelledby="staticBackdropLabel"
+											aria-hidden="true">
 											<div class=" modal-dialog modal-lg">
 												<div class="modal-content">
 													<div class="modal-header">
@@ -126,68 +133,66 @@
 													</div>
 
 													<div class="modal-body">
-														<c:forEach var="itemOD" items="${item.order_details}">
-																	<div class="row p-5">
-																		<div class="col-10">
-																			<img src="/images/product-img/${itemOD.products.images}" style="width: 100px; height: 100px;">
-																		</div>
+														<th:block th:each="itemOD : ${item.order_details}">
+															<div class="row p-5">
+																<div class="col-10">
+																	<img
+																		th:src="@{/images/product-img/{images}(images=${itemOD.products.images})}"
+																		style="width: 100px; height: 100px;">
+																</div>
 
+																<div class="col-3">
+																	<h5>Mã hóa đơn</h5>
+																	<p th:text="${item.id}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Mã sản phẩm</h5>
+																	<p th:text="${itemOD.products.id}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Giá</h5>
+																	<p th:text="${itemOD.price}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Số lượng</h5>
+																	<p th:text="${itemOD.quanlity}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Tiền nhận</h5>
+																	<p th:text="${#numbers.formatDecimal(item.money_received, 0 , 'COMMA', 0, 'POINT')}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Tổng tiền</h5>
+																	<p class="text-danger" th:text="${#numbers.formatDecimal(item.sum_money, 0 , 'COMMA', 0, 'POINT')}"></p>
+																</div>
 
-																		<div class="col-3">
-																			<h5>Mã hóa đơn</h5>
-																			<p>${item.id}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Mã sản phẩm</h5>
-																			<p>${itemOD.products.id}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Giá</h5>
-																			<p>${itemOD.price}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Số lượng</h5>
-																			<p>${itemOD.quanlity}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Tiền nhận</h5>
-																			<p>${item.money_received}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Tổng tiền</h5>
-																			<p class="text-danger">${itemD.sum_money}</p>
-																		</div>
+																<div class="col-3">
+																	<h5>Người đặt</h5>
+																	<p
+																		th:text="${item.users.first_names} + ' ' + ${item.users.last_names}"></p>
+																</div>
 
-
-																		<div class="col-3">
-																			<h5>Người đặt</h5>
-																			<p>${item.users.first_names}
-																				${item.users.last_names}</p>
-																		</div>
-
-
-																		<div class="col-3">
-																			<h5>Địa chỉ</h5>
-																			<p>${item.users.address}</p>
-
-																		</div>
-																		<div class="col-3">
-																			<h5>Ghi chú</h5>
-																			<p>${item.notes}</p>
-
-																		</div>
-																		<div class="col-3">
-																			<h5>Ngày đặt</h5>
-																			<p>${item.create_date}</p>
-																		</div>
-																		<div class="col-3">
-																			<h5>Trạng thái đơn hàng</h5>
-																			<p class="bg-success text-white p-2">${item.status}</p>
-
-																		</div>
-																	</div>
-														</c:forEach>
+																<div class="col-3">
+																	<h5>Địa chỉ</h5>
+																	<p th:text="${item.users.address}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Ghi chú</h5>
+																	<p th:text="${item.notes}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Ngày đặt</h5>
+																	<p th:text="${item.create_date}"></p>
+																</div>
+																<div class="col-3">
+																	<h5>Trạng thái đơn hàng</h5>
+																	<p class="bg-success text-white p-2"
+																		th:text="${item.status}"></p>
+																</div>
+															</div>
+														</th:block>
 													</div>
+
 
 													<div class="modal-footer">
 														<div class="col-12 mt-2">
@@ -310,7 +315,7 @@
 										</div>
 
 									</td>
-									
+
 									<td>
 										<button type="button" class="btn btn-danger"
 											data-bs-toggle="modal" data-bs-target="#modaldelete "
@@ -348,11 +353,11 @@
 
 
 								</tr>
-						</tbody>
-					</table>
-				</div>
+							</tbody>
+						</table>
+					</div>
 
-			</div>
+				</div>
 			</div>
 			<div class="d-flex justify-content-center">
 
@@ -391,8 +396,9 @@
 	</main>
 
 	<!-- Link To Base JS -->
-	<th:block th:include="/admin/fragments/_jsCSS :: jsLinks" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+	<th:block th:include="/admin/component/_linkJS :: jsLinks" />
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 	<script type="text/javascript">
     const sidebarList = document.querySelectorAll('.sidebar');

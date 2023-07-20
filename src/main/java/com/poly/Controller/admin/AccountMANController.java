@@ -133,7 +133,7 @@ public class AccountMANController {
 			}else {
 				System.out.println("Email đã tồn tại");
 				model.addAttribute("error", "Email đã tồn tại trong hệ thông");
-				return "/admin/account";
+				return "redirect:/admin/account";
 			}
 		}
 
@@ -191,7 +191,7 @@ public class AccountMANController {
 		model.addAttribute("users", entity);
 		// tìm kiếm để ia ra dữ liệu toàn bộ
 		model.addAttribute("list", listproduts);
-		return "/admin/account";
+		return "admin/account";
 	}
 
 	@GetMapping("/account/delete/{id}")

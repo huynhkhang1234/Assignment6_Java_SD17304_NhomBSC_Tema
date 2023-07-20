@@ -9,20 +9,20 @@
 	<title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-	<th:block th:include="/admin/fragments/_linkCSS :: cssLinks" />
+	<th:block th:include="/admin/component/_linkCSS :: cssLinks" />
 	
 </head>
 
 
 <body>
 	<!-- Start Header -->
-	<nav th:replace="~{/admin/fragments/_header :: nav}" ></nav>
+	<nav th:replace="~{/admin/component/_header :: nav}" ></nav>
 	<!-- End Header -->
 
 	<main>
 
 		<!-- Start Menu Aside -->
-		<aside th:replace="~{/admin/fragments/_menu :: aside}" ></aside>
+		<aside th:replace="~{/admin/component/_menu :: aside}" ></aside>
 		<!-- End Menu Aside -->
 
 		<section class="middle">
@@ -205,19 +205,15 @@
         <td>
             <span th:text="${#dates.format(item.create_date, 'dd-MM-yyyy hh:mm')}"></span>
         </td>
-        <!-- <th:block th:each="itemOD: ${item.order_details}">
-        	<th:block th:with="count = ${count} + ${itemOD.quanlity}">
-        	</th:block>
-        </th:block> -->
         <td class="text-center">
             <span th:text="${#aggregates.sum(item.order_details.![quanlity])}"></span>
         </td>
         <td class="text-center">
-            <span th:text="${#numbers.formatDecimal(item.sum_money, 0, 'COMMA', 5, 'POINT')}"></span>
+            <span th:text="${#numbers.formatDecimal(item.sum_money, 0, 'COMMA', 0, 'POINT')}"></span>
             <span>VNĐ</span>
         </td>
         <td>
-            <span th:text="${item.money_received}"></span>
+            <span th:text="${#numbers.formatDecimal(item.money_received, 0, 'COMMA', 0, 'POINT')}"></span>
             <span>VNĐ</span>
         </td>
         <td th:text="${item.users.address}"></td>
@@ -250,7 +246,7 @@
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<!-- Link To Base JS -->
-	<th:block th:include="/admin/fragments/_linkJS :: jsLinks" />
+	<th:block th:include="/admin/component/_linkJS :: jsLinks" />
 	
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

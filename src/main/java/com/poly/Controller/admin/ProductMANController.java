@@ -294,6 +294,19 @@ public class ProductMANController {
 		model.addAttribute("discounts", d);
 		List<Discounts> listDis = disdao.findAll();
 		model.addAttribute("listDis", listDis);
+		
+		Products entity = new Products();
+		model.addAttribute("products", entity);
+		Categories ct = new Categories();
+		model.addAttribute("categories", ct);
+		
+		try {
+			pageable = PageRequest.of(p.orElse(0), 8);
+		} catch (Exception e) {
+			pageable = PageRequest.of(0, 8);
+		}
+		Page<Categories> listCate = this.catedao.getIsActive(pageable);
+		model.addAttribute("listCate", listCate);
 
 		return "/admin/product";
 	}
@@ -330,8 +343,12 @@ public class ProductMANController {
 
 		cate = catedao.getById(id);
 		model.addAttribute("categories", cate);
-		//List<Categories> listCate = catedao.findAll();
-		//model.addAttribute("listCate", listCate);
+		
+		Discounts d = new Discounts();
+		model.addAttribute("discounts", d);
+		
+		List<Discounts> listDis = disdao.findAll();
+		model.addAttribute("listDis", listDis);
 
 		return "/admin/product";
 	}
