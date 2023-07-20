@@ -59,6 +59,7 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
+		model.addAttribute("list2", this.userDao.findAll());
 		return "admin/account";
 	}
 
