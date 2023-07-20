@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Link To Base CSS -->
+	<!-- Link To Favicon -->
+    <link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml">
+
+    <!-- Link To Base CSS -->
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- Link To Icon Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Link To Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+<style>
+.login-form-container {
+	background: #f3f3f3 none repeat scroll 0 0;
+	padding: 37px 40px;
+	text-align: left;
+	overflow: hidden;
+}
+
+.login-form-container input {
+	background: #ffffff none repeat scroll 0 0;
+	border: medium none rgba(0, 0, 0, 0);
+	border-radius: 0;
+	box-shadow: none;
+	color: #333;
+	font-size: 14px;
+	height: 40px;
+	margin-bottom: 20px;
+	padding-left: 10px;
+	width: 100%;
+}
+
+.form-action-button {
+	overflow: hidden;
+	margin-top: 10px;
+}
+
+.customer-page .theme-default-button {
+	border-radius: 30px;
+	color: #fff;
+}
+
+.theme-default-button {
+	background-color: #000;
+	border: medium none;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: 400;
+	height: 40px;
+	line-height: 24px;
+	margin-bottom: 0;
+	padding: 8px 25px;
+	border-radius: 0;
+	text-align: center;
+}
+
+.form-action-button a {
+	float: right;
+	margin-top: 7px;
+}
+
+.customer-page a {
+	color: #303030;
+}
+
+.account-optional-action {
+	margin-top: 20px;
+}
+</style>
+
+</head>
+<body>
+<div th:insert="~{/user/component/_header.html}"></div>
+<main>
+
+		<!-- ========================== BREADCRUMB ========================== -->
+		<section class="breadcrumb">
+			<ul class="breadcrumb__list d-flex container">
+				<li><a href="/user/index" class="breadcrumb__link">Trang
+						chủ</a></li>
+				<li><span class="breadcrumb__link">></span></li>
+				<li><span class="breadcrumb__link active">Đăng nhập</span></li>
+
+			</ul>
+
+		</section>
+	<div class="customer-page theme-default-margin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
+                <div class="login">
+                    <div id="CustomerLoginForm">
+                        <form th:action="@{/user/login}" method="post" id="customer_login" >
+                            <input type="hidden" name="form_type" value="customer_login">
+                            <input type="hidden" name="utf8" value="✓">
+
+                            <div class="login-form-container">
+                                <div class="login-text" style="text-align: center;">
+                                    <h2>Đăng Nhập</h2>
+                                    <span th:if="${not #strings.isEmpty(session.errorMessage)}">
+                                       <span  th:text="${session.errorMessage}"></span>
+                                       </span>
+                                </div>
+                                <div class="login-form">
+                                    <label for="Email" class="hidden-label">Email</label>
+                                    <input id="email" name="email" type="email" class="input-full"
+                                        placeholder="Vui lòng nhập Email" th:value="${email}" />                                   
+                                    <br>
+                                    <label for="Pass" class="hidden-label">Mật khẩu</label>
+                                    <input id="passWord" name="pass_words" type="password" class="input-full"
+                                        placeholder="Vui lòng nhập mật khẩu" th:value="${pass}" />                            
+                                    <div style="display: flex;">
+                                        <input style="width: 17px" type="checkbox" name="remember" value="true">
+                                        <span style="padding-top: 10px; margin-left: 5px">Lưu thông tin</span>
+                                    </div>
+
+                                    <div class="login-toggle-btn">
+                                        <div class="form-action-button">
+                                            <button type="submit" class="theme-default-button">Xác Nhận</button>
+                                            <a th:href="@{/mail/send}" id="RecoverPassword">Quên mật khẩu</a>
+                                        </div>
+                                        <div class="account-optional-action">
+                                            <a th:href="@{/user/register}" id="customer_register_link">Tạo Tài khoản</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div id="RecoverPasswordForm" style="display: none;">
+                        <form method="post" th:action="@{/account/recover}" accept-charset="UTF-8">
+                            <input type="hidden" name="form_type" value="recover_customer_password">
+                            <input type="hidden" name="utf8" value="">
+
+                            <div class="login-form-container">
+                                <div class="login-text">
+                                    <h2>Reset your password</h2>
+                                    <p>We will send you an email to reset your password.</p>
+                                </div>
+                                <div class="login-form">
+                                    <input type="email" name="email" id="RecoverEmail" class="input-full"
+                                        placeholder="Email" autocorrect="off" autocapitalize="off">
+                                    <div class="login-toggle-btn">
+                                        <div class="form-action-button">
+                                            <button type="submit" class="theme-default-button">Submit</button>
+                                            <a href="#" id="HideRecoverPasswordLink">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+	</main>
+	<div th:insert="~{/user/component/_footer.html}"></div>
+<script src="/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>

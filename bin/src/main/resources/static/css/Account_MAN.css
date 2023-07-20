@@ -1,0 +1,8 @@
+.row .col-md .col-auto{
+    display: flex;
+}
+
+.btn-account{
+    margin-top: 20px;
+    padding-top: 25px;
+}
