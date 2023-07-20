@@ -1,0 +1,238 @@
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<header class="header">
+	<nav class="my-navbar">
+		<div class="container d-grid">
+			<a href="index.html" class="brand d-flex gap-2"> <img
+				src="../images/favicon.svg" alt="" width="36"> <span>Brand</span>
+			</a>
+			<ul class="nav-menu">
+				<li class="active-link"><a href="/user/index" title="Trang chủ">Trang
+						chủ</a></li>
+				<li><a href="/user/shop" title="Mua sắm <.">Mua sắm <i
+						class="bi bi-chevron-down"></i></a>
+					<div class="my-dropdown-menu">
+						<div class="container d-flex" style="grid-gap: 40px;">
+							<div class="right-section d-grid gap-2"
+								style="grid-template-columns: repeat(5, 1fr);">
+								<div class="menu-content d-flex flex-column">
+									<h5>Phụ tùng động cơ</h5>
+									<ul class="dropdown-links d-grid">
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống bôi trơn</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống làm mát</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống đánh lửa</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Máy khởi động</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Gioăng động cơ</p>
+												</div>
+										</a></li>
+									</ul>
+								</div>
+								<div class="menu-content d-flex flex-column">
+									<h5>Phụ tùng gầm</h5>
+									<ul class="dropdown-links d-grid">
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Ly hợp</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống phanh</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hộp số</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống truyền lực</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Bánh xe - May ơ</p>
+												</div>
+										</a></li>
+									</ul>
+								</div>
+								<div class="menu-content d-flex flex-column">
+									<h5>Phụ tùng thân - vỏ</h5>
+									<ul class="dropdown-links d-grid">
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Ca pô - Tai xe</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Cánh cửa</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Kính xe</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Cản trước - Cản sau</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Gương xe</p>
+												</div>
+										</a></li>
+									</ul>
+								</div>
+								<div class="menu-content d-flex flex-column">
+									<h5>Phụ tùng điều hòa</h5>
+									<ul class="dropdown-links d-grid">
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Hệ thống điều hòa</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Đèn xe hơi</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Cơ cấu rửa kính</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Quạt gió điều hòa</p>
+												</div>
+										</a></li>
+										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+												<div>
+													<p>Công tắc, cầu chì</p>
+												</div>
+										</a></li>
+									</ul>
+								</div>
+								<div class="menu-content d-flex flex-column align-items-center">
+									<h5>Sản phẩm hot</h5>
+									<div class="d-flex align-items-center" style="height: 200px;">
+										<img src="../../images/product-01.png" alt="">
+									</div>
+									<p>Tên sản phẩm</p>
+									<div class="deals__price d-flex align-items-center gap-2">
+										<span class="new__price">$139.00</span> <span
+											class="old__price">$160.99</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div></li>
+				<li><a href="/user/product" title="Sản phẩm <.">Sản phẩm <i
+						class="bi bi-chevron-down"></i></a>
+					<div class="my-dropdown-menu">
+						<div class="container d-grid" style="grid-gap: 40px;">
+							<div class="left-section">
+								<span class="dropdown-close"> <i
+									class="bi bi-chevron-left"></i> Back
+								</span>
+								<h1>Thương hiệu sản phẩm</h1>
+								<p>Mô tả rằng tại đây có rất nhiều thương hiệu nổi tiếng và
+									phù hợp với xe của bạn, bạn có thể tham khảo rất nhiều thứ với
+									chúng tôi. Hãy mua chỗ chúng tôi nhé bạn!!!</p>
+								<a href="#" class="btn btn-primary btn-see-all">Xem thêm</a>
+							</div>
+							<div class="right-section">
+								<h3>Sản phẩm hot trong tháng</h3>
+								<ul class="dropdown-links">
+									<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+											<div>
+												<h5>Sản phẩm 1</h5>
+												<p>Mô tả sản phẩm 1</p>
+											</div>
+									</a></li>
+									<li><a href="#"> <i class="bi bi-webcam"></i>
+											<div>
+												<h5>Sản phẩm 2</h5>
+												<p>Mô tả sản phẩm 2</p>
+											</div>
+									</a></li>
+									<li><a href="#"> <i class="bi bi-arrow-repeat"></i>
+											<div>
+												<h5>Sản phẩm 3</h5>
+												<p>Mô tả sản phẩm 3</p>
+											</div>
+									</a></li>
+									<li><a href="#"> <i class="bi bi-boxes"></i>
+											<div>
+												<h5>Sản phẩm 4</h5>
+												<p>Mô tả sản phẩm 4</p>
+											</div>
+									</a></li>
+									<li><a href="#"> <i class="bi bi-gear"></i>
+											<div>
+												<h5>Sản phẩm 5</h5>
+												<p>Mô tả sản phẩm 5</p>
+											</div>
+									</a></li>
+									<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
+											<div>
+												<h5>Sản phẩm 6</h5>
+												<p>Mô tả sản phẩm 6</p>
+											</div>
+									</a></li>
+								</ul>
+							</div>
+						</div>
+					</div></li>
+				<li><a href="/user/news" title="Tin tức">Tin tức</a></li>
+				<li><a href="/user/contactus" title="Liên hệ">Liên hệ</a></li>
+			</ul>
+
+
+
+			<div class="header__user-actions d-flex">
+				<c:if test="${empty sessionScope.userLogin}">
+					<%@include file="_header__user-default.jsp"%>
+
+				</c:if>
+				<c:if test="${not empty sessionScope.userLogin}">
+					<%@include file="_header__user-actived.jsp"%>
+				</c:if>
+			</div>
+
+			<i class="bi bi-list toggle-navbar"></i>
+		</div>
+	</nav>
+	<div class="search-box container">
+		<form action="/product/page" method="POST">
+			<input name="keyword" value="${param.keyword}"
+				placeholder="Tìm kiếm ở đây...">		
+		</form>
+
+	</div>
+</header>
