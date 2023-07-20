@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -489,7 +489,7 @@
                             <div class="form-action-button">
                               <button type="submit" class="theme-default-button">Xác Nhận</button>
                               
-                              <a href="#recover" id="RecoverPassword" data-bs-toggle="modal" data-bs-target="#exampleModal">Quên mật khẩu</a>
+<a href="/mail/send" id="RecoverPassword" data-bs-toggle="modal" data-bs-target="#exampleModal">Quên mật khẩu</a>
                               
                             </div>
                             <div class="account-optional-action">
@@ -681,27 +681,9 @@
     </a>
 
     <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Quên Mật Khẩu</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
 
-            <div class="form-group">
-                <input type="email" name="customer[email]"id="CustomerEmail" class="form-control rounded-0" placeholder="Email" required>
-            </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-          <button type="button" class="btn btn-primary">Xác Nhận</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  
+  
     <script src="../../js/main.js"></script>
     <script src="../../js/bootstrap.bundle.min.js"></script>
 </body>
