@@ -61,7 +61,7 @@ public class SendMail {
 		
 		if(u != null ) {
 			
-		mail.setFrom("hotrovienBSCTeam@gmail.com");
+		mail.setFrom("vuongpvpc04104@fpt.edu.vn");
 		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.getUser_names() + " ==> Mật khẩu của bạn là: " + u.getPass_words());
 		try {
 

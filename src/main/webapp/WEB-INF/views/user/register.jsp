@@ -114,6 +114,7 @@
 								<fr:form action="/user/register" method="POST"
 									modelAttribute="user" id="customer_register"
 									accept-charset="UTF-8" data-login-with-shop-sign-in="true">
+									
 									<input type="hidden" name="form_type" value="customer_register">
 									<input type="hidden" name="utf8" value="✓">
 
