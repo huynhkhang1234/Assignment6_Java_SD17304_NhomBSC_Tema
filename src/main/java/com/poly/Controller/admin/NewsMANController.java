@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.DAO.CategoriesDAO;
@@ -69,7 +70,7 @@ public class NewsMANController {
 		return "admin/news";
 	}
 
-	@PostMapping("/admin/update/{id}")
+	@PostMapping("/admin/news/update/{id}")
 	public String update(Model model, @ModelAttribute("news") News entity, @RequestParam("username") String username,
 			@RequestParam("image") MultipartFile file) {
 
@@ -107,7 +108,7 @@ public class NewsMANController {
 		return "redirect:/admin/news";
 	}
 
-	@PostMapping("admin/save")
+	@PostMapping("admin/news/save")
 	public String save(Model model, @ModelAttribute("news") News entity,
 
 			@RequestParam("image") MultipartFile file) {
@@ -146,7 +147,7 @@ public class NewsMANController {
 	}
 
 //xử lí nút edit và đổ dữ liệu bên table
-	@GetMapping("/admin/edit/{id}")
+	@GetMapping("/admin/news/edit/{id}")
 	public String edit(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 
 		entity = dao.getById(id);
@@ -160,7 +161,7 @@ public class NewsMANController {
 		return "admin/news";
 	}
 
-	@GetMapping("/admin/delete/{id}")
+	@GetMapping("/admin/news/delete/{id}")
 	public String delete(@ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 
 		entity = dao.getOne(id);

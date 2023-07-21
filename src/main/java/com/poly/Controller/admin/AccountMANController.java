@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.Beans.AccountAdmin;
@@ -59,7 +60,6 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
-		model.addAttribute("list2", this.userDao.findAll());
 		return "admin/account";
 	}
 
@@ -133,7 +133,7 @@ public class AccountMANController {
 			}else {
 				System.out.println("Email đã tồn tại");
 				model.addAttribute("error", "Email đã tồn tại trong hệ thông");
-				return "/admin/account";
+				return "redirect:/admin/account";
 			}
 		}
 
@@ -191,7 +191,7 @@ public class AccountMANController {
 		model.addAttribute("users", entity);
 		// tìm kiếm để ia ra dữ liệu toàn bộ
 		model.addAttribute("list", listproduts);
-		return "/admin/account";
+		return "admin/account";
 	}
 
 	@GetMapping("/account/delete/{id}")

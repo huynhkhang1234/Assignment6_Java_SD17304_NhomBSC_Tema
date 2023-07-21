@@ -2,25 +2,18 @@ package com.poly.Controller.admin;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.poly.DAO.Order_detailsDAO;
-import com.poly.DAO.OrdersDAO;
-import com.poly.Entities.Orders;
-import com.poly.utils.XDate;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.Order_detailsDAO;
 import com.poly.DAO.OrdersDAO;
@@ -80,7 +73,7 @@ public class HomepageMANController {
 			java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
 			
-			// phương thức before sẽ kiểm tra ngày của tham số truyền vào có lớn hơn ngày bắt đầu hay không
+			 //phương thức before sẽ kiểm tra ngày của tham số truyền vào có lớn hơn ngày bắt đầu hay không
 			if (endDate.before(startDate)) {
 				m.addAttribute("message", "Ngày kết thúc phải lớn ngày bắt đầu nhe bé!!!");
 				
@@ -96,10 +89,11 @@ public class HomepageMANController {
 		     m.addAttribute("startDate", startDate1);
 		     m.addAttribute("endDate", endDate1);
 
-		     return "/admin/index";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "redirect:/admin/index";
-		}
+		     return "redirect:/admin/index?startDate=" + startDate1 + "&endDate=" + endDate1;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	         //Xử lý trường hợp lỗi và chuyển hướng đến "/admin/index" với thông báo lỗi
+	        return "redirect:/admin/index?error=1";
+	    }
 	}
 }

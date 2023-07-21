@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<!-- Link To Base CSS -->
-	<!-- Link To Favicon -->
-    <link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Link To Base CSS -->
-    <link rel="stylesheet" href="/css/base.css">
+	<title>B.S.C.Team - CarService</title>
 
-    <!-- Link To Icon Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-    <!-- Link To Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+	<!-- Link To Base CSS -->
+	<th:block th:include="/user/component/_linkCSS :: cssLinks" />
 
 <style>
 .login-form-container {
@@ -76,14 +73,19 @@
 </style>
 
 </head>
+
 <body>
-<div th:insert="~{/user/component/_header.html}"></div>
-<main>
+
+	<!-- Header Start -->
+	<header th:replace="~{/user/component/_header :: header}" ></header>
+	<!-- Header End -->
+
+	<main>
 
 		<!-- ========================== BREADCRUMB ========================== -->
 		<section class="breadcrumb">
 			<ul class="breadcrumb__list d-flex container">
-				<li><a href="/user/index" class="breadcrumb__link">Trang
+				<li><a th:href="@{/user/index}" class="breadcrumb__link">Trang
 						chủ</a></li>
 				<li><span class="breadcrumb__link">></span></li>
 				<li><span class="breadcrumb__link active">Đăng nhập</span></li>
@@ -91,7 +93,8 @@
 			</ul>
 
 		</section>
-	<div class="customer-page theme-default-margin">
+
+		<div class="customer-page theme-default-margin">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
@@ -104,18 +107,19 @@
                             <div class="login-form-container">
                                 <div class="login-text" style="text-align: center;">
                                     <h2>Đăng Nhập</h2>
-                                    <span th:if="${not #strings.isEmpty(session.errorMessage)}">
-                                       <span  th:text="${session.errorMessage}"></span>
-                                       </span>
+                                    <span th:if="${not #strings.isEmpty(session.errorMessage)}"
+                                        th:text="${session.errorMessage}"></span>
                                 </div>
                                 <div class="login-form">
                                     <label for="Email" class="hidden-label">Email</label>
                                     <input id="email" name="email" type="email" class="input-full"
-                                        placeholder="Vui lòng nhập Email" th:value="${email}" />                                   
+                                        placeholder="Vui lòng nhập Email" th:value="${email}" />
+                                    <!-- <span th:errors="*{email}" class="input-full"></span> -->
                                     <br>
                                     <label for="Pass" class="hidden-label">Mật khẩu</label>
                                     <input id="passWord" name="pass_words" type="password" class="input-full"
-                                        placeholder="Vui lòng nhập mật khẩu" th:value="${pass}" />                            
+                                        placeholder="Vui lòng nhập mật khẩu" th:value="${pass}" />
+                                    <!-- <span th:errors="*{pass_words}" class="input-full"></span> -->
                                     <div style="display: flex;">
                                         <input style="width: 17px" type="checkbox" name="remember" value="true">
                                         <span style="padding-top: 10px; margin-left: 5px">Lưu thông tin</span>
@@ -134,11 +138,10 @@
                             </div>
                         </form>
                     </div>
-                    
                     <div id="RecoverPasswordForm" style="display: none;">
                         <form method="post" th:action="@{/account/recover}" accept-charset="UTF-8">
                             <input type="hidden" name="form_type" value="recover_customer_password">
-                            <input type="hidden" name="utf8" value="">
+                            <input type="hidden" name="utf8" value="✓">
 
                             <div class="login-form-container">
                                 <div class="login-text">
@@ -163,9 +166,20 @@
         </div>
     </div>
 </div>
+		
+
 	</main>
-	<div th:insert="~{/user/component/_footer.html}"></div>
-<script src="/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+
+	 <!-- Footer Start -->
+	<footer th:replace="/user/component/_footer :: _footer" ></footer>
+	<!-- Footer End -->
+
+    <!-- Link To Base JS -->
+    <th:block th:replace="/user/component/_linkJS :: jsLinks" />
+
+
+
 </body>
+
 </html>
