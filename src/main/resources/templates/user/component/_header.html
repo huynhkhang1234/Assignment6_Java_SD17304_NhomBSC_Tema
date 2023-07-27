@@ -1,5 +1,5 @@
 <header class="header" xmlns:th="http://www.thymeleaf.org">
-    <nav class="my-navbar">
+    <nav class="my-navbar" th:fragment="_header">
         <div class="container d-grid">
             <a th:href="@{/user/index}" class="brand d-flex gap-2">
                 <img th:src="@{/images/favicon.svg}" alt="" style="width: 36px;">

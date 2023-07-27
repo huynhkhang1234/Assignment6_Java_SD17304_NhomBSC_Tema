@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 <title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-<%@include file="component/_linkCSS.jsp"%>
+<th:block th:include="/user/component/_linkCSS :: cssLinks" />
 
 <link rel="stylesheet" href="../css/product.css">
 <style>
@@ -26,12 +26,12 @@
 
 
 	<!-- Header Start -->
-	<%@include file="component/_header.jsp"%>
+	<th:block th:include="/user/component/_header :: header" />
 	<!-- Header End -->
 
 	<main>
 
-		<!-- ========================== BREADCRUMB ========================== -->
+		<!-- 	========================== BREADCRUMB ========================== -->
 		<section class="breadcrumb">
 			<ul class="breadcrumb__list d-flex container">
 				<li><a href="/user/index" class="breadcrumb__link">Trang
@@ -42,25 +42,25 @@
 		</section>
 
 		<div class=" py-5">
-		
 
-		
+
+
 			<div class="">
 				<div class="container">
 					<div class="row products" id="product-list">
 
-						<c:forEach items="${listproduts.content}" var="item">
+						<th:block th:each="item:${listproduts.content}">
 
 							<div class="col-md-3 col-sm-6 ">
-								<input id="productId2" value="${item.id}" type="hidden">
+								<!-- <input id="productId2" value="${item.id}" type="hidden"> -->
 								<div class="product-grid6">
 									<div class="card rounded-0">
 										<div class="product-image6">
 
-											<!----------------------- thông tin được chuyển trang ----------------------->
+											<!-- 	--------------------- thông tin được chuyển trang --------------------- -->
 											<a href="/user/product?id=${item.id}"> <img
 												class="card-img rounded-0 img-fluid"
-												src="../images/product-img/${item.images}">
+												th:src="@{'/images/product-img/' + ${item.images}}" />
 											</a>
 
 
@@ -74,39 +74,56 @@
 													class="text-warning bi bi-star"></i> <i
 													class="text-warning bi bi-star"></i></li>
 											</ul>
-											<!-- ----------------input hidden----------------------- -->
+											<!-- 	----------------input hidden----------------------- -->
 
-											<input type="hidden" id="imgOne${item.id}"
+											<!-- <input type="hidden" id="imgOne${item.id}"
 												value="${item.images}"> <input type="hidden"
 												id="nameOne${item.id}" value="${item.titles}" /> <input
 												type="hidden" id="OnePrice${item.id}" value="${item.price}" />
 											<input type="hidden" id="discount${item.id}"
 												value="${item.discounts.price_discounts}" />
-											<!-- --------------------------------------------------------------- -->
+											--------------------------------------------------------------- -->
 											<h3 class="title">
-												<a href="#">${item.titles}</a>
+												<a href="#">[[${item.titles}]]</a>
 											</h3>
-											
-											<c:if test="${item.discounts.price_discounts == 0 || item.discounts == null}">
+
+											<span
+												th:if="${item.discounts.price_discounts == 0 || item.discounts == null}">
+
 												<div class="price">
-													<fmt:formatNumber
-														value="${item.price - (item.price * (item.discounts.price_discounts / 100))}"
-														pattern="###,###,### VNĐ" />
+													<span
+														th:text="${#numbers.formatDecimal(item.price ,0, 'COMMA', 0, 'POINT')}"></span>
+													<span>VNĐ</span>
 
 												</div>
-											</c:if>
-											<c:if test="${item.discounts.price_discounts != 0 && item.discounts != null}">
-												<div class="price">
-													<fmt:formatNumber
-														value="${item.price - (item.price * (item.discounts.price_discounts / 100))}"
-														pattern="###,###,### VNĐ" />
+											</span>
+											<!--  -->
+											<span
+												th:if="${item.discounts.price_discounts != 0 && item.discounts != null}">
 
+												<div class="price">
+													<span
+														th:text="${#numbers.formatDecimal(item.price - (item.price * (item.discounts.price_discounts / 100)), 0, 'COMMA', 0, 'POINT')}"></span>
+													<span>VNĐ</span>
 													<del style="color: #ccc">
-														<fmt:formatNumber value="${item.price}"
-															pattern="###,###,### VNĐ" />
+													<span
+														th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}"></span>
+														
 													</del>
 												</div>
-											</c:if>
+											</span>
+											<!--  <span th:if="${item.discounts.price_discounts != 0 && item.discounts != null}">
+													<div class="price">
+														<fmt:formatNumber
+															value="${item.price - (item.price * (item.discounts.price_discounts / 100))}"
+															pattern="###,###,### VNĐ" />
+
+														<del style="color: #ccc">
+															<fmt:formatNumber value="${item.price}"
+																pattern="###,###,### VNĐ" />
+														</del>
+													</div>
+												</span>  -->
 										</div>
 
 										<ul class="social">
@@ -117,7 +134,7 @@
 
 											<!-- //foreach//c:if nếu id = id thì tim đổ ngược lại tim đen -->
 
-											<c:if test="${!empty listLike}">
+											<!-- 	<c:if test="${!empty listLike}">
 												<c:set var="dem" value="0" />
 												<c:forEach var="like" items="${listLike}">
 													<c:if test="${like.products.id == item.id}">
@@ -144,16 +161,16 @@
 													data-tip="Thêm vào danh sách yêu thích"> <i
 														id="likeIcon${item.id}" class="bi bi-heart "></i>
 												</a></li>
-											</c:if>
+											</c:if> -->
 
-											<!-------------- Thêm vào giỏ hàng trên trang  shop ------------------------>
+											<!-- ------------ Thêm vào giỏ hàng trên trang  shop ---------------------- -->
 											<li><a class="add-to-cart"
 												onclick="addToCart('${item.id}')"
 												data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
 										</ul>
 
 									</div>
-									<div class="product-item__sale">
+									<!-- <div class="product-item__sale">
 										<c:if test="${not empty item.discounts.price_discounts}">
 											<span class="percent-count sale-txt">-${item.discounts.price_discounts}%</span>
 										</c:if>
@@ -161,44 +178,44 @@
 										0 %
 									</c:if>
 
-									</div>
+									</div> -->
 								</div>
 
 
 							</div>
-						
-						</c:forEach>
+
+						</th:block>
 
 					</div>
-				
-						<div div="row">
 
-							<ul class="pagination pagination-lg justify-content-end">
-								<li class="page-item "><a
-									class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-									href="/user/shop?p=0" >1</a></li>
-								<li class="page-item"><a
-									class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-									href="/user/shop?p=1">2</a></li>
-									<li class="page-item"><a
-									class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-									href="/user/shop?p=2">3</a></li>
-								<li class="page-item"><a
-									class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
-									href="/user/shop?p=${listproduts.totalPages-1}">4</a></li>
-							</ul>
+					<div div="row">
+
+						<ul class="pagination pagination-lg justify-content-end">
+							<li class="page-item "><a
+								class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+								href="/user/shop?p=0">1</a></li>
+							<li class="page-item"><a
+								class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+								href="/user/shop?p=1">2</a></li>
+							<li class="page-item"><a
+								class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+								href="/user/shop?p=2">3</a></li>
+							<li class="page-item"><a
+								class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
+								href="/user/shop?p=${listproduts.totalPages-1}">4</a></li>
+						</ul>
 
 
 
-						</div>
-				
+					</div>
+
 
 				</div>
 			</div>
 		</div>
-		<!-- End Content -->
+		<!-- End Content
 
-		<!-- Start Brands -->
+		Start Brands -->
 		<section class="bg-light py-5">
 			<div class="container my-4">
 				<div class="row text-center py-3">
@@ -208,22 +225,20 @@
 					</div>
 					<div class="col-lg-9 m-auto tempaltemo-carousel">
 						<div class="row d-flex flex-row">
-							<!--Controls-->
+							Controls
 							<div class="col-1 align-self-center">
 								<a class="h1" href="#multi-item-example" role="button"
 									data-bs-slide="prev"> <i class="bi bi-chevron-left"></i>
 								</a>
 							</div>
-							<!--End Controls-->
-
-							<!--Carousel Wrapper-->
+							End Controls Carousel Wrapper
 							<div class="col">
 								<div class="carousel slide carousel-multi-item pt-2 pt-md-0"
 									id="multi-item-example" data-bs-ride="carousel">
-									<!--Slides-->
+									Slides
 									<div class="carousel-inner product-links-wap" role="listbox">
 
-										<!--First slide-->
+										First slide
 										<div class="carousel-item active">
 											<div class="row">
 												<div class="col-3 p-md-5">
@@ -245,9 +260,9 @@
 
 											</div>
 										</div>
-										<!--End First slide-->
+										<!-- End First slide
 
-										<!--Second slide-->
+										Second slide -->
 										<div class="carousel-item">
 											<div class="row">
 												<div class="col-3 p-md-5">
@@ -268,9 +283,9 @@
 												</div>
 											</div>
 										</div>
-										<!--End Second slide-->
+										<!-- 	End Second slide
 
-										<!--Third slide-->
+										Third slide -->
 										<div class="carousel-item">
 											<div class="row">
 												<div class="col-3 p-md-5">
@@ -291,21 +306,21 @@
 												</div>
 											</div>
 										</div>
-										<!--End Third slide-->
+										<!-- End Third slide -->
 
 									</div>
-									<!--End Slides-->
+									<!-- 									End Slides -->
 								</div>
 							</div>
-							<!--End Carousel Wrapper-->
+							<!-- End Carousel Wrapper -->
 
-							<!--Controls-->
+							<!-- 	Controls -->
 							<div class="col-1 align-self-center">
 								<a class="h1" href="#multi-item-example" role="button"
 									data-bs-slide="next"> <i class="bi bi-chevron-right"></i>
 								</a>
 							</div>
-							<!--End Controls-->
+							<!-- End Controls -->
 						</div>
 					</div>
 				</div>
@@ -361,13 +376,13 @@
 
 
 	<!-- Footer Start -->
-	<%@include file="component/_footer.jsp"%>
+	<th:block th:include="/user/component/_footer :: _footer" />
 	<!-- Footer End -->
 
 	<!-- Link To Base JS -->
-	<%@include file="component/_linkJS.jsp"%>
+	<th:block th:include="/user/component/_linkJS::jsLinks" />
 	<!-- thư viện query  -->
-	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- <script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
 		// sử lí code ajax
 		function addToCart(id) {
@@ -516,9 +531,9 @@
 		///test xem tìm kiếm dc ko cái đã
 		
 	</script>
-	
-	
-	
+	 -->
+
+
 </body>
 
 </html>

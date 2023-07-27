@@ -1,14 +1,7 @@
 
-<%-- <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%> --%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="fr"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ page import="java.text.DecimalFormat"%>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -17,8 +10,7 @@
 <title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-<%@include file="component/_linkCSS.jsp"%>
-
+		<th:block th:include="/user/component/_linkCSS :: cssLinks"/>
 <style>
 .pro-thumbnail {
 	width: 80px;
@@ -32,7 +24,8 @@
 	kiểm tra -->
 
 	<!-- Header Start -->
-	<%@include file="component/_header.jsp"%>
+	<th:block th:include="/user/component/_header :: header" />
+	
 	<!-- Header End -->
 
 	<main>
@@ -64,25 +57,25 @@
 					<tbody class="text-center">
 
 						<!-- ------------------------vòng lập---------------------------------------------- -->
-						<c:forEach items="${listCart}" var="item">
+						<th:block th:each=" item:${listCart}">
 
 							<tr id="cart" data-product-id="${item.value.id}">
 								<td class="pro-thumbnail"><a href="#"> <img
 										src="/images/product-img/${item.value.images}" alt="" height="70px;">
 								</a></td>
-								<td>${item.value.name}</td>
+								<td>[[${item.value.name}]]</td>
 								<!----------------- giá có trong cart------------------------------------ -->
-								<c:if test="${not empty item.value.price}">
+								<th:block th:if="${not #strings.isEmpty(item.value.price)}">
 									<!-- sdfsdffsdf -->
 									<td><fmt:formatNumber type="currency"
 											value="${item.value.price}" currencySymbol="đ"
 											pattern="###,###" /> VNĐ
-									<%-- ///
+									
 									<fmt:formatNumber value="${item.price - (item.price * (item.discounts.price_discounts / 100))}" pattern="###,###,### VNĐ" />
-									///	 --%>	
+									
 											
 											</td>
-								</c:if>
+								</th:block>
 								<!-- -------------------------------------------------------- -->
 								<c:if test="${ empty item.value.price}">
 									<td>0 VNĐ</td>
@@ -128,7 +121,7 @@
 								<%-- <c:set var="total" value="${total + item.value.orderMoney}" /> --%>
 							</tr>
 
-						</c:forEach>
+						</th:block>
 
 
 					</tbody>
@@ -190,11 +183,15 @@
 
 
 	<!-- Footer Start -->
-	<%@include file="component/_footer.jsp"%>
+	
+	<th:block th:include="/user/component/_footer :: _footer" />
+	
 	<!-- Footer End -->
 
 	<!-- Link To Base JS -->
-	<%@include file="component/_linkJS.jsp"%>
+	<th:block th:include="/user/component/_linkJS::jsLinks" />
+	
+
 	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>	
 function onUp(id,price) {
