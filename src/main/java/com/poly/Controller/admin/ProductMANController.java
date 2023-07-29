@@ -227,7 +227,7 @@ public class ProductMANController {
 		Date now = new Date();
 		if (entityDis.getStart_day() == null)
 			entityDis.setStart_day(now);
-		entityDis.setEnd_day(now);
+			entityDis.setEnd_day(now);
 
 		// discounts
 		disdao.saveAndFlush(entityDis);
