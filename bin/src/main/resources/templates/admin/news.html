@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>B.S.C.Team - CarService</title>
+
+<!-- Link To Base CSS -->
+	<th:block th:replace="/admin/component/_linkCSS :: cssLinks" />
+
+<!-- Link To Own CSS -->
+<link rel="stylesheet" th:href="@{/css/News_MAN.css}">
+
+</head>
+
+<body>
+	<!-- Start Header -->
+	<nav th:replace="~{/admin/component/_header :: nav}" ></nav>
+	<!-- End Header -->
+
+	<main>
+
+		<!-- Start Menu Aside -->
+		<aside th:replace="~{/admin/component/_menu :: aside}" ></aside>
+		<!-- End Menu Aside -->
+
+<section class="middle" style="width: 1200px;">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active s-3" id="home-tab" data-bs-toggle="tab"
+                    data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                    aria-selected="true">
+                <h4>Bài viết</h4>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                    data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                    aria-selected="false">
+                <h4>Danh sách</h4>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <!-- Thêm bài viết -->
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
+             aria-labelledby="home-tab" tabindex="0">
+            <h1>Thêm bài viết</h1>
+            <br>
+            <section class="content-header">
+                <form action="/admin/save" modelAttribute="news" method="POST"
+                      enctype="multipart/form-data">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-7" style="padding: 0px;">
+                                <section class="content">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card card-primary">
+                                                    <div class="card-header" style="background-color: aqua;">
+                                                        <h3 class="card-title">Thông tin chính</h3>
+                                                    </div>
+                                                    <div class="card-body" style="height: 285px;">
+                                                        <div class="form-group">
+                                                            <label for="title">Tên bài viết</label>
+                                                            <input type="text" id="title" th:value="${news.titles}" name="titles"
+                                                                   class="form-control"/>
+                                                        </div>
+                                                        <br>
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="row">
+                                                                        <div class="col-12 form-group">
+                                                                            <label for="content">Nội dung tóm tắt</label>
+                                                                            <textarea id="content" name="content"
+                                                                                      class="form-control" rows="4"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br><br>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="row">
+                                                                <div class="col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="publishDate">Ngày đăng</label>
+                                                                        <input readonly class="form-control"
+                                                                               th:value="${#dates.format(news.create_date, 'dd-MM-yyyy HH:mm')}"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="username">Tài khoản</label>
+                                                                        <input th:if="${#fields.hasErrors('news.users.user_names')}" th:errors="*{users.user_names}" class="form-control is-invalid" type="text"/>
+                                                                        <input th:unless="${#fields.hasErrors('news.users.user_names')}" readonly th:value="${session.userLogin.user_names}" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-4">
+                                                                    <div class="form-group">
+                                                                        <label for="category">Thể loại</label>
+                                                                        <select name="categories_news" class="form-control">
+                                                                            <option th:each="item : ${listLoai}" th:value="${item.id}" th:text="${item.titles}"></option> <!-- th:selected="${item.id == news.categories_news.id}" -->
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-sm-5" style="padding: 0px;">
+                                <div class="card card-success" style="height: 337px;">
+                                    <div class="card-header" style="background-color: yellow">
+                                        <h3 class="card-title">Hình đại diện</h3>
+                                    </div>
+                                    <div class="col-10" style="margin: 25px; width: 90%">
+                                        <div style="width: 100%; height: 200px; border: 1px dotted gray;">
+                                            <img th:if="${news.images}" th:src="@{/images/news-img/${news.images}}" id="img"
+                                                 width="100%" height="100%" style="object-fit: contain;"/>
+                                            <img th:unless="${news.images}" th:src="${name}" id="img"
+                                                 width="100%" height="100%" style="object-fit: contain;"/>
+                                        </div>
+                                    </div>
+                                    <div style="margin: 25px; width: 90%; margin-top: 0px;" class="input-group date"
+                                         id="reservationdate" data-target-input="nearest">
+                                        <input name="image" th:value="${news.images}" id="inputGroupFile01" type="file"
+                                               class="form-control datetimepicker-input" placeholder="choose file"/>
+                                        <div class="input-group-append"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </form>
+            </section>
+            <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12" style="padding: 0px;">
+                <section class="content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-outline card-info"></div>
+                            <div class="card-header" style="background-color: aqua;">
+                                <label for="">Nội dung chính</label>
+                            </div>
+                            <div class="card-body">
+                                <textarea id="editor" name="contents" th:value="${news.contents}" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    	<form th:action="@{/admin/news/save}" modelAttribute="news" method="POST" class="col-md-1">
+        	<button type="submit" class="btn btn-success">Đăng Bài</button>
+    	</form>
+    	<form th:action="@{|/admin/news/update/${news.id}|}" method="POST" class="col-md-1">
+        	<button type="submit" class="btn btn-warning">Lưu</button>
+    	</form>
+	    <a th:href="@{/admin/news}" class="btn btn-primary col-md-1">
+	        Làm mới
+	    </a>
+    </div>
+</section>
+		
+        </div>
+    
+    
+
+		<!-- Danh sách bài viết -->
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand">
+                <h1>Danh sách bài viết</h1>
+            </a>
+        </div>
+    </nav>
+
+    <div class="px-4 p-3">
+        <div class="row">
+            <div class="col-3 offset-1"></div>
+            <div class="col-3 offset-5">
+                <a type="button" class="btn btn-primary" href="#">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>Export to excel</span>
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive mt-5" style="overflow-x: auto">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Người Đăng</th>
+                        <th>Tên Bài viết</th>
+                        <th>Ngày Đăng</th>
+                        <th colspan="2">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${list}">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${item.users.user_names}"></td>
+                        <td th:text="${item.titles}"></td>
+                        <td th:text="${item.create_date}"></td>
+                        <td class="text-center">
+                            <!-- Modal update -->
+                            <a th:href="@{/admin/news/edit/{id}(id=${item.id})}" class="btn btn-primary">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelte${item.id }">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                            <!-- Modal delete -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row tm-mb-90">
+            <div class="col-12 d-flex justify-content-between align-items-center tm-paging-col">
+                <a href="#" class="btn btn-primary tm-btn-prev mb-2">
+                    <i class="bi bi-chevron-left" style="width: 1000px;"></i>
+                </a>
+                <div class="tm-paging d-flex">
+                    <a href="#" class="btn btn-primary tm-btn-prev mb-2">
+                        <i class="bi bi-chevron-double-left" style="width: 1000px;"></i>
+                    </a>
+                    &nbsp;
+                    <a href="#" class="btn btn-primary tm-btn-prev mb-2">
+                        <i class="bi bi-chevron-double-right" style="width: 1000px;"></i>
+                    </a>
+                </div>
+                <a href="#" class="btn btn-primary tm-btn-next">
+                    <i class="bi bi-chevron-right" style="width: 1000px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    </div>
+</section>
+		
+
+	</main>
+
+
+	<!-- Modal -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" th:fragment="modal" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">Bạn muốn chỉnh sửa Bài Viết</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                <button type="button" class="btn btn-primary">YES</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+	
+
+
+	<!-- Link To Base JS -->
+	<th:block th:replace="/admin/component/_linkJS :: jsLinks" />
+
+	<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+	<script>
+
+const sidebarList = document.querySelectorAll('.sidebar');
+const sidebarActive = document.querySelector('.sidebar#news');
+
+sidebarList.forEach((sidebar) => {
+	sidebar.firstElementChild.classList.remove('active');
+    });
+sidebarActive.firstElementChild.classList.add('active');
+
+let img = document.getElementById('img');
+let input = document.getElementById('inputGroupFile01');
+input.onchange = (e) => {
+    if (input.files[0])
+        img.src = URL.createObjectURL(input.files[0]);
+} 
+	
+    tinymce.init({
+    selector: '#editor',
+    plugins: 'powerpaste casechange searchreplace autolink directionality advcode visualblocks visualchars image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker editimage help formatpainter permanentpen charmap linkchecker emoticons advtable export autosave',
+    toolbar: 'undo redo print spellcheckdialog formatpainter | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | alignleft aligncenter alignright alignjustify lineheight | checklist bullist numlist indent outdent | removeformat',
+    height: '700px'
+        });
+ </script>
+</body>
+
+</html>
