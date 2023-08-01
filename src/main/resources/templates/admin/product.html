@@ -130,28 +130,30 @@
 													<li class="price">Giá: <span th:text="${item.price}" /></li>
 
 													<li>Ngày tạo: <span th:text="${#dates.format(item.create_date, 'hh:mm dd-MM-yyyy')}" /></li>
-													
-													<li>Ngày cập nhật: <span th:text="${#dates.format(item.update_date, 'hh:mm dd-MM-yyyy')}" /></li>
 
-													<li>Loại: <span th:each="cate : ${item.categories.id}" th:text="${cate}" /></li>
+													<li>Loại: <span th:each="cate : ${item.categories}" th:text="${cate.names}"></span></li>
 
 													<li>Trạng thái: <span th:text="${item.is_status == 1 ? 'Còn hàng':'Hết hàng'}" /></li>
 
-													<li>Nhà cung cấp: <span th:each="supp : ${item.suppliers.user_names}" th:text="${supp}" /></li>
+													<li>Nhà cung cấp: <span
+														th:each="supp : ${item.suppliers.user_names}"
+														th:text="${supp}" /></li>
 
-													<li>Giá gốc: <span th:text="${item.original_price + ' VNĐ'}" /></li>
+													<li>Giá gốc: <span th:text="${item.original_price + ' VNĐ'}" /> 
 													
-													<!-- <li>Giảm giá: <span th:text="${item.discounts.price_discounts} + '%' "/></li>  -->		
-																							
+													<!-- <li>Giảm giá: <span th:text="${item.discounts.id} + '%' "/></li>  -->
+													
+
 													<li>Tình trạng: <span th:text="${item.is_active}" /></li>
 
-													<li>Mô tả: <span th:text="${item.description}" /></li>
+													<li>Mô tả: <span th:text="${item.description}"></span></li>
 
 												</div>
 
 
 												<div class="right">
-													<img th:src="@{/images/product-img/{images}(images=${item.images})}" />
+													<img
+														th:src="@{/images/product-img/{images}(images=${item.images})}" />
 												</div>
 
 
@@ -337,8 +339,7 @@
 
 
 															<div class="col-12">
-																<label for="inputDescription" class="form-label">Mô
-																	tả</label>
+																<label for="inputDescription" class="form-label">Mô tả</label>
 
 																<textarea th:value="${item.description}"
 																	class="form-control" rows="4"></textarea>
@@ -349,6 +350,11 @@
 														<div class="modal-footer">
 															<button type="button" class="btn btn-secondary"
 																data-bs-dismiss="modal">Đóng</button>
+
+															<!-- <button
+																th:formaction=" '/admin/product/update/' + ${item.id}"
+																type="submit" class="btn btn-primary">Lưu thay
+																đổi</button> -->
 																
 															<form th:action="@{|/admin/product/update/${products.id}|}"
 																method="POST">
@@ -356,7 +362,6 @@
 																	Lưu thay đổi
 																</button>
 															</form>
-															
 														</div>
 													</form>
 												</div>
@@ -421,11 +426,11 @@
 
 									<div class="col-12">
 
-										<label for="inputSuppliers" class="form-label">Giảm giá:</label> 
-										<select name="dis" class="form-control">
-											<option th:each="dis : ${listDis}" th:value="${dis.id}" th:text="${dis.price_discounts + '%'}"
-												th:selected="${discounts.id == dis.id}">
-											</option>
+										<label for="inputSuppliers" class="form-label">Giảm
+											giá:</label> <select name="dis" class="form-control">
+											<option th:each="dis : ${listDis}" th:value="${dis.id}"
+												th:text="${dis.price_discounts + '%'}"
+												th:selected="${discounts.id == dis.id}"></option>
 										</select>
 									</div>
 
@@ -495,15 +500,14 @@
 											
 										</form>
 
-										<form th:action="@{/admin/discount/update/{id}}"
-											modelAttribute="discounts" method="POST">
+										<form th:action="@{|/admin/discount/update/{id}|}"
+											th:modelAttribute="discounts" method="POST">
 											
 											<button type="submit" class="btn btn-primary">
-												<i class="bi bi-pencil-square"></i>
+												<i class="bi bi-pencil-square"> </i>
 											</button>
 											
 										</form>
-									
 
 									</div>
 								</div>
@@ -548,7 +552,8 @@
 													<a
 														th:href="@{/admin/discount/edit/{id}(id=${item.id})}"
 														class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
-													</a> 												
+													</a> 
+													
 					
 													<a
 														th:href="@{/admin/discount/delete/{id}(id=${discounts.id})}"
@@ -594,11 +599,13 @@
 											<label class="col-form-label">Mã:</label>
 										</div>
 										<div class="col-auto">
-
+										
 											<input name="id" th:value="${categories.id}"
 												class="form-control" />
 										</div>
+										
 									</div>
+									
 									<div class="col-12">
 										<div class="col-auto">
 											<label class="col-form-label">Tên:</label>
@@ -608,6 +615,7 @@
 											<input name="names" th:value="${categories.names}"
 												class="form-control" />
 										</div>
+										<p th:if="${categories.names == null}" style="color: red;">Vui lòng nhập tên</p>
 									</div>
 
 									<fieldset class="row mb-3" style="margin-top: 1rem;">
@@ -635,6 +643,7 @@
 												</label>
 											</div>
 										</div>
+										
 									</fieldset>
 
 
@@ -643,13 +652,15 @@
 								<div class="btn-add">
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 
-										<form th:action="@{/admin/save/category}" modelAttribute="categories" method="POST">
+										<form th:action="@{/admin/save/category}"
+											modelAttribute="categories" method="POST">
 											<button type="submit" class="btn btn-primary">
 												<i class="bi bi-plus-lg"></i>
 											</button>
 										</form>
 
-										<form th:action="@{|/admin/category/update/${categories.id}|}" method="POST">
+										<form th:action="@{|/admin/category/update/${categories.id}|}"
+											method="POST">
 											<button type="submit" class="btn btn-primary">
 												<i class="bi bi-pencil-square"></i>
 											</button>
@@ -681,9 +692,9 @@
 													<a
 														th:href="@{/admin/category/edit/{id}(id=${item.id})}"
 														class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
-													</a>
+													</a> 
 													
-													 <a th:href="@{/admin/delete/{id}(id=${categories.id})}"
+													<a th:href="@{/admin/category/delete/{id}(id=${categories.id})}"
 														class="btn btn-danger"> <i class="bi bi-trash"></i>
 													</a>
 												</td>
@@ -896,6 +907,10 @@
 							</div>
 						</div>
 					</div>
+
+
+
+
 
 
 				</div>

@@ -153,7 +153,7 @@ public class ProductMANController {
 
 		if (entityDis.getStart_day() == null)
 			entityDis.setStart_day(now);
-		entityDis.setEnd_day(now);
+			entityDis.setEnd_day(now);
 
 		// discounts
 		disdao.saveAndFlush(entityDis);
@@ -234,6 +234,16 @@ public class ProductMANController {
 
 		return "redirect:/admin/product";
 	}
+	
+	@GetMapping("/admin/discount/delete/{id}")
+	public String delete(Model model, @ModelAttribute("discounts") Discounts entityDis,
+			@PathVariable("id") Integer id) {
+
+		entityDis = disdao.getOne(id);
+		entityDis.setIs_active(0);
+		disdao.saveAndFlush(entityDis);
+		return "redirect:/admin/product";
+	}
 
 	@PostMapping("/admin/category/update/{id}")
 	public String update(Model model, @ModelAttribute("categories") Categories entityCate,
@@ -257,7 +267,7 @@ public class ProductMANController {
 	}
 
 	@GetMapping("/admin/category/delete/{id}")
-	public String delte(Model model, @ModelAttribute("categories") Categories entityCate,
+	public String delete(Model model, @ModelAttribute("categories") Categories entityCate,
 			@PathVariable("id") Integer id) {
 
 		entityCate = catedao.getOne(id);
@@ -265,6 +275,8 @@ public class ProductMANController {
 		catedao.saveAndFlush(entityCate);
 		return "redirect:/admin/product";
 	}
+	
+	
 
 	@GetMapping("/admin/discount/edit/{id}")
 	public String edit(Model model, @PathVariable("id") Integer id, @ModelAttribute("discounts") Discounts d,
