@@ -2,8 +2,6 @@ package com.poly.Beans;
 
 import java.util.Date;
 
-import com.poly.Entities.Roles;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

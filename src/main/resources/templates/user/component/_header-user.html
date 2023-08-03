@@ -4,9 +4,9 @@
 <div class="header__user-left d-flex gap-4 me-3">
     <a th:href="@{/user/cart}" class="d-flex header__action-btn">
         <i class="bi bi-bag"></i>
-        <span id="cartIcon" class="count">
-            <span th:if="${session.cartSize == null}">0</span>
-            <span th:if="${session.cartSize != null}" th:text="${session.cartSize}"></span>
+        <span id="cartIcon" class="count" >
+            <span style="transform: rotate(0deg);">{{cart.count}}</span>
+           
         </span>
     </a>
 
@@ -70,7 +70,7 @@
 			type="button" data-bs-toggle="dropdown" aria-expanded="false">
 			<div class="profile-photo overflow-hidden">
 				 <th:block th:if="${ #strings.isEmpty(session.userLogin.images)}">
-							<img src="/images/user-img/${session.userLogin.getImages()}" id="img" 
+							<img th:src="@{/images/user-img/1.png}" id="img" 
 							style="width: auto !important;">
 						</th:block> 
 

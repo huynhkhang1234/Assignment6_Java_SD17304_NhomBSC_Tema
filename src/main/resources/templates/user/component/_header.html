@@ -229,7 +229,7 @@
 	</nav>
 	<div class="search-box container">
         <form action="/product/page" method="POST">
-            <input name="keyword" th:value="${param.keyword}" placeholder="Tìm kiếm ở đây...">
+            <input name="keyword" ng-model="searchKeyword" placeholder="Tìm kiếm ở đây...">
         </form>
     </div>
 </header>

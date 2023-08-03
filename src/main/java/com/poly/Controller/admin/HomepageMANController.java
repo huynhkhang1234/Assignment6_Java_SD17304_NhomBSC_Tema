@@ -45,7 +45,7 @@ public class HomepageMANController {
 	    m.addAttribute("listO", listO);
 	    m.addAttribute("startDate", startDate);
 	    m.addAttribute("endDate", endDate);
-
+	    System.out.println("test");
 	    return "admin/index";
 	}
 	

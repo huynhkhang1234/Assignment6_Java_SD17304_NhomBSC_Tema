@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -31,7 +33,9 @@ public class Order_details  implements Serializable {
 	private int price;
 	private int quanlity;
 	private float sum_money;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date create_date;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date update_date;
 	private int is_active;
 	
