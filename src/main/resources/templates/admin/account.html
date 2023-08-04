@@ -45,14 +45,14 @@
                         <img src="" alt="">
                     </div>
                     <!--row1-->
-                    <div class="col-3">
+                    <!--<div class="col-3">
                         <div class="col-auto">
                             <label class="col-form-label">ID</label>
                         </div>
                         <div class="col-auto">
                             <input name="id" th:value="${users.id}" class="form-control" readonly />
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-3">
                         <div class="col-auto">
                             <label class="col-form-label">Tên tài khoản</label>
@@ -60,6 +60,7 @@
                         <div class="col-auto">
                             <input th:field="*{user_names}" class="form-control"/>
                         </div>
+                        <small class="form-text text-danger" th:errors="*{user_names}"></small>
                     </div>
                     <div class="col-3">
 
@@ -71,6 +72,7 @@
                                 <div class="col-auto">
                                     <input th:field="*{first_names}" class="form-control"/>
                                 </div>
+                                <small class="form-text text-danger" th:errors="*{first_names}"></small>
                             </div>
                             <div class="col-md">
                                 <div class="col-auto">
@@ -79,6 +81,7 @@
                                 <div class="col-auto">
                                     <input th:field="*{last_names}" class="form-control"/>
                                 </div>
+                                <small class="form-text text-danger" th:errors="*{last_names}"></small>
                             </div>
                         </div>
 
@@ -92,6 +95,7 @@
                         <div class="col-auto">
                             <input th:field="*{email}" class="form-control"/>
                         </div>
+                        <small class="form-text text-danger" th:errors="*{email}"></small>
                     </div>
                     <!--row2-->
                     <div class="col-3">
@@ -101,6 +105,7 @@
                         <div class="col-auto">
                             <input th:field="*{pass_words}" class="form-control"/>
                         </div>
+                        <small class="form-text text-danger" th:errors="*{pass_words}"></small>
                     </div>
                     <div class="col-3">
                         <div class="col-auto">
@@ -109,6 +114,7 @@
                         <div class="col-auto">
                             <input th:field="*{phones}" class="form-control" type="number"/>
                         </div>
+                        <small class="form-text text-danger" th:errors="*{phones}"></small>
                     </div>
                     <div class="col-3">
                         <div class="col-auto">
@@ -117,6 +123,7 @@
                         <div class="col-auto">
                             <input th:field="*{address}" class="form-control"/>
                         </div>
+                        <small class="form-text text-danger" th:errors="*{address}"></small>
                     </div>
 
                     <!--row3-->
@@ -143,11 +150,11 @@
                             <label class="col-form-label">Ngày tạo</label>
                         </div>
                         <div class="col-auto">
-                        <input th:value="${users.create_date}" class="form-control" readonly/>
+                        <input th:value="*{create_date}" class="form-control" readonly/>
                             
                         </div>
                     </div>
-                    <div class="col-3">
+                    <!--<div class="col-3">
                         <div class="col-auto">
                             <label class="col-form-label">Ngày cập nhật</label>
                         </div>
@@ -155,7 +162,7 @@
                             <input th:value="${users.update_date}" class="form-control" readonly/>
                             
                         </div>
-                    </div>
+                    </div>-->
                     <!--Images-->
 					<div class="col-4" style="padding: 0px;">
 						
@@ -196,7 +203,7 @@
 
                         <button class="btn btn-info" type="submit" >Thêm</button>
 						<button class="btn btn-warning" th:formaction="@{|/account/update/${users.id}|}">Cập nhật</button>
-						<button class="btn btn-secondary" th:formaction="@{/admin/account}">Làm mới</button>
+						<a class="btn btn-secondary" th:href="'/admin/account'">Làm mới</a>
 
 
                     </div>
@@ -208,7 +215,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>STT</th>
                                 <th>Tên tài khoản</th>
                                 <th>Tên</th>
                                 <th>Họ</th>
@@ -224,8 +231,8 @@
                         </thead>
                         <tbody>
 							
-                            <tr th:each="item : ${list}">
-                                <td th:text="${item.id}"></td>
+                            <tr th:each="item, state: ${list}">
+                                <td th:text="${state.index + 1}"></td>
 						         <td th:text="${item.user_names}"></td>
 						         <td th:text="${item.first_names}"></td>
 						         <td th:text="${item.last_names}"></td>
@@ -237,13 +244,13 @@
 						         
                                 <td style="text-align: center;">
 								    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-								        data-bs-target="#modal-Close${item.id}">
+								        th:data-bs-target="'#modal-Close'+ ${item.id}">
 								        <i th:if="${item.is_active == 3}" class="fa-solid fa-lock "></i>
 								        <i th:if="${item.is_active == 1}" class="bi bi-unlock-fill"></i>
 								    </button>
 								    
 								    
-								<div th:if="${item.is_active == 1}" class="modal fade" th:id="'modal-Close'+'${item.id}'" data-bs-backdrop="static"
+								<div th:if="${item.is_active == 1}" class="modal fade" th:id="'modal-Close'+${item.id}" data-bs-backdrop="static"
 								        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
 								        aria-hidden="true">
 								        <div class="modal-dialog">
@@ -265,7 +272,7 @@
 								            </div>
 								        </div>
 								    </div>
-								    <div th:if="${item.is_active == 3}" class="modal fade" th:id="'modal-Close'+'${item.id}'" data-bs-backdrop="static"
+								    <div th:if="${item.is_active == 3}" class="modal fade" th:id="'modal-Close'+ ${item.id}" data-bs-backdrop="static"
 								        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
 								        aria-hidden="true">
 								        <div class="modal-dialog">

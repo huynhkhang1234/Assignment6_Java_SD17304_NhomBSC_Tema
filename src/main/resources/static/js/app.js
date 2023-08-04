@@ -14,7 +14,7 @@ app.controller('profileController', function ($scope, $http) {
         var AccountURL = 'http://localhost:8080/api/account';
 
         $http.get(AccountURL)
-            .then(function (response) {
+            .then(function (response) {      
                 $scope.userCurrent = response.data;
                 $scope.confirmPass = $scope.userCurrent.pass_words;
             })

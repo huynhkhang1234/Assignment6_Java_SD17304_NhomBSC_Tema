@@ -49,14 +49,13 @@ public class AccountMANController {
 	// ko thể khóa tài khoản hiện tại.
 	@Autowired
 	HttpSession session;
-	
-
-    
 
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
 		 Users entity = new Users();
-		 entity.setImages("");
+		 
+		 entity.setCreate_date(new Date());
+		 
 		 model.addAttribute("users", entity);
 		 
 		Pageable pageable;
@@ -68,6 +67,7 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
+		
 		return "admin/account";
 	}
 
@@ -76,12 +76,8 @@ public class AccountMANController {
 			@RequestParam("file") MultipartFile file) {
 
 		if (result.hasErrors()) {
-
-			System.out.println("có lỗi.");
-			System.out.println(entity);
 			return "/admin/account";
 		} else {
-
 			System.out.println("không lỗi nủa");
 			Optional<Users> uss = this.userDao.findByEmail(entity.getEmail().trim());
 			if (uss == null) {

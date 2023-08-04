@@ -74,8 +74,8 @@ public class NewsMANController {
 	public String update(Model model, @ModelAttribute("news") News entity, @RequestParam("username") String username,
 			@RequestParam("image") MultipartFile file) {
 
-		Users u = userDao.findByUsername(username);
-		entity.setUsers(u);
+		Optional<Users> u = userDao.findByUsername(username);
+		entity.setUsers(u.get());
 
 		Date now = new Date();
 
