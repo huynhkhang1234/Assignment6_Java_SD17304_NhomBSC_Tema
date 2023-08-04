@@ -3,6 +3,7 @@ package com.poly.Controller.admin;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ import com.poly.Entities.Categories;
 import com.poly.Entities.Discounts;
 import com.poly.Entities.Products;
 import com.poly.Entities.Suppliers;
+import com.poly.utils.XDate;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
@@ -79,6 +81,12 @@ public class ProductMANController {
 
 		// discounts
 		Discounts entityDis = new Discounts();
+		
+		String startDate = XDate.toString(new Date(), "yyyy-MM-dd");
+	    String endDate = XDate.toString(XDate.getDateAfter(1), "yyyy-MM-dd");
+		
+	    model.addAttribute("startDate", startDate);
+	    model.addAttribute("endDate", endDate);
 		model.addAttribute("discounts", entityDis);
 		List<Discounts> listDis = disdao.findAll();
 		model.addAttribute("listDis", listDis);
@@ -107,16 +115,16 @@ public class ProductMANController {
 	@PostMapping("/admin/save/product")
 	public String saveProduct(Model model, @ModelAttribute("product") Products entity,
 			@RequestParam("cate") Categories cate, @RequestParam("supp") Suppliers supp,
-			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file) {
-		Date now = new Date();
+			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file, 
+			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException {
+		
 
 		entity.setCategories(cate);
 		entity.setSuppliers(supp);
 		entity.setDiscounts(dis);
 
-		if (entity.getCreate_date() == null)
-			entity.setCreate_date(now);
-		entity.setUpdate_date(now);
+		entity.setCreate_date(XDate.toDate(createDate));
+		entity.setUpdate_date(XDate.toDate(updateDate));
 
 		// Xử lý hình ảnh String
 
@@ -141,19 +149,68 @@ public class ProductMANController {
 
 		dao.saveAndFlush(entity);
 
-		return "redirect:/admin/product";
+		return "/admin/product";
 	}
+	
+	@GetMapping("/admin/product/edit/{id}")
+	public String edit(Model model, @PathVariable("id") Integer id, @ModelAttribute("product") Products pro,
+			@RequestParam("p") Optional<Integer> p, @RequestParam("cate") Categories cate, @RequestParam("supp") Suppliers supp,
+			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file, 
+			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException {
+		
+		model.addAttribute("id", id);
+		// products
+		Pageable pageable;
+		try {
+			pageable = PageRequest.of(p.orElse(0), 8);
+		} catch (Exception e) {
+			pageable = PageRequest.of(0, 8);
+		}
+		Page<Products> listproduts = this.dao.getIsActive(pageable);
+		model.addAttribute("listproduts", listproduts);
+
+		model.addAttribute("list", listproduts);
+
+		// discounts
+
+		pro = dao.getById(id);
+		
+		String createDay = XDate.toString(pro.getCreate_date(), "yyyy-MM-dd");
+	    String updateDay = XDate.toString(pro.getUpdate_date(), "yyyy-MM-dd");
+	    
+		model.addAttribute("createDay", createDay);
+		model.addAttribute("updateDay", updateDay);
+	    
+		model.addAttribute("discounts", dis);
+		List<Discounts> listDis = disdao.findAll();
+		model.addAttribute("listDis", listDis);
+		
+		Products entity = new Products();
+		model.addAttribute("products", entity);
+		
+		Categories ct = new Categories();
+		model.addAttribute("categories", ct);
+		
+		try {
+			pageable = PageRequest.of(p.orElse(0), 8);
+		} catch (Exception e) {
+			pageable = PageRequest.of(0, 8);
+		}
+		
+		Page<Categories> listCate = this.catedao.getIsActive(pageable);
+		model.addAttribute("listCate", listCate);
+
+		return "/admin/product";
+	}
+	
 
 	@PostMapping("/admin/save/discount")
-	public String saveProduct(Model model, @ModelAttribute("discount") Discounts entityDis,
-			@RequestParam("dis") Discounts dis) {
+	public String saveProduct(Model model, @ModelAttribute("discounts") Discounts entityDis,
+			@RequestParam("startDay") String startDate, @RequestParam("endDay") String endDate) throws ParseException {
 
-		Date now = new Date();
-		System.out.println(entityDis);
 
-		if (entityDis.getStart_day() == null)
-			entityDis.setStart_day(now);
-			entityDis.setEnd_day(now);
+			entityDis.setStart_day(XDate.toDate(startDate));
+			entityDis.setEnd_day(XDate.toDate(endDate));
 
 		// discounts
 		disdao.saveAndFlush(entityDis);
@@ -164,17 +221,17 @@ public class ProductMANController {
 	@PostMapping("/admin/product/update/{id}")
 	public String update(Model model, @ModelAttribute("products") Products entity, @PathVariable("id") Integer id,
 			@RequestParam("cate") Categories cate, @RequestParam("supp") Suppliers supp,
-			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file) {
+			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file, 
+			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException{
 
-		Date now = new Date();
 
 		entity.setCategories(cate);
 		entity.setSuppliers(supp);
 		entity.setDiscounts(dis);
-		entity.setIs_active(1);
-		if (entity.getCreate_date() == null)
-			entity.setCreate_date(now);
-		entity.setUpdate_date(now);
+		entity.setIs_active(0);
+		
+		entity.setCreate_date(XDate.toDate(createDate));
+		entity.setUpdate_date(XDate.toDate(updateDate));
 
 		if (file.getOriginalFilename() == null || file.getOriginalFilename().length() == 0) {
 			Products p = dao.getById(entity.getId());
@@ -221,14 +278,12 @@ public class ProductMANController {
 	}
 
 	@PostMapping("/admin/discount/update/{id}")
-	public String update(Model model, @ModelAttribute("discounts") Discounts entityDis, @PathVariable("id") Integer id,
-			@RequestParam("dis") Discounts dis) {
-
-		Date now = new Date();
-		if (entityDis.getStart_day() == null)
-			entityDis.setStart_day(now);
-			entityDis.setEnd_day(now);
-
+	public String update(Model model, @ModelAttribute("discount") Discounts entityDis, @PathVariable("id") Integer id, 
+			@RequestParam("startDay") String startDate, @RequestParam("endDay") String endDate) throws ParseException {
+		
+		entityDis.setStart_day(XDate.toDate(startDate));
+		entityDis.setEnd_day(XDate.toDate(endDate));
+			
 		// discounts
 		disdao.saveAndFlush(entityDis);
 
@@ -240,7 +295,7 @@ public class ProductMANController {
 			@PathVariable("id") Integer id) {
 
 		entityDis = disdao.getOne(id);
-		entityDis.setIs_active(0);
+		/* entityDis.setIs_active(0); */
 		disdao.saveAndFlush(entityDis);
 		return "redirect:/admin/product";
 	}
@@ -250,7 +305,7 @@ public class ProductMANController {
 			@PathVariable("id") Integer id) {
 
 		// categories
-		entityCate.setIs_active(1);
+		/* entityCate.setIs_active(0); */
 		catedao.saveAndFlush(entityCate);
 
 		return "redirect:/admin/product";
@@ -267,13 +322,15 @@ public class ProductMANController {
 	}
 
 	@GetMapping("/admin/category/delete/{id}")
-	public String delete(Model model, @ModelAttribute("categories") Categories entityCate,
+	public String delete(@ModelAttribute("categories") Categories entityCate,
 			@PathVariable("id") Integer id) {
 
 		entityCate = catedao.getOne(id);
-		entityCate.setIs_active(0);
+		entityCate.setIs_active(0); 
+		
 		catedao.saveAndFlush(entityCate);
 		return "redirect:/admin/product";
+		
 	}
 	
 	
@@ -281,8 +338,8 @@ public class ProductMANController {
 	@GetMapping("/admin/discount/edit/{id}")
 	public String edit(Model model, @PathVariable("id") Integer id, @ModelAttribute("discounts") Discounts d,
 			@RequestParam("p") Optional<Integer> p) {
-
-		// products
+		
+		model.addAttribute("id", id);
 		// products
 		Pageable pageable;
 		try {
@@ -293,16 +350,19 @@ public class ProductMANController {
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("listproduts", listproduts);
 
-		//
-		// Products entity = new Products();
-		// model.addAttribute("products", entity);
-		// List<Products> list = dao.findAllActiveTrue(Sort.by(Direction.DESC,
-		// "is_status"));
 		model.addAttribute("list", listproduts);
 
 		// discounts
 
 		d = disdao.getById(id);
+		
+		String startDate = XDate.toString(d.getStart_day(), "yyyy-MM-dd");
+	    String endDate = XDate.toString(d.getEnd_day(), "yyyy-MM-dd");
+	    
+
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+	    
 		model.addAttribute("discounts", d);
 		List<Discounts> listDis = disdao.findAll();
 		model.addAttribute("listDis", listDis);
@@ -364,5 +424,5 @@ public class ProductMANController {
 
 		return "/admin/product";
 	}
-
+	
 }
