@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B.S.C.Team - CarService</title>
+
+<!-- Link To Base CSS -->
+	<th:block th:include="/user/component/_linkCSS :: cssLinks"/>
+
+<style>
+.pro-thumbnail {
+	width: 80px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="shop-cart" ng-controller="ctrl">
+	<!--  đọc dữ liệu từ trang khi mà người dùng click chuột vào giỏ hàng
+	kiểm tra -->
+
+	<!-- Header Start -->
+	<th:block th:include="/user/component/_header :: header" />
+	<!-- Header End -->
+
+	 <main>
+
+		<!-- ========================== BREADCRUMB ========================== -->
+		<section class="breadcrumb">
+			<ul class="breadcrumb__list d-flex container">
+				<li><a href="/user/index" class="breadcrumb__link">Trang
+						chủ</a></li>
+				<li><span class="breadcrumb__link">></span></li>
+				<li><span class="breadcrumb__link">Giỏ hàng</span></li>
+				<li><span class="breadcrumb__link">></span></li>
+				<li><span class="breadcrumb__link active">Đặt hàng</span></li>
+			</ul>
+		</section>
+
+		<form class="container mt-5 d-flex justify-content-center gap-4">
+			<div class="table-cart col-md-8">
+				<div class="card border-secondary mb-3">
+					<div class="card-header fw-bold text-uppercase">Địa chỉ giao
+						hàng						
+						</div>
+					<div class="card-body text-secondary row" th:if="${user}">
+						<div class="col-md-6 mb-3">
+							<label for="firstName" class="form-label">Họ:</label> <input
+								placeholder="Vui lòng nhập họ" type="text" class="form-control"
+								id="firstName"
+								th:value="${user.getLast_names()}" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="lastName" class="form-label">Tên:</label> <input
+								placeholder="Vui lòng nhập tên" type="text" class="form-control"
+								id="lastName"  th:value="${user.getFirst_names()}"
+								required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="email" class="form-label">Email:</label> <input
+								placeholder="Vui lòng nhập email" type="text"
+								class="form-control" id="email"
+								th:value="${user.getEmail()}" required>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label for="numberPhone" class="form-label">Số điện
+								thoại:</label> <input placeholder="Vui lòng nhập số điện thoại"
+								type="text" class="form-control" id="numberPhone"
+								th:value="${user.getPhones()}" required>
+						</div>
+						<div class="mb-3">
+							<label for="address" class="form-label">Địa chỉ:</label>
+							<textarea th:text="${user.getAddress()}" class="form-control" id="address"
+								style="height: 100px; text-align: left;"
+								placeholder="Vui lòng nhập thông tin địa chỉ" required>
+                            
+                            </textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card border-secondary mb-3">
+					<div class="card-header fw-bold text-uppercase">Hóa đơn chi
+						tiết</div>
+					<div class="card-body text-secondary">
+						<div style="color: #333;">
+
+							<p class="card-text" style="font-weight: 500;">Sản phẩm:</p>
+
+							  <ul class="mb-3">							
+									<li class="d-flex justify-content-between mb-2" ng-repeat="item in cart.items">
+									
+										{{item.titles}} (x{{item.qty}}) <span>{{item.qty * item.price |number:2}} VNĐ </span>
+									</li>							
+							</ul>  
+						</div>
+
+						<div class="d-flex justify-content-between pt-3"
+							style="color: #333; border-top: 1px solid #ccc;">
+							<p class="card-text" style="font-weight: 500;">Tạm tính:</p>
+								<span>{{cart.amount |number:2}} VNĐ</span>
+						</div>
+						<div class="d-flex justify-content-between" style="color: #333;">
+							<p class="card-text" style="font-weight: 500;">Khuyến mãi:</p>
+							<span> 
+							Chưa có
+							</span>
+						</div>
+						<div class="d-flex justify-content-between"
+							style="color: #333; border-bottom: 1px solid #ccc;">
+							<p class="card-text" style="font-weight: 500;">Phí ship:</p>
+							<span>
+							Chưa tính
+							</span>
+						</div>
+						<div class="d-flex justify-content-between mt-3"
+							style="color: #333;">
+							<h5 class="card-title" style="font-weight: 500;">Tổng cộng:</h5>
+							<h5 class="fw-bold">
+								<span>{{cart.amount |number:2}} VNĐ</span>
+
+
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="box-bill col-md-12">
+					<div class="card border-secondary mb-3">
+						<div class="card-header fw-bold text-uppercase">Thanh toán</div>
+						<div class="card-body text-secondary">
+							<div class="form-check">
+								<input class="form-check-input" type="radio"
+									name="flexRadioDefault" id="flexRadioDefault1"> <label
+									class="form-check-label" for="flexRadioDefault1"
+									style="color: #333;"> Trực tiếp (Tiền mặt) </label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="radio"
+									name="flexRadioDefault" id="flexRadioDefault2" checked>
+								<label class="form-check-label" for="flexRadioDefault2"
+									style="color: #333;"> Chuyển khoản (Thẻ ngân hàng
+									online) </label>
+							</div>
+							<a data-bs-toggle="modal"
+											data-bs-target="#QuickViewModal"  ng-click="order.check()"
+								class="btn btn-warning w-100 mt-4 fw-bolder">Tiến hành đặt
+								hàng</a>
+							<!-- <a onclick="checkOut(${session.total})"
+								class="btn btn-warning w-100 mt-4 fw-bolder">Tiến hành đặt
+								hàng</a> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--  -->
+		<!-- model của in hóa đơn -->
+	 
+  <div class="modal fade" ng-if="cart.amount > 0" id="QuickViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Mở Khóa tài khoản</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 19px;">Bạn có muốn in hóa không {{sessionScope.userLogin.getUser_names()}} ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" ng-click="bill.NotBill()" class="btn btn-secondary" data-bs-dismiss="modal">không cần thiết</button>
+          <a ng-click="bill.YesBill()" class="btn btn-primary">có</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+	</main>
+
+
+	<!-- Footer Start --> 
+		<th:block th:include="/user/component/_footer :: _footer" />
+	<!-- Footer End -->
+
+	<!-- Link To Base JS -->
+	<th:block th:include="/user/component/_linkJS::jsLinks" />
+	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+<script th:src="@{/angular.js/shop.js}"></script>
+</body>
+
+</html>

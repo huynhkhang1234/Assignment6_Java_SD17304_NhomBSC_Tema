@@ -24,12 +24,6 @@ import com.poly.Entities.MailModel;
 import com.poly.Entities.Users;
 import com.poly.utils.MailerService;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
 @Controller
 public class SendMail {
 	@Autowired

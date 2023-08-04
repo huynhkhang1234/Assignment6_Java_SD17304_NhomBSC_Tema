@@ -1,0 +1,46 @@
+<nav xmlns:th="http://www.thymeleaf.org">
+	<div class="my-container" th:fragment="hnav">
+		<a href="#" class="left-logo d-flex align-items-center"> 
+			<img th:src="@{/images/favicon.svg}" class="logo"> 
+			<span class="title-logo">B.S.C Team</span>
+		</a>
+		<div class="search-bar">
+			<i class="bi bi-search"></i> <input type="search" placeholder="Search">
+		</div>
+		<div class="profile-area">
+			<!-- sáng tối -->
+			<div class="theme-btn">
+				<span class="switch"> <i class="bi bi-brightness-high bi-icon"></i></span>
+			</div>
+			<div class=" btn-group">
+				<button class="profile btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<div class="profile-photo">
+						<!-- Sử dụng thymeleaf để kiểm tra session.userLogin -->
+						<th:block th:if="${session.userLogin}">
+							<img th:src="@{/images/user-img/{images}(images=${session.userLogin.images})}" style="width: auto !important;">
+						</th:block>
+					</div>
+					<div class="profile__content d-flex flex-column">
+						<th:block th:unless="${session.userLogin}">
+							<h5>Tên: Chu Hua</h5>
+							<span>Vai trò: Admin</span>
+						</th:block>
+						
+						<th:block th:if="${session.userLogin}">
+							<span th:text="${session.userLogin.user_names}"></span>
+						</th:block>
+					</div>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-lg-right d-right">
+					<li><a th:href="@{/admin/logout}" class="dropdown-item">Đăng xuất</a></li>
+					<li><a th:href="@{/user/index}" class="dropdown-item">Quay lại trang chủ</a></li>
+				</ul>
+			</div>
+			<button id="menu-btn">
+				<i class="bi bi-list"></i>
+			</button>
+		</div>
+	</div>
+</nav>
+
+<!--end of navbar-->

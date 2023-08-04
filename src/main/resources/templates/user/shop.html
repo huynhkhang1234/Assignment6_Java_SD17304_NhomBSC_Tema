@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B.S.C.Team - CarService</title>
+<!-- Link To Base CSS -->
+<th:block th:include="/user/component/_linkCSS :: cssLinks" />
+
+<link rel="stylesheet" href="../css/product.css">
+<style>
+.likeCss {
+	background: red;
+}
+
+.likeCss .iconCss {
+	color: #fff;
+}
+</style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="shop-cart" ng-controller="ctrl">
+
+
+	<!-- Header Start -->
+	<th:block th:include="/user/component/_header :: header" />
+	<!-- Header End -->
+
+	<main>
+
+		<!-- 	========================== BREADCRUMB ========================== -->
+		<section class="breadcrumb">
+			<ul class="breadcrumb__list d-flex container">
+				<li><a href="/user/index" class="breadcrumb__link">Trang
+						chủ</a></li>
+				<li><span class="breadcrumb__link">></span></li>
+				<li><span class="breadcrumb__link active">Sản phẩm</span></li>
+			</ul>
+		</section>
+
+		<div class=" py-5">
+
+
+
+			<div class="">
+				<div class="container">
+					<div class="row products" id="product-list">
+
+						<!-- <th:block th:each="item:${listproduts.content} "> -->
+
+						<div class="col-md-3 col-sm-6 "
+							ng-repeat="item in (products | filter:searchKeyword | limitTo: itemsPerPage : (currentPage - 1) * itemsPerPage)">
+							<!-- <input id="productId2" value="${item.id}" type="hidden"> -->
+							<div class="product-grid6">
+								<div class="card rounded-0">
+									<div class="product-image6">
+
+										<!-- 	--------------------- thông tin được chuyển trang --------------------- -->
+										<a ng-href="/user/product?id={{item.id}}"
+											ng-click="viewProductDetail(item.id)"> <img
+											class="card-img rounded-0 img-fluid"
+											ng-src="../images/product-img/{{item.images}}" />
+										</a>
+
+
+									</div>
+									<div class="product-content">
+										<a href="shop-single.html" class="h3 text-decoration-none"></a>
+										<ul class="list-unstyled d-flex justify-content-center mb-1">
+											<li><i class="text-warning bi bi-star"></i> <i
+												class="text-warning bi bi-star"></i> <i
+												class="text-warning bi bi-star"></i> <i
+												class="text-warning bi bi-star"></i> <i
+												class="text-warning bi bi-star"></i></li>
+										</ul>
+										<!-- 	----------------input hidden----------------------- -->
+
+										<!-- <input type="hidden" id="imgOne${item.id}"
+												value="${item.images}"> <input type="hidden"
+												id="nameOne${item.id}" value="${item.titles}" /> <input
+												type="hidden" id="OnePrice${item.id}" value="${item.price}" />
+											<input type="hidden" id="discount${item.id}"
+												value="${item.discounts.price_discounts}" />
+											--------------------------------------------------------------- -->
+										<h3 class="title">
+											<a href="#">{{item.titles}}</a>
+										</h3>
+										<div ng-if="!item.discounts || item.discounts === 0">
+											<div class="price">{{ item.price | number:0 }} VNĐ</div>
+										</div>
+										<div ng-if="item.discounts != null && item.discounts != 0">
+											<div class="price">
+												{{ (item.price - (item.price *
+												item.discounts.price_discounts) / 100) | number:0 }} VNĐ
+												<del style="color: #ccc"> {{ item.price | number:0 }}
+													VNĐ </del>
+											</div>
+										</div>
+
+
+									</div>
+
+									<ul class="social">
+
+										<li><a ng-click="viewProduct(item.id)"
+											data-tip="Xem lướt qua" data-bs-toggle="modal"
+											data-bs-target="#QuickViewModal"><i class="bi bi-eye"></i></a></li>
+
+										<!-- //foreach//c:if nếu id = id thì tim đổ ngược lại tim đen -->
+
+										<!-- 										<span ng-if="listLike != ''"> <span
+											ng-repeat="like in listLike"> <span
+												ng-if="like.products.id == item.id">
+
+													<li><input /> <a class="likeCss"
+														id="likeButton{{item.id}}"
+														data-tip="Thêm vào danh sách yêu thích"> <i
+															class="bi bi-heart iconCss" id="likeIcon{{item.id}}"></i>
+													</a></li>
+											</span>
+										</span> -->
+										<!-- <span  ng-repeat="like in listNotLike">
+										  <span ng-if="like.products.id == item.id">
+												<li><a class="buttonCss" ng-click="like(item.id)"
+													id="likeButton{{item.id}}"
+													data-tip="Thêm vào danh sách yêu thích"> <i
+														class="bi bi-heart" id="likeIcon{{item.id}}"></i>
+												</a></li>
+										</span> 
+										</span>  -->
+										</span>
+
+										<!-- <li ng-if="!listLike || listLike.length === 0"><a
+											ng-click="like(item.id)" id="{{ 'likeButton' + item.id }}"
+											data-tip="Thêm vào danh sách yêu thích"> <i
+												id="{{ 'likeIcon' + item.id }}" class="bi bi-heart"></i>
+										</a></li> -->
+
+										<!-- ------------ Thêm vào giỏ hàng trên trang  shop ---------------------- -->
+										<li><a class="add-to-cart" ng-click="cart.add(item.id)"
+											data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+									</ul>
+
+								</div>
+								<!-- Hiện thị giảm giá. -->
+								<div class="product-item__sale">
+									<span class="percent-count sale-txt"
+										ng-if="item.discounts.price_discounts != null"> -{{
+										item.discounts.price_discounts }}% </span> <span
+										ng-if="item.discounts.price_discounts == null"> 0% </span>
+								</div>
+
+
+							</div>
+
+							<!-- 	</th:block> -->
+
+						</div>
+
+						<div div="row">
+
+							<ul class="pagination pagination-lg justify-content-end">
+								<li class="page-item "
+									ng-repeat="page in cart.getPages() track by $index"
+									ng-class="{active: page === currentPage}"><a
+									ng-click="cart.setCurrentPage(page)"
+									class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0">{{
+										page }}</a></li>
+
+							</ul>
+
+
+
+
+
+
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+			<!-- End Content
+
+		Start Brands -->
+			<section class="bg-light py-5">
+				<div class="container my-4">
+					<div class="row text-center py-3">
+						<div class="col-lg-6 m-auto">
+							<h1 class="h1">Our Brands</h1>
+
+						</div>
+						<div class="col-lg-9 m-auto tempaltemo-carousel">
+							<div class="row d-flex flex-row">
+								Controls
+								<div class="col-1 align-self-center">
+									<a class="h1" href="#multi-item-example" role="button"
+										data-bs-slide="prev"> <i class="bi bi-chevron-left"></i>
+									</a>
+								</div>
+								<!-- End Controls Carousel Wrapper -->
+								<div class="col">
+									<div class="carousel slide carousel-multi-item pt-2 pt-md-0"
+										id="multi-item-example" data-bs-ride="carousel">
+										Slides
+										<div class="carousel-inner product-links-wap" role="listbox">
+
+											<!-- First slide -->
+											<div class="carousel-item active">
+												<div class="row">
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo6.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo2.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo3.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo4.png" alt="Brand Logo"></a>
+													</div>
+
+												</div>
+											</div>
+											<!-- End First slide
+
+										Second slide -->
+											<div class="carousel-item">
+												<div class="row">
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo5.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo1.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo7.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo8.png" alt="Brand Logo"></a>
+													</div>
+												</div>
+											</div>
+											<!-- 	End Second slide
+
+										Third slide -->
+											<div class="carousel-item">
+												<div class="row">
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo9.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo11.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo10.png" alt="Brand Logo"></a>
+													</div>
+													<div class="col-3 p-md-5">
+														<a href="#"><img class="img-fluid brand-img"
+															src="../images/product-img/logo12.png" alt="Brand Logo"></a>
+													</div>
+												</div>
+											</div>
+											<!-- End Third slide -->
+
+										</div>
+										<!-- 									End Slides -->
+									</div>
+								</div>
+								<!-- End Carousel Wrapper -->
+
+								<!-- 	Controls -->
+								<div class="col-1 align-self-center">
+									<a class="h1" href="#multi-item-example" role="button"
+										data-bs-slide="next"> <i class="bi bi-chevron-right"></i>
+									</a>
+								</div>
+								<!-- End Controls -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+	</main>
+
+	<!-- Modal Quick View -->
+	<div class="modal fade modal-xl" id="QuickViewModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body" style="padding: 100px;">
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="box__quickview-image">
+								<img id="images" alt=""
+									ng-src="../images/product-img/{{product_Detail.images}}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<h4 id="title">
+								Tên sản phẩm: {{product_Detail.titles}}
+								<div class="price d-flex align-items-center gap-2">
+									<span id="price" class="old__price">Giá:
+										{{product_Detail.price}} </span> <span class="new__price">
+										<p id="disPrice" class="h3 py-2" style="color: red">
+										
+										
+											{{ (product_Detail.price - (product_Detail.price *
+												product_Detail.discounts.price_discounts) / 100) | number:0 }} VNĐ
+																										
+											
+											</p>
+									</span>
+								</div>
+								<div class="my-4">
+									<ul class="list-unstyled pb-3 description">
+										<li id="description">Mô tả:
+											{{product_Detail.description}}</li>
+
+
+									</ul>
+								</div>
+								<div class="row">
+									<div class="col-3">
+										<input style="text-align: center" type="number" min="1"
+											value="1" class="form-control" readonly>
+									</div>
+									<div class="col-6">
+										<a href="#" class="btn btn-dark"
+											ng-click="cart.add(product_Detail.id)">Thêm vào giỏ hàng</a>
+									</div>
+								</div>
+						</div>
+
+						<!--  -->
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+
+	</main>
+
+
+	<!-- Footer Start -->
+	<th:block th:include="/user/component/_footer :: _footer" />
+	<!-- Footer End -->
+
+	<!-- Link To Base JS -->
+	<th:block th:include="/user/component/_linkJS::jsLinks" />
+	<!-- thư viện query  -->
+	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script th:src="@{/angular.js/shop.js}"></script>
+
+
+</body>
+
+</html>
