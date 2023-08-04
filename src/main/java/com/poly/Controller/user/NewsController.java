@@ -23,28 +23,8 @@ public class NewsController {
 	NewsDAO dao;
 	
 	@GetMapping("/user/news")
-	public String view(Model model) {
-		News entity = new News();
-		model.addAttribute("news", entity);
-
-
-		List<News> list = dao.findAllActiveTrue();
-
-		model.addAttribute("list", list);
+	public String view() {
 	
 		return "user/news";
-	}
-	
-	@GetMapping("/user/news/detail/{id}")
-	public String detail(Model m, @PathVariable("id") Integer id) {
-		News entity = new News();
-		
-		entity = dao.getById(id);
-		
-		m.addAttribute("news", entity);
-		
-		List<News> list = dao.findAllActiveTrue();
-		m.addAttribute("list", list);
-		return "user/news-detail";
 	}
 }

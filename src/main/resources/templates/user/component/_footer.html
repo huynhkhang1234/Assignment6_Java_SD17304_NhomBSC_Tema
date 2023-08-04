@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-<footer th:fragment="_footer">
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="_footer">
+    <a href="#" class="btn" id="btn-back-top">
+        <i class="bi bi-chevron-double-up"></i>
+    </a>
+    
+<footer>
         <div class="footer__container">
             <div class="footer__top container">
                 <ul class="footer__info-links">
@@ -148,5 +145,4 @@
             </div>
         </div>
     </footer>
-</body>
-</html>
+</th:block>

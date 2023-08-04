@@ -1,34 +1,34 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<body>
-<header class="header" th:fragment="_header.html">
-	<nav class="my-navbar">
-		<div class="container d-grid">
-			<a href="index.html" class="brand d-flex gap-2"> <img
-				src="../images/favicon.svg" alt="" width="36"> <span>Brand</span>
-			</a>
-			<ul class="nav-menu">
-				<li class="active-link"><a href="/user/index" title="Trang chủ">Trang
-						chủ</a></li>
-				<li><a href="/user/shop" title="Mua sắm <.">Mua sắm <i
-						class="bi bi-chevron-down"></i></a>
-					<div class="my-dropdown-menu">
-						<div class="container d-flex" style="grid-gap: 40px;">
-							<div class="right-section d-grid gap-2"
-								style="grid-template-columns: repeat(5, 1fr);">
-								<div class="menu-content d-flex flex-column">
-									<h5>Phụ tùng động cơ</h5>
-									<ul class="dropdown-links d-grid">
+<header class="header" xmlns:th="http://www.thymeleaf.org">
+    <nav class="my-navbar">
+        <div class="container d-grid">
+            <a th:href="@{/user/index}" class="brand d-flex gap-2">
+                <img th:src="@{/images/favicon.svg}" alt="" style="width: 36px;">
+                <span>Brand</span>
+            </a>
+            <ul class="nav-menu">
+                <li class="active-link">
+                    <a th:href="@{/user/index}" title="Trang chủ">Trang chủ</a>
+                </li>
+                <li>
+                    <a th:href="@{/user/shop}" title="Mua sắm <.">Mua sắm <i class="bi bi-chevron-down"></i></a>
+                    <div class="my-dropdown-menu">
+                        <div class="container d-flex" style="grid-gap: 40px;">
+                            <div class="right-section d-grid gap-2" style="grid-template-columns: repeat(5, 1fr);">
+                                <div class="menu-content d-flex flex-column">
+                                    <h5>Phụ tùng động cơ</h5>
+                                    <ul class="dropdown-links d-grid">
+                                        <li>
+                                            <a href="#">
+                                                <i class="bi bi-grid-1x2-fill"></i>
+                                                <div>
+                                                    <p>Hệ thống bôi trơn</p>
+                                                </div>
+                                            </a>
+                                        </li>
 										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
-												<span>
-													<p>Hệ thống bôi trơn</p>
-												</span>
-										</a></li>
-										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
-												<span>
+												<div>
 													<p>Hệ thống làm mát</p>
-												</span>
+												</div>
 										</a></li>
 										<li><a href="#"> <i class="bi bi-grid-1x2-fill"></i>
 												<div>
@@ -151,7 +151,7 @@
 							</div>
 						</div>
 					</div></li>
-				<li><a href="/user/product" title="Sản phẩm <.">Sản phẩm <i
+				<li><a href="@{/user/produc}" title="Sản phẩm <.">Sản phẩm <i
 						class="bi bi-chevron-down"></i></a>
 					<div class="my-dropdown-menu">
 						<div class="container d-grid" style="grid-gap: 40px;">
@@ -208,34 +208,28 @@
 							</div>
 						</div>
 					</div></li>
-				<li><a href="/user/news" title="Tin tức">Tin tức</a></li>
-				<li><a href="/user/contactus" title="Liên hệ">Liên hệ</a></li>
+				<li><a href="@{/user/news}" title="Tin tức">Tin tức</a></li>
+				<li><a href="@{/user/contactus}" title="Liên hệ">Liên hệ</a></li>
 			</ul>
 
 
 
 			<div class="header__user-actions d-flex">
-				<!--  <span th:if="${#strings.isEmpty(session.userLogin)}">
-						<span th:insert="~{/user/component/_header.html}"></span>
+				<th:block th:if="${session.userLogin}">
+					<div th:replace="/user/component/_header-user :: header-actived" ></div>
 
-				</span>  -->
-				<span th:if="${not #strings.isEmpty(session.userLogin)}">
-						<span th:insert="~{/user/component/_header__user-actived}"></span>
-
-				</span>
-			</div> 
+				</th:block>
+				<th:block th:unless="${session.userLogin}">
+					<div th:replace="/user/component/_header-user :: header-default" ></div>
+				</th:block>
+			</div>
 
 			<i class="bi bi-list toggle-navbar"></i>
 		</div>
 	</nav>
 	<div class="search-box container">
-		<form action="/product/page" method="POST">
-			<input name="keyword" value="${param.keyword}"
-				placeholder="Tìm kiếm ở đây...">		
-		</form>
-
-	</div>
+        <form action="/product/page" method="POST">
+            <input name="keyword" th:value="${param.keyword}" placeholder="Tìm kiếm ở đây...">
+        </form>
+    </div>
 </header>
-
-</body>
-</html>

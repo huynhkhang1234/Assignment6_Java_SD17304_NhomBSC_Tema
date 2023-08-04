@@ -101,7 +101,7 @@ public class NewsMANController {
 	}
 
 	@PostMapping("/admin/news/save")
-	public String save(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id,
+	public String save(Model model, @ModelAttribute("news") News entity,
 
 			@RequestParam("file") MultipartFile file) {
 
@@ -114,18 +114,11 @@ public class NewsMANController {
 		System.out.println(entity.getContents().length());
 		entity.setUpdate_date(now);
 		entity.setIs_active(1);
-
-		// xử lí hình ảnh
-		Optional<News> n = dao.findById(id);
-
-		if (n.get().getImages() == null || n.get().getImages().contains(".")) {
-			if (file.getOriginalFilename().contains(".")) {
-				entity.setImages(file.getOriginalFilename());
-				XImage.addImageToPackage(file, "/images/news-imgae/");
-			} else {
-				entity.setImages(n.get().getImages());
-			}
-		}
+		
+		entity.setImages(file.getOriginalFilename());
+		XImage.addImageToPackage(file, "/images/news-imgae/");
+		
+		
 
 		dao.save(entity);
 		return "redirect:/admin/news";
@@ -145,6 +138,7 @@ public class NewsMANController {
 		List<News> list = dao.findAllActiveTrue();
 		model.addAttribute("list", list);
 		return "admin/news";
+		
 	}
 
 	@GetMapping("/admin/news/delete/{id}")
