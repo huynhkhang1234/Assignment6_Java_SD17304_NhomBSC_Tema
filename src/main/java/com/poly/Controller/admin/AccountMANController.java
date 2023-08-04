@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,7 @@ import com.poly.Entities.Products;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
 import com.poly.utils.XDate;
+import com.poly.utils.XImage;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
@@ -38,19 +40,25 @@ import jakarta.validation.Valid;
 public class AccountMANController {
 	@Autowired
 	UsersDAO userDao;
+	
 	@Autowired
 	RolesDAO rolesDao;
-
+	
 	@Autowired
 	ServletContext app;
 	// ko thể khóa tài khoản hiện tại.
 	@Autowired
 	HttpSession session;
+	
+
+    
 
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
 		 Users entity = new Users();
+		 entity.setImages("");
 		 model.addAttribute("users", entity);
+		 
 		Pageable pageable;
 		try {
 			pageable = PageRequest.of(p.orElse(0), 5);
@@ -75,29 +83,17 @@ public class AccountMANController {
 		} else {
 
 			System.out.println("không lỗi nủa");
-			Users uss = this.userDao.findByEmail(entity.getEmail().trim());
+			Optional<Users> uss = this.userDao.findByEmail(entity.getEmail().trim());
 			if (uss == null) {
 				if (entity.getCreate_date() == null)
 					entity.setCreate_date(new Date());
 				entity.setUpdate_date(new Date());
 
 				/* Xử lý hình ảnh */
-				String uploadRootPath = app.getRealPath("images/user-img/");
-				File uploadRootDir = new File(uploadRootPath);
-				if (!uploadRootDir.exists()) {
-					uploadRootDir.mkdirs();
-				}
-				try {
-					String fileName = file.getOriginalFilename();
-					File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(file.getBytes());
-					stream.close();
-					entity.setImages(fileName);
-				} catch (Exception e) {
-					model.addAttribute("message", "Lỗi upload file!");
-				}
-
+				XImage.addImageToPackage(file, "/images/user-img/");
+				
+				entity.setImages(file.getOriginalFilename());
+				
 				Users us = new Users();
 				us.setUser_names(entity.getUser_names());
 				us.setFirst_names(entity.getFirst_names());
@@ -152,20 +148,21 @@ public class AccountMANController {
 		entity.setIs_active(1);
 
 		/* Xử lý hình ảnh */
-		String uploadRootPath = app.getRealPath("images/user-img/");
-		File uploadRootDir = new File(uploadRootPath);
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
-		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi upload file!");
+		// Kiểm tra xem trong database thì account đó, có hình ảnh hay chưa
+		if(userDao.findById(id).get().getImages().contains(".")) {
+			// Nếu có hình rồi, thì xem trên giao diện, có thêm hình ảnh nào không.
+			if (file.getOriginalFilename().contains(".")) {
+				// Nếu mà account đó cập nhật hình mới thì thêm vào thư mục, và set lại trong database
+				XImage.addImageToPackage(file, "/images/user-img/");
+				entity.setImages(file.getOriginalFilename());
+			} else {
+				entity.setImages(userDao.findById(id).get().getImages());
+			}
+				
+		} else {
+			// Nếu chưa có thì thêm vào thư mục, rồi thêm vào database
+			XImage.addImageToPackage(file, "/images/user-img/");
+			entity.setImages(file.getOriginalFilename());
 		}
 
 		userDao.saveAndFlush(entity);

@@ -28,8 +28,11 @@ import com.poly.Entities.Users;
 
 import jakarta.servlet.http.HttpSession;
 
-@Controller
-public class ProfileController {
+@CrossOrigin("*")
+@RestController
+public class ProfileRestController {
+	@Autowired
+	UserService userSer;
 	
 //	@Autowired
 //	HttpSession session;
@@ -41,30 +44,19 @@ public class ProfileController {
 //	LikesDAO lDAO;
 	
 	
-	@GetMapping("user/profile/account")
-	public String viewAccount(Model m) {
-		m.addAttribute("url", "account");
-		return "user/profile";
-	}
-	
-	@GetMapping("component/_header.html")
-	public String viewHeader() {
-		return "user/component/_header";
-	}
-	
-	@GetMapping("component/_footer.html")
-	public String viewFooter() {
-		return "user/component/_footer";
-	}
-	
-	@GetMapping("component/_header-actived.html")
-	public String viewHeaderActived() {
-		return "user/component/_header-actived";
-	}	
-	
-	@GetMapping("component/_header-default.html")
-	public String viewHeaderDefault() {
-		return "user/component/_header-default";
+	@GetMapping("api/account")
+	public ResponseEntity<Optional<Users>> viewAccount() {
+		// Set username mặc định
+		String username = "Phinvhpc04124@fpt.edu.vn";
+		
+		Optional<Users> u = userSer.getUser(username);
+		
+		if (u.isPresent()) {
+			return ResponseEntity.ok(u);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+		
 	}
 	
 //	@PostMapping("/user/profile/account/{id}")

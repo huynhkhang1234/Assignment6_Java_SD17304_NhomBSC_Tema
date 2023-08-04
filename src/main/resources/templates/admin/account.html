@@ -40,13 +40,6 @@
           
             <!--from-->
             <form th:action="@{/account/create}" th:object=${users} th:method="POST" enctype="multipart/form-data" th:modelAttribute="users">
-            <div class="px-4 p-3">
-                <div class="row">
-                    <div class="col-5">
-                        <button  class="btn btn-info text-white">Thêm mới</button>
-                    </div>
-                </div>
-            </div>
             <div class="row">
                     <div class="col-12">
                         <img src="" alt="">
@@ -176,7 +169,7 @@
 						
 						
 						
-						<img alt="" th:if="${#strings.isEmpty(name)}" th:src="@{../images/user-img/${users.images}}" id="img" 
+						<img alt="" th:if="${#strings.isEmpty(name)}" th:src="@{|/images/user-img/${users.images}|}" id="img" 
 						width="100%" height="100%" style="object-fit: contain;"> 
 						
 						
@@ -201,8 +194,9 @@
                 <div class="btn-account">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
 
-                        <button class="btn btn-warning" th:formaction="'/account/update/' + ${users.id}">Cập nhật</button>
-
+                        <button class="btn btn-info" type="submit" >Thêm</button>
+						<button class="btn btn-warning" th:formaction="@{|/account/update/${users.id}|}">Cập nhật</button>
+						<button class="btn btn-secondary" th:formaction="@{/admin/account}">Làm mới</button>
 
 
                     </div>
@@ -298,7 +292,7 @@
 								</td>
 
                 
-                <td th:img="${item.images}"></td>
+                <td th:text="${item.images}"></td>
                 
                 <td>
                 <!-- Modal update --> 

@@ -1,37 +1,36 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="header-actived">
 <!-- ======================= Cái này là để cho đăng nhập rồi nhé ======================= -->
 <div class="header__user-left d-flex gap-4 me-3">
-    <a th:href="@{/user/cart}" class="d-flex header__action-btn">
+    <a href="/user/cart" class="d-flex header__action-btn">
         <i class="bi bi-bag"></i>
         <span id="cartIcon" class="count">
-            <span th:if="${session.cartSize == null}">0</span>
-            <span th:if="${session.cartSize != null}" th:text="${session.cartSize}"></span>
+            <!-- <span if="session.cartSize == null">0</span>
+            <span if="session.cartSize != null" ></span> -->
+			<span>0</span>
         </span>
     </a>
 
-    <div th:if="${session.cartSize != null}" class="header__action-mini-cart">
-        <div class="cart-empty-title d-none">
+    <div class="header__action-mini-cart">
+        <!-- <div class="cart-empty-title d-none">
             <h3>Your cart is currently empty.</h3>
-        </div>
+        </div> -->
 
         <div class="mini-cart-product">
             <div class="mini-product">
                 <div class="mini-product__thumb">
-                    <a th:href="/user/products/5-simple-product?variant=30694916718638">
-                        <img id="imgInfo" th:alt="" th:src="@{/images/your-image.jpg}" />
+                    <a href="/user/products/5-simple-product?variant=30694916718638">
+                        <img id="imgInfo" alt="" src="/images/your-image.jpg" />
                     </a>
                 </div>
                 <div class="mini-product__info">
                     <h2 class="title">
-                        <a th:id="nameInfo" th:href="/products/5-simple-product?variant=30694916718638">Tên sản phẩm</a>
+                        <a id="nameInfo" href="/products/5-simple-product?variant=30694916718638">Tên sản phẩm</a>
                     </h2>
                     <div class="mini-calculation">
-                        <p th:id="priceInfo" class="price">
-                            1x1 <span th:id="disMoneyInfo" class="money" data-currency-bdt="Tk 50.00"></span>
+                        <p id="priceInfo" class="price">
+                            1x1 <span id="disMoneyInfo" class="money" data-currency-bdt="Tk 50.00"></span>
                         </p>
                         <button class="remove-pro">
-                            <a th:href="@{/user/cart}">
+                            <a href="/user/cart">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                         </button>
@@ -42,15 +41,15 @@
 
         <div class="cart-subtotal">
             <h4>
-                Tổng: <span th:id="SummoneyInfo" class="shopping-cart__total">
+                Tổng: <span id="SummoneyInfo" class="shopping-cart__total">
                     <span class="money" data-currency-bdt="Tk 50.00">Tk 50.00</span>
                 </span>
             </h4>
         </div>
 
         <div class="cart-checkout-btn d-flex justify-content-end gap-2">
-            <a class="btn btn-outline-dark" th:href="@{/user/cart}">Giỏ hàng</a>
-            <a class="btn btn-outline-warning" th:href="@{/user/cart/checkout}">Đặt hàng</a>
+            <a class="btn btn-outline-dark" href="/user/cart">Giỏ hàng</a>
+            <a class="btn btn-outline-warning" href="/user/cart/checkout">Đặt hàng</a>
         </div>
     </div>
 </div>
@@ -69,8 +68,8 @@
 			class="profile d-flex flex-row-reverse align-items-center gap-2 btn btn-outline-dark dropdown-toggle"
 			type="button" data-bs-toggle="dropdown" aria-expanded="false">
 			<div class="profile-photo overflow-hidden">
-				 <c:if test="${not empty session.userLogin.images}">
-							<img src="/images/user-img/${session.userLogin.getImages()}" id="img" 
+				 <c:if test="not empty session.userLogin.images">
+							<img src="/images/user-img/session.userLogin.getImages()" id="img" 
 							style="width: auto !important;">
 						</c:if> 
 
@@ -78,13 +77,14 @@
 			</div>
 			<div class="profile__content d-flex flex-column ">
 				<p style="margin: 0;">
-					<c:if test="${empty session.userLogin}">Chưa đăng nhập</c:if>
-					<c:if test="${not empty session.userLogin}">${session.userLogin.getUser_names()}</c:if>
+					{{userCurrent.user_names}}
+					<!-- <c:if test="empty session.userLogin">Chưa đăng nhập</c:if>
+					<c:if test="not empty session.userLogin">session.userLogin.getUser_names()</c:if> -->
 				</p>
 			</div>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end d-right">
-			<c:if test="${session.userLogin.roles.id != 2}">
+			<c:if test="session.userLogin.roles.id != 2">
 				<li><a class="dropdown-item" href="/admin/index"> <i
 						class="bi bi-person-lines-fill"></i> Quản lý
 				</a></li>
@@ -116,27 +116,3 @@
 		</ul>
 	</div>
 </div>
-
-
-
-</th:block>
-
-<th:block th:fragment="header-default">
-
-			<!-- ======================= Cái này là để cho chưa đăng nhập nhé ======================= -->
- 					<div class="header__user-left d-flex">
-                        <a href="/user/register" class="btn btn-outline-dark">
-                            Đăng ký
-                        </a>
-                        <a href="/user/login" class="btn btn-warning">
-                            Đăng nhập
-                        </a>
-                        <span><i class="bi bi-dash-lg"></i></span>
-                        <div class="header__user-right">
-                            <a href="#" class="btn btn-dark" id="search-icon">
-                                <i class="bi bi-search"></i>
-                            </a>
-                        </div>
-                    </div> 
-</th:block>
-</html>

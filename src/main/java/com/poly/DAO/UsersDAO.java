@@ -1,6 +1,7 @@
 package com.poly.DAO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import jakarta.validation.Valid;
 
 public interface UsersDAO extends JpaRepository<Users, Integer> {
 	@Query("SELECT u FROM Users u WHERE u.email = :email")
-	Users findByEmail(@Param("email") String username);
+	Optional<Users> findByEmail(@Param("email") String username);
 
 	@Query(value = "SELECT acc FROM Users acc")
 	public List<Users> getDemo();
@@ -27,7 +28,7 @@ public interface UsersDAO extends JpaRepository<Users, Integer> {
 	List<Users> findByEquals();
 
 	@Query("SELECT u FROM Users u WHERE u.user_names = :users")
-	Users findByUsername(@Param("users") String users);
+	Optional<Users> findByUsername(@Param("users") String users);
 	// truy vấn tất cả 1 và 3 trả về âpge
 
 	@Query(value = "SELECT n FROM Users n where n.is_active = 1 or n.is_active = 3")
