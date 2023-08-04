@@ -47,38 +47,37 @@
 					<div class="card-header fw-bold text-uppercase">Địa chỉ giao
 						hàng						
 						</div>
-					<div class="card-body text-secondary row">
+					<div class="card-body text-secondary row" th:if="${user}">
 						<div class="col-md-6 mb-3">
 							<label for="firstName" class="form-label">Họ:</label> <input
 								placeholder="Vui lòng nhập họ" type="text" class="form-control"
 								id="firstName"
-								value="${sessionScope.userLogin.getFirst_names()}" required>
+								th:value="${user.getLast_names()}" required>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="lastName" class="form-label">Tên:</label> <input
 								placeholder="Vui lòng nhập tên" type="text" class="form-control"
-								id="lastName" value="${sessionScope.userLogin.getLast_names()}"
+								id="lastName"  th:value="${user.getFirst_names()}"
 								required>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="email" class="form-label">Email:</label> <input
 								placeholder="Vui lòng nhập email" type="text"
 								class="form-control" id="email"
-								value="${sessionScope.userLogin.getEmail()}" required>
+								th:value="${user.getEmail()}" required>
 						</div>
 						<div class="col-md-6 mb-3">
 							<label for="numberPhone" class="form-label">Số điện
 								thoại:</label> <input placeholder="Vui lòng nhập số điện thoại"
 								type="text" class="form-control" id="numberPhone"
-								value="${sessionScope.userLogin.getPhones()}" required>
+								th:value="${user.getPhones()}" required>
 						</div>
 						<div class="mb-3">
 							<label for="address" class="form-label">Địa chỉ:</label>
-							<textarea class="form-control" id="address"
+							<textarea th:text="${user.getAddress()}" class="form-control" id="address"
 								style="height: 100px; text-align: left;"
 								placeholder="Vui lòng nhập thông tin địa chỉ" required>
-                            <div th:text="${test}"></div>
-                          
+                            
                             </textarea>
 						</div>
 					</div>

@@ -15,12 +15,12 @@ import com.poly.RestService.LikeService;
 @RestController
 @RequestMapping("/rest/like")
 public class RestLikeController {
-	@Autowired
-	LikeService service;
-	@GetMapping("/all")
-	public List<Likes> likeAll(){
-		return service.getAll();
-	}
+	
+	 @Autowired LikeService service;
+	 
+	 @GetMapping("/all")
+	 public List<Likes> likeAll(){ return service.getAll(); }
+	 
 	
 	
 }

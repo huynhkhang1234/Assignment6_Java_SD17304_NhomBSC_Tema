@@ -1,5 +1,7 @@
 package com.poly.DAO;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +14,7 @@ public interface ProductsDAO extends JpaRepository<Products, Integer> {
 	
 			
 	@Query("SELECT p FROM Products p WHERE p.is_active = 1")
-	Page<Products> findAllActiveTrue(Pageable pageable);
+	List<Products> findAllActiveTrue();
 	
 	@Query("SELECT p FROM Products p WHERE id = :id")
 	Products findByProductId(@Param("id") Integer id);

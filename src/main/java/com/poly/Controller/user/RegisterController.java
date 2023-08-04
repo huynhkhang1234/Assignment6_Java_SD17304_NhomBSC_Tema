@@ -2,6 +2,9 @@ package com.poly.Controller.user;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +17,6 @@ import com.poly.Beans.Users_bean;
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 public class RegisterController {

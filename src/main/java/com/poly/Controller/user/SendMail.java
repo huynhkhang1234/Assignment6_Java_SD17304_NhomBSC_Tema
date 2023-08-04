@@ -3,6 +3,11 @@ package com.poly.Controller.user;
 import java.io.File;
 import java.io.IOException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,11 +21,6 @@ import com.poly.DAO.UsersDAO;
 import com.poly.Entities.MailModel;
 import com.poly.Entities.Users;
 import com.poly.utils.MailerService;
-
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class SendMail {

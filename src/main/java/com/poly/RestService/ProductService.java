@@ -17,6 +17,6 @@ public class ProductService {
 		return dao.findById(id);
 	}
 	public List<Products> getAll(){
-		return dao.findAll();
+		return dao.findAllActiveTrue();
 	}
 }

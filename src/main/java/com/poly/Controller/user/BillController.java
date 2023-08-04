@@ -2,14 +2,18 @@ package com.poly.Controller.user;
 
 
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.poly.DAO.OrdersDAO;
-
-import jakarta.servlet.http.HttpSession;
+import com.poly.DAO.UsersDAO;
+import com.poly.Entities.Users;
+import com.poly.service.B64Session;
 
 @Controller
 public class BillController {
@@ -17,8 +21,14 @@ public class BillController {
 	HttpSession session;
 	@Autowired
 	OrdersDAO dao;
+	@Autowired
+	B64Session b64s;
+	@Autowired
+	UsersDAO usDAO;
 	@GetMapping("/user/bill")
-	public String bill() {
+	public String bill(Model m) {
+		Users us = usDAO.findByEmail(b64s.getemail());
+		m.addAttribute("user",us);
 		return "/user/bills";
 	}
 	

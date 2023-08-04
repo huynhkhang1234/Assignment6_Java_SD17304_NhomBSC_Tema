@@ -17,8 +17,9 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
 	integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<!-- link angular. -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<!-- link angular. -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <style>
 * {
 	margin: 0;
@@ -56,7 +57,7 @@ h1 {
 table {
 	text-align: center;
 	font-size: 2.4rem;
-	border-collapse: collapse; 
+	border-collapse: collapse;
 	border: 1px solid rgb(223, 212, 212);
 	width: 100%;
 }
@@ -67,7 +68,6 @@ table th {
 	padding-bottom: 14px;
 	font-size: 18px;
 }
-
 
 table thead {
 	background-color: #25c481;
@@ -138,8 +138,8 @@ tfoot tr {
 			</div>
 			<div>
 				<div>
-				<p >Người mua: [[${session.userLogin.getUser_names()}]]</p>
-					
+					<p th:if="${user}">Người mua: [[${user.getUser_names()}]]</p>
+
 				</div>
 
 				<div>
@@ -164,46 +164,47 @@ tfoot tr {
 						</tr>
 					</thead>
 					<tbody style="text-align: left;">
-					<!-- 	<c:forEach var="item" items="${sessionScope.dataBill}">
-							<tr>
-								<td>${item.value.name}</td>
-								<td style="text-align: center;">${item.value.quantity}</td>
-								<td><fmt:formatNumber value="${item.value.price}"
-										pattern="###,###,### VNĐ" /></td>
-								<td><fmt:formatNumber value="${item.value.orderMoney}"
-										pattern="###,###,### VNĐ" /></td>
-								
-							</tr>
-							
-						</c:forEach> -->
+						<tr ng-repeat="item in printInfo">
+						<td>{{item[0]}}</td>
+						
+					  <td>{{ item[1] }}</td>
+					    <td>{{ item[2] }}</td>
+					    <td>{{ item[3] }}</td>
+							<!-- <td style="text-align: center;">{{item.quantity}}</td>
+							<td>{{item.price | number: '###,###,### VNĐ'}}</td>
+							<td>{{item.sumMoney | number: '###,###,### VNĐ'}}</td> -->
+						</tr>
 
 
 
 					</tbody>
-					
-								
-								
-							
+
+
+
+
 				</table>
-				
+
 			</div>
 			<div class="row"
 				style="font-size: 20px; text-align: center; margin-top: 23px; color: beige; margin-bottom: 10px;">
 				<div class="col-12">
 					<hr />
-					<span style="color: darkmagenta">Tổng tiền : 
-								<fmt:formatNumber value="${totalDataBill}"
-										pattern="###,###,### VNĐ" /></span>
+					<span style="color: darkmagenta">Tổng tiền :  
+					
+					{{total | number:0}} VNĐ
+					
+					</td>
 					<p style="margin-top: 10px; padding-bottom: 30px">Cảm ơn quý
 						khách đã mua hàng</p>
-						<p>Bạn sẽ được chuyển về trang mua hàng sau ({{ countdown}} giây)  </p>
+					<p>Bạn sẽ được chuyển về trang mua hàng sau ({{ countdown}}
+						giây)</p>
 
 				</div>
 			</div>
 		</div>
 	</div>
 
-	
+
 	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
 
@@ -225,13 +226,16 @@ tfoot tr {
   			  success: function() {
   				  setTimeout(function() {
   					    // tiến hành lệnh tiếp theo ở đây sau khi chờ 5 giây
-  					    window.location.replace("/user/shop");
+  					    /* window.location.replace("/user/shop"); */
+  					    console.log("abc");
+  					    window.location.href = "http://localhost:8080/user/shop";
   					    someOtherFunction();
   					  }, 7000);
   				  	   
   			  },
   			  error: function() {
   			    // Xử lý lỗi
+  			    console.log("Lỗi ở đây");
   			  }
   			});           
         })
@@ -240,7 +244,7 @@ tfoot tr {
     </script>
 
 
-<script th:src="@{/angular.js/Bills/_bill_products.js}"></script>
+	<script th:src="@{/angular.js/Bills/_bill_products.js}"></script>
 </body>
 
 </html>

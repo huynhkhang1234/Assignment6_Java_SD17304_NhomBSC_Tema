@@ -69,29 +69,28 @@
 			class="profile d-flex flex-row-reverse align-items-center gap-2 btn btn-outline-dark dropdown-toggle"
 			type="button" data-bs-toggle="dropdown" aria-expanded="false">
 			<div class="profile-photo overflow-hidden">
-				 <th:block th:if="${ #strings.isEmpty(session.userLogin.images)}">
+			 <span ng-if="${ #strings.isEmpty(session.userLogin.images)}">
 							<img th:src="@{/images/user-img/1.png}" id="img" 
 							style="width: auto !important;">
-						</th:block> 
+						</span>  
 
 				<img src="/images/profile-1.jpg">
 			</div>
 			<div class="profile__content d-flex flex-column ">
-				<p style="margin: 0;">
-					<th:block th:if="${ #strings.isEmpty(session.userLogin)}">Chưa đăng nhập</th:block>
-					<th:block th:if="${not #strings.isEmpty(session.userLogin)}">[[${session.userLogin.getUser_names()}]]</th:block>
+				<p style="margin: 0;" th:text="${username}">
+				 
 				</p>
 			</div>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end d-right">
-			<th:block th:if="${session.userLogin.roles.id != 2}">
+			<!-- <th:block th:if="${session.userLogin.roles.id != 2}">
 				<li><a class="dropdown-item" href="/admin/index"> <i
 						class="bi bi-person-lines-fill"></i> Quản lý
 				</a></li>
 				<li>
 					<hr class="dropdown-divider">
 				</li>
-			</th:block>
+			</th:block> -->
 			<li><a class="dropdown-item" href="/user/profile/account"> <i
 					class="bi bi-person-fill"></i> Tài khoản
 			</a></li>

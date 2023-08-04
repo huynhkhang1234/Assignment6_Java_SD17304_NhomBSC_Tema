@@ -4,6 +4,9 @@ package com.poly.Controller.user;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +19,6 @@ import com.poly.DAO.LikesDAO;
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Likes;
 import com.poly.Entities.Users;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProfileController {

@@ -100,7 +100,7 @@
             <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
                 <div class="login">
                     <div id="CustomerLoginForm">
-                        <form th:action="@{/user/login}" method="post" id="customer_login" >
+                        <form th:action="@{/auth/login}" method="post" id="customer_login" >
                             <input type="hidden" name="form_type" value="customer_login">
                             <input type="hidden" name="utf8" value="✓">
 
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="login-form">
                                     <label for="Email" class="hidden-label">Email</label>
-                                    <input id="email" name="email" type="email" class="input-full"
+                                    <input id="email" name="email"  class="input-full"
                                         placeholder="Vui lòng nhập Email" th:value="${email}" />
                                     <!-- <span th:errors="*{email}" class="input-full"></span> -->
                                     <br>

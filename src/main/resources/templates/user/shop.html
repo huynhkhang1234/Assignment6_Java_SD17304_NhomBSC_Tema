@@ -320,7 +320,13 @@
 									<span id="price" class="old__price">Giá:
 										{{product_Detail.price}} </span> <span class="new__price">
 										<p id="disPrice" class="h3 py-2" style="color: red">
-											{{product_Detail.price}}</p>
+										
+										
+											{{ (product_Detail.price - (product_Detail.price *
+												product_Detail.discounts.price_discounts) / 100) | number:0 }} VNĐ
+																										
+											
+											</p>
 									</span>
 								</div>
 								<div class="my-4">
