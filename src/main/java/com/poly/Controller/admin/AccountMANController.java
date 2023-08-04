@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.Beans.AccountAdmin;
@@ -49,7 +50,12 @@ public class AccountMANController {
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
 		 Users entity = new Users();
+		 entity.setUser_names("vương");
+		 
 		 model.addAttribute("users", entity);
+		 
+		 
+		 
 		Pageable pageable;
 		try {
 			pageable = PageRequest.of(p.orElse(0), 5);
@@ -59,7 +65,6 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
-		model.addAttribute("list2", this.userDao.findAll());
 		return "admin/account";
 	}
 
@@ -73,68 +78,71 @@ public class AccountMANController {
 			System.out.println(entity);
 			return "/admin/account";
 		} else {
+			
+				System.out.println("không lỗi nủa");
+				Users uss = this.userDao.findByEmail(entity.getEmail().trim());
+				if (uss == null) {
+					if (entity.getCreate_date() == null)
+						entity.setCreate_date(new Date());
+					entity.setUpdate_date(new Date());
 
-			System.out.println("không lỗi nủa");
-			Users uss = this.userDao.findByEmail(entity.getEmail().trim());
-			if (uss == null) {
-				if (entity.getCreate_date() == null)
-					entity.setCreate_date(new Date());
-				entity.setUpdate_date(new Date());
+					/* Xử lý hình ảnh */
+					String uploadRootPath = app.getRealPath("images/user-img/");
+					File uploadRootDir = new File(uploadRootPath);
+					if (!uploadRootDir.exists()) {
+						uploadRootDir.mkdirs();
+					}
+					try {
+						String fileName = file.getOriginalFilename();
+						File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
+						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+						stream.write(file.getBytes());
+						stream.close();
+						entity.setImages(fileName);
+					} catch (Exception e) {
+						model.addAttribute("message", "Lỗi upload file!");
+					}
 
-				/* Xử lý hình ảnh */
-				String uploadRootPath = app.getRealPath("images/user-img/");
-				File uploadRootDir = new File(uploadRootPath);
-				if (!uploadRootDir.exists()) {
-					uploadRootDir.mkdirs();
-				}
-				try {
-					String fileName = file.getOriginalFilename();
-					File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(file.getBytes());
-					stream.close();
-					entity.setImages(fileName);
-				} catch (Exception e) {
-					model.addAttribute("message", "Lỗi upload file!");
-				}
+					Users us = new Users();
+					us.setUser_names(entity.getUser_names());
+					us.setFirst_names(entity.getFirst_names());
+					us.setLast_names(entity.getLast_names());
+					us.setCreate_date(XDate.now());
+					us.setEmail(entity.getEmail());
+					us.setIs_active(1);
+					us.setAddress(entity.getAddress());
+					us.setPass_words(entity.getPass_words());
+					us.setPhones(entity.getPhones());
+					us.setImages(entity.getImages());
+					Roles roles = new Roles();
+					if (entity.getRoles().getId() == 1) {
+						roles.setId(1);
+						roles.setRoles("admin");
+						roles.setActions("admin");
+						us.setRoles(roles);
+					}
+					if (entity.getRoles().getId() == 2) {
+						roles.setId(2);
+						roles.setRoles("user");
+						roles.setActions("views");
+						us.setRoles(roles);
+					}
+					if (entity.getRoles().getId() == 3) {
+						roles.setId(2);
+						roles.setRoles("user");
+						roles.setActions("views");
+						us.setRoles(roles);
+					}
 
-				Users us = new Users();
-				us.setUser_names(entity.getUser_names());
-				us.setFirst_names(entity.getFirst_names());
-				us.setLast_names(entity.getLast_names());
-				us.setCreate_date(XDate.now());
-				us.setEmail(entity.getEmail());
-				us.setIs_active(1);
-				us.setAddress(entity.getAddress());
-				us.setPass_words(entity.getPass_words());
-				us.setPhones(entity.getPhones());
-				us.setImages(entity.getImages());
-				Roles roles = new Roles();
-				if (entity.getRoles().getId() == 1) {
-					roles.setId(1);
-					roles.setRoles("admin");
-					roles.setActions("admin");
-					us.setRoles(roles);
+					this.userDao.save(us);
+				}else {
+					System.out.println("Email đã tồn tại");
+					model.addAttribute("error", "Email đã tồn tại trong hệ thống");
+					return "redirect:/admin/account";
 				}
-				if (entity.getRoles().getId() == 2) {
-					roles.setId(2);
-					roles.setRoles("user");
-					roles.setActions("views");
-					us.setRoles(roles);
-				}
-				if (entity.getRoles().getId() == 3) {
-					roles.setId(2);
-					roles.setRoles("user");
-					roles.setActions("views");
-					us.setRoles(roles);
-				}
+			
 
-				this.userDao.save(us);
-			}else {
-				System.out.println("Email đã tồn tại");
-				model.addAttribute("error", "Email đã tồn tại trong hệ thông");
-				return "redirect:/admin/account";
-			}
+			
 		}
 
 		return "redirect:/admin/account";
@@ -191,7 +199,7 @@ public class AccountMANController {
 		model.addAttribute("users", entity);
 		// tìm kiếm để ia ra dữ liệu toàn bộ
 		model.addAttribute("list", listproduts);
-		return "/admin/account";
+		return "admin/account";
 	}
 
 	@GetMapping("/account/delete/{id}")

@@ -26,5 +26,9 @@ public class MailModel {
 		
 		this.body = body;
 	}
+	
+	public void abc() {
+		
+	}
 
 }

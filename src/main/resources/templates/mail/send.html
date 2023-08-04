@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html ng-app="myApp">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,15 +7,16 @@
 <title>B.S.C.Team - CarService</title>
 
   <!-- Link To Favicon -->
-    <link rel="shortcut icon" href="../../favicon.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml">
 
     <!-- Link To Base CSS -->
-    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="/css/base.css">
 
     <!-- Link To Icon Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
 <style>
 .login-form-container {
 	background: #f3f3f3 none repeat scroll 0 0;
@@ -93,7 +94,7 @@
         <nav class="my-navbar">
             <div class="container d-grid">
                 <a href="#" class="brand d-flex gap-2">
-                    <img src="../../favicon.svg" alt="" width="36">
+                    <img src="/images/favicon.svg" alt="" width="36">
                     <span>Brand</span>
                 </a>
                 <ul class="nav-menu">
@@ -287,7 +288,7 @@
                                     </div>
                                     <div class="menu-content d-flex">
                                         <div class="">
-                                            <img src="../../images/product-01.png" alt="">
+                                            <img src="/images/product-01.png" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -381,10 +382,10 @@
                 </ul>
                 <div class="header__user-actions d-flex">
                     <div class="header__user-left d-flex">
-                        <a href="../../html/register.html" class="btn btn-outline-dark">
+                        <a href="html/register.html" class="btn btn-outline-dark">
                             Đăng ký
                         </a>
-                        <a href="../../html/login.html" class="btn btn-warning">
+                        <a href="html/login.html" class="btn btn-warning">
                             Đăng nhập
                         </a>
                     </div>
@@ -404,7 +405,7 @@
         </div>
     </header>
 
-<main>
+<main ng-controller="emailController">
 
 		<!-- ========================== BREADCRUMB ========================== -->
 		<section class="breadcrumb">
@@ -412,7 +413,7 @@
 				<li><a href="/user/index" class="breadcrumb__link">Trang
 						chủ</a></li>
 				<li><span class="breadcrumb__link">></span></li>
-				<li><span class="breadcrumb__link active">Đăng ký</span></li>
+				<li><span class="breadcrumb__link active">Quên mật khẩu</span></li>
 			</ul>
 		</section>
 
@@ -423,22 +424,22 @@
 
 						<div class="login">
 							<div id="CustomerLoginForm">
-								<form action="" method="post" 
-							      th:object="${mailModel}" accept-charset="UTF-8"
+								<form action="" 
+							      accept-charset="UTF-8"
 							      data-login-with-shop-sign-in="true">
 							
 							    <div class="login-form-container">
 							        <div class="login-text" style="text-align: center;">
 							            <h2>GỬI MAIL</h2>
-							            <span style="color: black; padding-top: 4px;" th:text="${message}"></span>
+							            <span style="color: red; padding-top: 4px;" th:text="${message}"></span>
 							        </div>
 							
 							        <label class="hidden-label">Email</label>
-							        <input type="email" th:field="*{to}" class="input-full"
-							               placeholder="" autocorrect="off" autocapitalize="off" />
+							        <input type="email" name="to" ng-model="mail.to" class="input-full"
+							              />
 							
 							        <div class="form-action-button">
-							            <button type="submit" name="btnGui" class="theme-default-button">Gửi</button>
+							            <button type="submit" ng-click="sendEmail()" class="theme-default-button">Gửi</button>
 							        </div>
 							    </div>
 							</form>
@@ -495,7 +496,7 @@
                 <div class="footer__content">
                     <h3 class="footer__title">
                         <a href="#" class="brand d-flex gap-2">
-                            <img src="../../favicon.svg" alt="" width="36">
+                            <img src="/images/favicon.svg" alt="" width="36">
                             <span>Brand</span>
                         </a>
                     </h3>
@@ -572,7 +573,7 @@
                 <div class="footer__content">
                     <h3 class="footer__title">Hình thức thanh toán</h3>
                     <h4 class="footer__subtitle">Hình thức</h4>
-                    <img src="../../images/payment-method.png" alt="" class="payment__img">
+                    <img src="/images/payment-method.png" alt="" class="payment__img">
                     <div class="footer__social">
                         <h4 class="footer__subtitle">Theo dõi chúng tôi</h4>
 
@@ -611,7 +612,40 @@
 
 
 
-
-<script src="../../js/main.js"></script>
+<script>
+	var app = angular.module('myApp', []);
+	
+	app.controller('emailController', function ($scope, $http) {
+		$scope.mail = "";
+		$scope.view = function () {
+			var EmailURL2 = "http://localhost:8080/api/mail/send";
+			
+			$http.get(EmailURL2)
+				.then(function (rep) {
+					$scope.mail = rep.data;
+				})
+				.catch(function (e) {
+					console.log(e);
+				});
+		}
+		
+		$scope.sendEmail = function () {
+			var EmailURL = "http://localhost:8080/api/mail/send";
+			
+			$http.post(EmailURL, $scope.mail)
+			.then(function (rep) {
+				$scope.mail = rep.data;
+			})
+			.catch(function (e) {
+				console.log(e);
+			});
+			
+		}
+		
+		$scope.view();
+		
+	});
+</script>
+<!-- <script src="/js/main.js"></script> -->
 </body>
 </html>

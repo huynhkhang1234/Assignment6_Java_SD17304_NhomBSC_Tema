@@ -77,7 +77,7 @@ public class LoginController {
 					session.removeAttribute("errorMessage");
 					System.out.println("Đăng nhập thành công với admin");
 					session.setAttribute("userLogin", userLogin);
-					return "redirect:/admin/index";
+					return "redirect:/user/index";
 				} else if (userLogin.getIs_active() == 3) {
 					session.setAttribute("errorMessage", "Tài khoản hiện tại của bạn đang bị khóa !!");
 					return "user/login";
