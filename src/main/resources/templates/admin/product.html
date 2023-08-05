@@ -154,8 +154,7 @@
 
 
 												<div class="right">
-													<img
-														
+
 													<img th:src="@{/images/product-img/{images}(images=${item.images})}" />
 												</div>
 											
@@ -164,17 +163,12 @@
 												<div class="bottom">
 													<div class="btn-pro">
 														
-														<button data-bs-toggle="modal"
-															data-bs-target="#exampleModal${item.id}"
+														<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+															th:data-bs-target=" '#exampleModal' + ${item.id} "
 															data-bs-whatever="@mdo">
-															<i class="bi bi-pencil-square"></i>
 															
-															<a th:href="@{/admin/product/edit/{id}(id=${item.id})}"
-																class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
-															</a> 
+															<i class="bi bi-pencil-square"></i>														 
 														</button>
-														
-										
 
 														<a th:href="@{/admin/product/delete/{id}(id=${item.id})}"
 															class="btn btn-danger"> <i class="bi bi-trash"></i>
@@ -186,7 +180,8 @@
 										</div>
 
 
-										<div class="modal fade" id="exampleModal${item.id}"
+										
+										<div class="modal fade" th:id=" 'exampleModal' + ${item.id}"
 											tabindex="-1" aria-labelledby="exampleModalLabel"
 											aria-hidden="true">
 
@@ -198,7 +193,9 @@
 															Sản Phẩm</h5>
 															
 														<button type="button" class="btn-close"
-															data-bs-dismiss="modal" aria-label="Close"></button>
+															data-bs-dismiss="modal" aria-label="Close">
+														</button>
+														
 													</div>
 
 													<form th:action="@{/admin/save}" th:object=${products}
@@ -208,67 +205,55 @@
 														<div class="modal-body">
 
 															<div class="col-md-6">
-																<label for="inputId" class="form-label">Mã:</label> <input
-																	name="id" th:value="${item.id}" class="form-control" />
-																	
+																<label for="inputId" class="form-label">Mã:</label> 
+																<input name="id" th:value="${item.id}" class="form-control" />
 
 															</div>
 
 															<div class="col-md-6">
-																<label for="inputTitle" class="form-label">Tiêu
-																	đề:</label>
-																	<input name="titles" th:field="*{titles}"
-																	class="form-control" />
+																<label for="inputTitle" class="form-label">Tiêu đề:</label>
+																
+																<input name="titles" th:value="${item.titles}" class="form-control" />
 															</div>
 
 															<div class="col-md-12">
 																<label for="inputPrice" class="form-label">Giá:</label>
 																
-																<input name="price" th:field="*{price}"
-																	class="form-control" />
+																<input name="price" th:value="${item.price}" class="form-control" />
 															</div>
 
 															<div class="col-md-12">
-																<label for="inputCraetDate" class="form-label">Ngày
-																	đăng:</label> 
-																	<input readonly th:field="*{create_date}"
-																	class="form-control" />
-
-															</div>
-
-															<div class="col-md-12">
-																<label for="inputCraetDate" class="form-label">Ngày
-																	cập nhật:</label> <input readonly
-																	th:field="*{update_date}" class="form-control" />
+																<label for="inputCraetDate" class="form-label">Ngày đăng:</label> 
 																	
+																<input readonly th:value="${item.create_date}" class="form-control" />
 
+															</div>
+
+															<div class="col-md-12">
+																<label for="inputCraetDate" class="form-label">Ngày cập nhật:</label> 
+																
+																<input readonly th:value="${item.update_date}" class="form-control" />
 															</div>
 
 															<div class="col-md-12">
 																<label for="categoryId" class="form-label">Loại:</label>
 
-																<select th:field="*{categories}" class="form-control">
-
+																<select th:value="${item.categories}" class="form-control">
 																	
-																	<option th:each="cate : ${listCate}"
-																		${item.categories.id==
-																		cate.id ? 'selected':''}
-																     th:value="${cate.id}"
-																		th:text="${cate.names}"></option>
+																	<option th:each="cate : ${listCate}" th:value="${cate.id}" th:text="${cate.names}"></option>
 
 																</select>
 
 															</div>
 
 															<fieldset class="row mb-3" style="margin-top: 1rem;">
-																<legend class="col-form-label col-sm-2 pt-0">Trạng
-																	thái:</legend>
+																<legend class="col-form-label col-sm-2 pt-0">Trạng thái:</legend>
 																<div class="col-sm-4">
 																	<div class="form-check">
 																		<label class="form-check-label" for="gridRadios1">
 																			
-																			<input name="is_status" th:field="*{is_status}"
-																			th:checked="*{is_status == 1}" value="1"
+																			<input name="is_status" th:value="${item.is_status}"
+																			th:checked="${item.is_status == 1}" value="1"
 																			class="form-check-input" type="radio"
 																			id="gridRadios1" checked />Còn hàng
 
@@ -281,8 +266,8 @@
 																	<div class="form-check">
 																		<label class="form-check-label" for="gridRadios2">
 																			
-																			<input name="is_status" th:field="*{is_status}"
-																			th:checked="*{is_status == 0}" value="0"
+																			<input name="is_status" th:value="${item.is_status}"
+																			th:checked="${item.is_status == 0}" value="0"
 																			class="form-check-input" type="radio"
 																			id="gridRadios1" checked />Hết hàng
 
@@ -292,33 +277,31 @@
 															</fieldset>
 
 															<div class="col-md-12">
-																<label for="inputSuppliers" class="form-label">Nhà
-																	cung cấp:</label> <select name="supp" class="form-control">
+																<label for="inputSuppliers" class="form-label">Nhà cung cấp:</label>
+																	<select name="supp" th:value="${item.suppliers}" class="form-control">
 
 																	<option th:each="supp : ${listSupp}"
-																		${item.suppliers.id==
-																		supp.id ? 'selected':''}
+												
 																     th:value="${supp.id}"
-																		th:text="${supp.user_names}"></option>
+																	th:text="${supp.user_names}"></option>
 
 																</select>
 
 															</div>
 
 															<div class="col-md-6">
-																<label for="inputSuppliers" class="form-label">Giá
-																	gốc:</label> <input name="original_price"
-																	th:field="*{original_price}" class="form-control" />
+																<label for="inputSuppliers" class="form-label">Giá gốc:</label> 
+																
+																<input name="original_price" th:value="${item.original_price}" class="form-control" />
 
 															</div>
 
 															<div class="col-md-6">
-																<label for="inputSuppliers" class="form-label">Giảm
-																	giá:</label> <select name="dis" class="form-control">
+																<label for="inputSuppliers" class="form-label">Giảm giá:</label> 
+																<select name="dis" th:value="${item.discounts}" class="form-control">
 
 																	<option th:each="dis : ${listDis}"
-																		${item.discounts.id==
-																		dis.id ? 'selected':''}
+																		
 																     	th:value="${dis.id}"
 																		th:text="${dis.price_discounts + '%' }"></option>
 
@@ -328,44 +311,12 @@
 
 															<label class="form-label" for="customFile">Tải ảnh:</label> 
 															<input th:value="${item.images}" name="file" type="file" class="form-control" id="customFile" />
-															<input th:field="*{images}" name="file" type="file" class="form-control" id="customFile" />
-
-															<fieldset class="row mb-3" style="margin-top: 1rem;">
-																<legend class="col-form-label col-sm-2 pt-0">Tình trạng:</legend>
-																<div class="col-sm-4">
-																	<div class="form-check">
-																		<label class="form-check-label" for="gridRadios1">
-																		
-																			<input name="is_active" th:field="*{is_active}"
-																			th:checked="*{is_active == 1}" value="1"
-																			class="form-check-input" type="radio"
-																			id="gridRadios1" checked />Đang hoạt động
-
-																		</label>
-																	</div>
-																</div>
-
-																<div class="col-sm-4">
-
-																	<div class="form-check">
-																		<label class="form-check-label" for="gridRadios2">
-																			
-																			<input name="is_active" th:field="*{is_active}"
-																			th:checked="*{is_active == 0}" value="0"
-																			class="form-check-input" type="radio"
-																			id="gridRadios1" checked />Đã đóng cửa
-
-																		</label>
-																	</div>
-																</div>
-															</fieldset>
 
 
 															<div class="col-12">
 																<label for="inputDescription" class="form-label">Mô tả</label>
-
 																
-																<textarea name="description" th:field="*{description}"
+																<textarea name="description" th:value="${item.description}"
 																	class="form-control" rows="4"></textarea>
 															</div>
 
@@ -375,21 +326,12 @@
 															<button type="button" class="btn btn-secondary"
 																data-bs-dismiss="modal">Đóng</button>
 
-															<!-- <button
-																th:formaction=" '/admin/product/update/' + ${item.id}"
-																type="submit" class="btn btn-primary">Lưu thay
-																đổi</button> -->
-																
-															<form th:action="@{|/admin/product/update/${products.id}|}"
-																method="POST">
-																<button type="submit" class="btn btn-primary">
-																	Lưu thay đổi
-																</button>
-															</form>
 														
-															<button th:formaction="@{|/admin/product/update/${id}|}" type=" button" class="btn btn-primary">
+															<!-- <button th:formaction="@{|/admin/product/update/${id}|}" type=" button" class="btn btn-primary">
 																Lưu thay đổi
-															</button>
+															</button> -->
+															
+															<button th:formaction=" '/admin/product/update/' + ${item.id}" class="btn btn-primary">Lưu thay đổi</button>
 														</div>
 													</form>
 												</div>
@@ -530,23 +472,13 @@
 								<div class="btn-add">
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 
-										
-									
-											
 											<button type="submit" class="btn btn-primary">
 												<i class="bi bi-plus-lg"></i>
-											</button>
-									
-
-									
-											
+											</button>			
 										
 											<button th:formaction="@{|/admin/discount/update/${id}|}" type=" button" class="btn btn-primary">
-												<i class="bi bi-pencil-square"> </i>
-											</button>
-											
-									
-										
+												<i class="bi bi-pencil-square"></i>
+											</button>										
 
 									</div>
 								</div>
@@ -670,44 +602,11 @@
 										<!-- <p th:if="${categories.names == null}" style="color: red;">Vui lòng nhập tên</p> -->
 									</div>
 
-							
-									<!-- <fieldset class="row mb-3" style="margin-top: 1rem;">
-										<legend class="col-form-label col-sm-2 pt-0">Tình
-											trạng:</legend>
-										<div class="col-sm-4">
-											<div class="form-check">
-												<label class="form-check-label" for="gridRadios1"> <input
-													name="is_status" th:checked="${categories.is_active == 1}"
-													value="1" class="form-check-input" type="radio"
-													id="gridRadios1" checked />Đang hoạt động
-
-												</label>
-											</div>
-										</div>
-
-										<div class="col-sm-4">
-
-											<div class="form-check">
-												<label class="form-check-label" for="gridRadios2"> <input
-													name="is_status" th:checked="${categories.is_active == 0}"
-													value="0" class="form-check-input" type="radio"
-													id="gridRadios1" checked />Đã đóng cửa
-
-												</label>
-											</div>
-										</div>
-										
-								
-									</fieldset> -->
-
-
 								</div>
 
 								<div class="btn-add">
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-
-								
-										
+	
 											<button type="submit" class="btn btn-primary">
 												<i class="bi bi-plus-lg"></i>
 											</button>
@@ -797,38 +696,31 @@
 									enctype="multipart/form-data">
 
 									<div class="modal-body">
-										<div class="col-md-12">
-											<label for="inputId" class="form-label">Mã:</label> <input
-												name="id" th:field="*{id}" class="form-control" />
-
-										</div>
 
 										<div class="col-md-12">
-											<label for="inputTitle" class="form-label">Tiêu đề:</label> <input
-												name="titles" th:field="*{titles}" class="form-control" />
-										</div>
-
-										<div class="col-md-12">
-											<label for="inputPrice" class="form-label">Giá:</label> <input
-												name="price" th:field="*{price}" class="form-control" />
-										</div>
-
-										<div class="col-md-12">
-											<label for="inputCraetDate" class="form-label">Ngày
-												đăng:</label> <input th:field="*{create_date}" class="form-control" />
+											<label for="inputTitle" class="form-label">Tiêu đề:</label> 
 											
-												<input type="date" name="createDay" th:value="${createDate}"
+											<input name="titles" th:field="*{titles}" class="form-control" />
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputPrice" class="form-label">Giá:</label>
+											 
+											<input name="price" th:field="*{price}" class="form-control" />
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputCraetDate" class="form-label">Ngày đăng:</label> 
+																							
+											<input type="date" name="createDay" th:value="${createDate}"
 													class="form-control" />
 
 										</div>
 
 										<div class="col-md-12">
-											<label for="inputCraetDate" class="form-label">Ngày
-												cập nhật:</label> <input th:field="*{update_date}"
-												class="form-control" />
-											
-												
-												<input type="date" name="updateDay" th:value="${updateDate}"
+											<label for="inputCraetDate" class="form-label">Ngày cập nhật:</label> 
+					
+											<input type="date" name="updateDay" th:value="${updateDate}"
 													class="form-control" />
 
 										</div>
@@ -837,11 +729,10 @@
 											<label for="categoryId" class="form-label">Loại:</label> <select
 												th:field="*{categories}" class="form-control">
 
-												<option th:each="cate : ${listCate.content}"
-													${item.categories.id==
-													cate.id ? 'selected':''}
-																     th:value="${cate.id}"
-													th:text="${cate.names}"></option>
+												<option th:each="cate : ${listCate}"							
+													th:value="${cate.id}"
+													th:text="${cate.names}">
+												</option>
 
 											</select>
 
@@ -875,13 +766,12 @@
 										</fieldset>
 
 										<div class="col-md-12">
-											<label for="inputSuppliers" class="form-label">Nhà
-												cung cấp:</label> <select name="supp" th:field="*{suppliers}"
-												class="form-control">
+											<label for="inputSuppliers" class="form-label">Nhà cung cấp:</label> 
+											
+											<select name="supp" th:field="*{suppliers}" class="form-control">
 
-												<option th:each="supp : ${listSupp}" ${item.suppliers.id==
-													supp.id ? 'selected':''}
-																     th:value="${supp.id}"
+												<option th:each="supp : ${listSupp}" 
+													th:value="${supp.id}"
 													th:text="${supp.user_names}"></option>
 
 											</select>
@@ -889,21 +779,21 @@
 										</div>
 
 										<div class="col-md-12">
-											<label for="inputSuppliers" class="form-label">Giá
-												gốc:</label> <input name="original_price"
-												th:field="*{original_price}" class="form-control" />
+											<label for="inputSuppliers" class="form-label">Giá gốc:</label>
+											
+											<input name="original_price" th:field="*{original_price}" class="form-control" />
 
 										</div>
 
 										<div class="col-md-12">
-											<label for="inputSuppliers" class="form-label">Giảm
-												giá:</label> <select name="dis" th:field="*{discounts}"
-												class="form-control">
+											<label for="inputSuppliers" class="form-label">Giảm giá:</label> 
+											
+												<select name="dis" th:field="*{discounts}" class="form-control">
 
-												<option th:each="dis : ${listDis}" ${item.discounts.id==
-													dis.id ? 'selected':''}
-																     	th:value="${dis.id}"
-													th:text="${dis.price_discounts + '%' }"></option>
+												<option th:each="dis : ${listDis}" 
+													th:value="${dis.id}"
+													th:text="${dis.price_discounts + '%' }">
+												</option>
 
 											</select>
 										</div>
@@ -912,40 +802,10 @@
 										<label class="form-label" for="customFile">Tải ảnh:</label> 
 										
 						
-										<input th:field="*{images}" name="file" type="file"
-											class="form-control" id="customFile" />
-											
-
-										<fieldset class="row mb-3" style="margin-top: 1rem;">
-											<legend class="col-form-label col-sm-2 pt-0">Tình
-												trạng:</legend>
-												
-											<div class="col-sm-4">
-												<div class="form-check">
-													<label class="form-check-label" for="gridRadios1">
-														
-														<input name="is_active" th:checked="*{is_active == 1}"
-														value="1" class="form-check-input" type="radio"
-														id="gridRadios1" checked />Đang hoạt động
-
-
-												<div class="form-check">
-													<label class="form-check-label" for="gridRadios2">
-														
-														<input name="is_active" th:checked="*{is_active == 0}"
-														value="0" class="form-check-input" type="radio"
-														id="gridRadios1" checked />Đã đóng cửa
-
-													</label>
-												</div>
-											</div>
-										</fieldset>
-
+										<input th:field="*{images}" name="file" type="file" class="form-control" id="customFile" />
 
 										<div class="col-12">
-											<label for="inputDescription" class="form-label">Mô
-												tả</label>
-
+											<label for="inputDescription" class="form-label">Mô tả</label>
 											
 											<textarea name="description" th:field="*{description}" class="form-control"
 												rows="4"></textarea>
@@ -958,8 +818,6 @@
 										<button type="button" class="btn btn-secondary"
 											data-bs-dismiss="modal">Đóng</button>
 
-									
-										
 											<button type="submit" class="btn btn-primary">
 												Thêm sản phẩm
 											</button>
@@ -970,12 +828,6 @@
 							</div>
 						</div>
 					</div>
-
-
-
-
-
-
 				</div>
 				<!-- kết thúc div tab-content -->
 

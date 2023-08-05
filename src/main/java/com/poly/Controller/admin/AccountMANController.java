@@ -147,7 +147,7 @@ public class AccountMANController {
 
 		if (entity.getCreate_date() == null)
 			entity.setCreate_date(new Date());
-		entity.setUpdate_date(new Date());
+			entity.setUpdate_date(new Date());
 
 		entity.setIs_active(1);
 

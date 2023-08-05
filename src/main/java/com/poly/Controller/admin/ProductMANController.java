@@ -125,31 +125,27 @@ public class ProductMANController {
 		if (entity.getCreate_date() == null) 
 			entity.setCreate_date(new Date());
 		entity.setUpdate_date(new Date());
+		
 		entity.setCreate_date(XDate.toDate(createDate));
 		entity.setUpdate_date(XDate.toDate(updateDate));
+		
+		entity.setIs_active(1);
 
 		// Xử lý hình ảnh String
+		/*
+		 * String uploadRootPath = app.getRealPath("images/product-img/"); File
+		 * uploadRootDir = new File(uploadRootPath);
+		 * 
+		 * if (!uploadRootDir.exists()) { uploadRootDir.mkdirs(); } try { String
+		 * fileName = file.getOriginalFilename(); File serverFile = new
+		 * File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
+		 * BufferedOutputStream stream = new BufferedOutputStream(new
+		 * FileOutputStream(serverFile)); stream.write(file.getBytes()); stream.close();
+		 * entity.setImages(fileName); } catch (Exception e) {
+		 * model.addAttribute("message", "Lỗi upload file!"); }
+		 */
 
-		String uploadRootPath = app.getRealPath("images/product-img/");
-		File uploadRootDir = new File(uploadRootPath);
-
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
-		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi upload file!");
-		}
-
-		// products
-
-		dao.saveAndFlush(entity);
+		dao.save(entity);
 
 		return "redirect:/admin/product";
 	
@@ -162,7 +158,7 @@ public class ProductMANController {
 			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException {
 		
 		model.addAttribute("id", id);
-		// products
+		
 		Pageable pageable;
 		try {
 			pageable = PageRequest.of(p.orElse(0), 8);
@@ -174,7 +170,6 @@ public class ProductMANController {
 
 		model.addAttribute("list", listproduts);
 
-		// discounts
 
 		pro = dao.getById(id);
 		
@@ -211,16 +206,9 @@ public class ProductMANController {
 	public String saveProduct(Model model, @ModelAttribute("discounts") Discounts entityDis,
 			@RequestParam("startDay") String startDate, @RequestParam("endDay") String endDate) throws ParseException {
 
-		Date now = new Date();
-		System.out.println(entityDis);
-
-		if (entityDis.getStart_day() == null)
-			entityDis.setStart_day(now);
-			entityDis.setEnd_day(now);
 			entityDis.setStart_day(XDate.toDate(startDate));
 			entityDis.setEnd_day(XDate.toDate(endDate));
 
-		// discounts
 		disdao.saveAndFlush(entityDis);
 
 		return "redirect:/admin/product";
@@ -232,16 +220,11 @@ public class ProductMANController {
 			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file, 
 			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException{
 
-		Date now = new Date();
-
 		entity.setCategories(cate);
 		entity.setSuppliers(supp);
 		entity.setDiscounts(dis);
+		
 		entity.setIs_active(1);
-		if (entity.getCreate_date() == null)
-			entity.setCreate_date(now);
-		entity.setUpdate_date(now);
-		entity.setIs_active(0);
 		
 		entity.setCreate_date(XDate.toDate(createDate));
 		entity.setUpdate_date(XDate.toDate(updateDate));
@@ -272,7 +255,6 @@ public class ProductMANController {
 
 		}
 
-		// products
 		dao.saveAndFlush(entity);
 
 		return "redirect:/admin/product";
@@ -281,7 +263,7 @@ public class ProductMANController {
 	@GetMapping("/admin/product/delete/{id}")
 	public String delete(@ModelAttribute("products") Products entity, @PathVariable("id") Integer id) {
 
-		// products
+	
 		entity = dao.getOne(id);
 		entity.setIs_active(0);
 
@@ -309,9 +291,11 @@ public class ProductMANController {
 			@PathVariable("id") Integer id) {
 
 		entityDis = disdao.getOne(id);
+
 		entityDis.setIs_active(0);
-		/* entityDis.setIs_active(0); */
+		
 		disdao.saveAndFlush(entityDis);
+		
 		return "redirect:/admin/product";
 	}
 
@@ -321,7 +305,7 @@ public class ProductMANController {
 
 		// categories
 		entityCate.setIs_active(1);
-		/* entityCate.setIs_active(0); */
+
 		catedao.saveAndFlush(entityCate);
 
 		return "redirect:/admin/product";
@@ -329,8 +313,6 @@ public class ProductMANController {
 
 	@PostMapping("/admin/save/category")
 	public String saveProduct(Model model, @ModelAttribute("category") Categories entityCate) {
-
-		// categories
 
 		catedao.saveAndFlush(entityCate);
 
@@ -343,24 +325,22 @@ public class ProductMANController {
 			@PathVariable("id") Integer id) {
 
 		entityCate = catedao.getOne(id);
+		
 		entityCate.setIs_active(0);
-		entityCate.setIs_active(0); 
 		
 		catedao.saveAndFlush(entityCate);
+		
 		return "redirect:/admin/product";
 		
 	}
-	
-	
+		
 
 	@GetMapping("/admin/discount/edit/{id}")
 	public String edit(Model model, @PathVariable("id") Integer id, @ModelAttribute("discounts") Discounts d,
 			@RequestParam("p") Optional<Integer> p) {
-
-		// products
 		
 		model.addAttribute("id", id);
-		// products
+
 		Pageable pageable;
 		try {
 			pageable = PageRequest.of(p.orElse(0), 8);
@@ -370,14 +350,7 @@ public class ProductMANController {
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("listproduts", listproduts);
 
-		//
-		// Products entity = new Products();
-		// model.addAttribute("products", entity);
-		// List<Products> list = dao.findAllActiveTrue(Sort.by(Direction.DESC,
-		// "is_status"));
 		model.addAttribute("list", listproduts);
-
-		// discounts
 
 		d = disdao.getById(id);
 		
@@ -394,6 +367,7 @@ public class ProductMANController {
 		
 		Products entity = new Products();
 		model.addAttribute("products", entity);
+		
 		Categories ct = new Categories();
 		model.addAttribute("categories", ct);
 		
@@ -412,32 +386,34 @@ public class ProductMANController {
 	public String edit(Model model, @PathVariable("id") Integer id, @ModelAttribute("categories") Categories cate,
 			@RequestParam("p") Optional<Integer> p) {
 
-		// products
+
 		Products entity = new Products();
 		model.addAttribute("products", entity);
+		
 		Pageable pageable;
+		
 		try {
 			pageable = PageRequest.of(p.orElse(0), 9);
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 9);
 		}
+		
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
-		// categories
+
 		cate = catedao.getById(id);
 		model.addAttribute("categories", cate);
-		/*
-		 * session.setAttribute("idCate", cate.getId());
-		 * session.setAttribute("nameCate", cate.getNames());
-		 */
+
 		try {
 			pageable = PageRequest.of(p.orElse(0), 8);
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 8);
 		}
+		
 		Page<Categories> listCate = this.catedao.getIsActive(pageable);
+		
 		model.addAttribute("listCate", listCate);
-
+		
 		cate = catedao.getById(id);
 		model.addAttribute("categories", cate);
 		
