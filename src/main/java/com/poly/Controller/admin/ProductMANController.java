@@ -124,7 +124,7 @@ public class ProductMANController {
 
 		if (entity.getCreate_date() == null) 
 			entity.setCreate_date(new Date());
-		entity.setUpdate_date(new Date());
+			entity.setUpdate_date(new Date());
 		
 		entity.setCreate_date(XDate.toDate(createDate));
 		entity.setUpdate_date(XDate.toDate(updateDate));
@@ -226,8 +226,14 @@ public class ProductMANController {
 		
 		entity.setIs_active(1);
 		
-		entity.setCreate_date(XDate.toDate(createDate));
-		entity.setUpdate_date(XDate.toDate(updateDate));
+		if (entity.getCreate_date() == null)
+			entity.setCreate_date(new Date());
+			entity.setUpdate_date(new Date());
+		
+			/*
+			 * entity.setCreate_date(XDate.toDate(createDate));
+			 * entity.setUpdate_date(XDate.toDate(updateDate));
+			 */
 
 		if (file.getOriginalFilename() == null || file.getOriginalFilename().length() == 0) {
 			Products p = dao.getById(entity.getId());

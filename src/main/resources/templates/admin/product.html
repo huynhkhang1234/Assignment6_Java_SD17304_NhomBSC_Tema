@@ -225,20 +225,20 @@
 															<div class="col-md-12">
 																<label for="inputCraetDate" class="form-label">Ngày đăng:</label> 
 																	
-																<input readonly th:value="${item.create_date}" class="form-control" />
+																<input readonly name="createDay" th:value="${item.create_date}" class="form-control" />
 
 															</div>
 
 															<div class="col-md-12">
 																<label for="inputCraetDate" class="form-label">Ngày cập nhật:</label> 
 																
-																<input readonly th:value="${item.update_date}" class="form-control" />
+																<input readonly name="updateDay" th:value="${item.update_date}" class="form-control" />
 															</div>
 
 															<div class="col-md-12">
 																<label for="categoryId" class="form-label">Loại:</label>
 
-																<select th:value="${item.categories}" class="form-control">
+																<select name="cate" th:value="${item.categories}" class="form-control">
 																	
 																	<option th:each="cate : ${listCate}" th:value="${cate.id}" th:text="${cate.names}"></option>
 
@@ -282,8 +282,9 @@
 
 																	<option th:each="supp : ${listSupp}"
 												
-																     th:value="${supp.id}"
-																	th:text="${supp.user_names}"></option>
+																     	th:value="${supp.id}"
+																		th:text="${supp.user_names}">
+																	</option>
 
 																</select>
 
@@ -327,11 +328,11 @@
 																data-bs-dismiss="modal">Đóng</button>
 
 														
-															<!-- <button th:formaction="@{|/admin/product/update/${id}|}" type=" button" class="btn btn-primary">
+															 <button th:formaction="@{|/admin/product/update/${item.id}|}" type=" button" class="btn btn-primary">
 																Lưu thay đổi
-															</button> -->
+															</button> 
 															
-															<button th:formaction=" '/admin/product/update/' + ${item.id}" class="btn btn-primary">Lưu thay đổi</button>
+															
 														</div>
 													</form>
 												</div>
