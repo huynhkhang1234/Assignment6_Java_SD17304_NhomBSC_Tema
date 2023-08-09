@@ -66,6 +66,25 @@
             width: 100%;
             height: 100%;
         }
+
+        i.password-icon {
+            font-size: 22px;
+        }
+
+        #v-pills-tabContent {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: lightgrey;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: grey;
+            border-radius: 10%;
+        }
     </style>
 	
 </head>
@@ -105,17 +124,17 @@
                             <a href="/user/account" class="ms-3">Sửa</a>
                         </div>
                     </div>
-                    <a class="btn btn-outline-dark active" id="account-tab" href="/user/profile/account" data-bs-toggle="pill" data-bs-target="#account"
+                    <a class="btn btn-outline-dark " id="account-tab" href="/user/profile/account" data-bs-toggle="pill" data-bs-target="#account"
                         role="tab" aria-controls="account-tab" aria-selected="true">Tài khoản</a>
                     <a class="btn btn-outline-dark" id="profile-tab" href="/user/profile/profile" data-bs-toggle="pill" data-bs-target="#profile"
                         role="tab" aria-controls="profile-tab" aria-selected="false">Hồ sơ</a>
                     <a class="btn btn-outline-dark" id="favorite-tab" href="/user/profile/favorite" data-bs-toggle="pill" data-bs-target="#favorite"
                         role="tab" aria-controls="favorite-tab" aria-selected="false">Yêu thích</a>
-                    <a class="btn btn-outline-dark" id="history-tab" href="/user/profile/history" data-bs-toggle="pill" data-bs-target="#history"
+                    <a class="btn btn-outline-dark active" id="history-tab" href="/user/profile/history" data-bs-toggle="pill" data-bs-target="#history"
                         role="tab" aria-controls="history-tab" aria-selected="false">Đơn mua</a>
                 </ul>
                 <div class="tab-content col-md-9 container" id="v-pills-tabContent">
-                    <div class="tab-pane fade row active show" id="account" role="tabpanel" aria-labelledby="account-tab"
+                    <div class="tab-pane fade row" id="account" role="tabpanel" aria-labelledby="account-tab"
                         tabindex="0">
                         <div class="row">
                             <div class="col-12 pb-3" style="border-bottom: 1px solid #ccc;">
@@ -159,9 +178,12 @@
                                         <div class="col-4">
                                             <label for="txtPassword" class="col-form-label">Mật khẩu: </label>
                                         </div>
-                                        <div class="col-7">
-                                            <input type="password" id="txtPassword" ng-model="userCurrent.pass_words" class="form-control" 
+                                        <div class="col-7 d-flex align-items-stretch position-relative">
+                                            <input type="{{ showPassword ? 'text' : 'password' }}" id="txtPassword" ng-model="userCurrent.pass_words" class="form-control" 
                                             aria-labelledby="passwordHelpInline">
+                                            <span class="input-group-text" ng-click="togglePassword()">
+                                                <i class="{{ showPassword ? 'bi-eye' : 'bi-eye-slash' }}"></i>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="row mb-3 align-items-center">
@@ -169,9 +191,12 @@
                                             <label for="txtConfirmPassword" class="col-form-label">Xác nhận mật khẩu:
                                             </label>
                                         </div>
-                                        <div class="col-7">
-                                            <input type="password" id="txtConfirmPassword" ng-model="confirmPass"    class="form-control" 
+                                        <div class="col-md-7 d-flex align-items-stretch position-relative">
+                                            <input type="{{ showPassword ? 'text' : 'password' }}" id="txtConfirmPassword" ng-model="confirmPass"    class="form-control" 
                                                 aria-labelledby="passwordHelpInline">
+                                            <span class="input-group-text" ng-click="togglePassword()">
+                                                <i class="{{ showPassword ? 'bi-eye' : 'bi-eye-slash' }}"></i>
+                                            </span>
                                         </div>
                                     </div>
 
@@ -188,18 +213,15 @@
                             <!-- form  -->
                             <div class="col-4 pt-3">
                                 <div class="col-10" style="margin: 25px; width: 90%">
-							<div style="width: 100%; height: 200px; border: 1px dotted gray;">
-									<img alt="" src="/images/user-img/{{userCurrent.images}}" height="100%">
-							</div>
-						</div>
-						
+                                    <div style="width: 100%; height: 200px; border: 1px dotted gray;">
+                                            <img alt="" src="/images/user-img/{{userCurrent.images}}" height="100%">
+                                    </div>
+						        </div>
                             </div>
                             <!-- form -->
                         </div>
                     </div>
-                    
-                    
-                     <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                         <div class="container overflow-hidden text-center">
                             <div class="row">
                                 <div class="col-12 pb-3" style="border-bottom: 1px solid #ccc;">
@@ -212,10 +234,10 @@
                                             <div class="col-6">
                                                 <div class="row mb-3 align-items-center">
                                                     <div class="col-4">
-                                                        <label for="txtFirstName" class="col-form-label">Họ: </label>
+                                                        <label for="txtFirstName" class="col-form-label">Tên: </label>
                                                     </div>
                                                     <div class="col-7">
-                                                        <input type="text" id="txtFirstName" class="form-control"
+                                                        <input type="text" id="txtFirstName" ng-model="userCurrent.first_names" class="form-control"
                                                             aria-labelledby="passwordHelpInline">
                                                     </div>
                                                 </div>
@@ -223,10 +245,10 @@
                                             <div class="col-6">
                                                 <div class="row mb-3 align-items-center">
                                                     <div class="col-4">
-                                                        <label for="txtLastName" class="col-form-label">Tên: </label>
+                                                        <label for="txtLastName" class="col-form-label">Họ: </label>
                                                     </div>
                                                     <div class="col-7">
-                                                        <input type="text" id="txtLastName" class="form-control"
+                                                        <input type="text" id="txtLastName" ng-model="userCurrent.last_names" class="form-control"
                                                             aria-labelledby="passwordHelpInline">
                                                     </div>
                                                 </div>
@@ -238,7 +260,7 @@
                                                         </label>
                                                     </div>
                                                     <div class="col-7">
-                                                        <input type="text" id="txt" class="form-control"
+                                                        <input type="email" id="txt" ng-model="userCurrent.email" class="form-control"
                                                             aria-labelledby="passwordHelpInline">
                                                     </div>
                                                 </div>
@@ -250,7 +272,7 @@
                                                         </label>
                                                     </div>
                                                     <div class="col-7">
-                                                        <input type="text" id="txtUsername" class="form-control"
+                                                        <input type="text" id="txtUsername" ng-model="userCurrent.phones" class="form-control"
                                                             aria-labelledby="passwordHelpInline">
                                                     </div>
                                                 </div>
@@ -263,8 +285,8 @@
                                                         </label>
                                                     </div>
                                                     <div class="col-10">
-                                                        <textarea class="form-control" id="txtAddress"
-                                                            style="height: 100px;" placeholder="" required></textarea>
+                                                        <textarea class="form-control" id="txtAddress"  ng-model="userCurrent.address"
+                                                            style="height: 100px;" placeholder="Địa chỉ của bạn...  " required></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -286,14 +308,13 @@
                         tabindex="0">
                         <div class="container">
                             <div class="row products" id="product-list">
-                                <c:forEach var="item" items="${listLike}">
-                                	<div class="col-md-3 col-sm-6">
+                                <div class="col-md-3 col-sm-6" ng-repeat="item in listFav">
                                     <div class="product-grid6">
                                         <div class="card rounded-0">
                                             <div class="product-image6">
                                                 <a href="#">
                                                     <img class="card-img rounded-0 img-fluid"
-                                                        src="/images/product-img/${item.products.images}">
+                                                        src="/images/product-img/{{item.products.images}}">
                                                 </a>
                                             </div>
                                             <div class="product-content">
@@ -307,16 +328,14 @@
                                                         <i class="text-warning bi bi-star"></i>
                                                     </li>
                                                 </ul>
-                                                <h3 class="title"><a href="#">${item.products.titles}</a>
+                                                <h3 class="title"><a href="#">{{item.products.titles}}</a>
                                                 </h3>
-                                                <div class="price d-flex gap-2 justify-content-center align-items-center">
-                                                	<c:if test="${item.products.discounts.id != null}">
-	                                                    <span class="new__price">${item.products.price - (item.products.price * (item.products.discounts.price_discounts / 100))}</span>
-	                                                    <span class="old__price">${item.products.price}</span>
-                                                	</c:if>
-                                                	<c:if test="${item.products.discounts.id == null}">
-	                                                    <span class="new__price">${item.products.price}</span>
-                                                	</c:if>
+                                                <div ng-show="item.products.discounts.id != null" class="price d-flex gap-2 justify-content-center align-items-center">
+                                                    <span class="new__price">{{item.products.price - (item.products.price * (item.products.discounts.price_discounts / 100)) | number: 0}} VNĐ</span>
+	                                                <span class="old__price">{{item.products.price | number: 0}} VNĐ</span>
+                                                </div>
+                                                <div ng-show="item.products.discounts.id == null" class="price d-flex gap-2 justify-content-center align-items-center">
+                                                    <span class="new__price">{{item.products.price}}</span>
                                                 </div>
                                             </div>
                                             <ul class="social">
@@ -328,16 +347,10 @@
                                             </ul>
                                         </div>
                                         <div class="product-item__sale">
-                                        <c:if test="${item.products.discounts.id != null}">
-                                        	<span class="percent-count sale-txt">-${item.products.discounts.price_discounts}%</span>
-                                        </c:if>
+                                            <span ng-show="item.products.discounts.id != null" class="percent-count sale-txt">-{{item.products.discounts.price_discounts}}%</span>
                                         </div>
                                     </div>
-
-
                                 </div>
-                                	
-                                </c:forEach>
                             </div>
 
                             <div div="row">
@@ -359,48 +372,36 @@
 
                         </div>
                     </div>
-                    <div class="tab-pane fade " id="history" role="tabpanel" aria-labelledby="history-tab"
+                    <div class="tab-pane fade active show" id="history" role="tabpanel" aria-labelledby="history-tab"
                         tabindex="0">
-                        <div class="col-12 p-3" style="border: 1px solid #ccc; border-radius: 10px;">
+                        <div class="col-12 p-3 mb-3" style="border: 1px solid #ccc; border-radius: 10px;" ng-repeat="o in listOrd">
                             <div class="header__order d-flex justify-content-between">
-                                <h5 class="d-flex align-items-center gap-2">Đơn hàng: <span
-                                        class="new__price">#0001</span></h5>
-                                <h5 class="d-flex gap-2">Tình trạng: <span>Đơn hàng đã được giao thành công</span></h5>
+                                <h5 class="d-flex align-items-center gap-2"> 
+                                    <span>Đơn hàng:</span>
+                                    <span class="new__price">#{{o.id < 10 ? '0' : ''}}{{o.id < 100 ? '0' : ''}}{{o.id < 1000 ? '0' : ''}}{{o.id}}
+                                    </span>
+                                </h5>
+                                <h5 class="d-flex gap-2">
+                                    <span>Tình trạng: </span>
+                                    <span>{{o.status}}</span>
+                                </h5>
                             </div>
-                            <div class="body__order d-grid align-items-center py-3 mt-3"
+                            <div class="body__order d-grid align-items-center py-3 mt-3" ng-repeat="od in listOD" ng-if="o.id == od.orders.id"
                                 style="grid-template-columns: 2fr 7fr 3fr; border-top: 1px solid #ccc;">
                                 <div class="body__order-image text-start">
-                                    <img style="background-image: url(../images/product-img/bomlop.png);"> </img>
+                                    <img style="background-image: url(/images/product-img/{{od.products.images}});"> </img>
                                 </div>
                                 <div class="body__order-content">
                                     <span class="body__order-title fw-bold">
-                                        Tên sản phẩm
+                                        {{od.products.titles}}
                                     </span>
                                     <span class="body__order-quanity">
-                                        x1
+                                        x{{od.quanlity}}
                                     </span>
                                 </div>
                                 <div class="body__order-price d-flex justify-content-center align-items-center gap-2">
-                                    <span class="new__price">123.000 VNĐ</span>
-                                    <span class="old__price">222.000 VNĐ</span>
-                                </div>
-                            </div>
-                            <div class="body__order d-grid align-items-center py-3 mt-3"
-                                style="grid-template-columns: 2fr 7fr 3fr; border-top: 1px solid #ccc;">
-                                <div class="body__order-image text-start">
-                                    <img style="background-image: url(../images/product-img/bomlop.png);"> </img>
-                                </div>
-                                <div class="body__order-content">
-                                    <span class="body__order-title fw-bold">
-                                        Tên sản phẩm
-                                    </span>
-                                    <span class="body__order-quanity">
-                                        x1
-                                    </span>
-                                </div>
-                                <div class="body__order-price d-flex justify-content-center align-items-center gap-2">
-                                    <span class="new__price">123.000 VNĐ</span>
-                                    <span class="old__price">222.000 VNĐ</span>
+                                    <span class="new__price">{{od.products.price - (od.products.price * (od.products.discounts.price_discounts / 100)) | number: 0}} VNĐ</span>
+	                                <span class="old__price">{{od.products.price | number: 0}} VNĐ</span>
                                 </div>
                             </div>
                             <div class="footer__order d-flex mt-3 p-3 justify-content-between"
@@ -412,7 +413,7 @@
                                 </div>
                                 <div class="footer__order-total d-flex gap-2">
                                     <h5>Thành tiền: </h5>
-                                    <span class="new__price">123.000 VNĐ</span>
+                                    <span class="new__price">{{o.sum_money | number: 0}} VNĐ</span>
                                 </div>
                             </div>
                         </div>
@@ -423,7 +424,7 @@
     </main>
 
     <!-- Modal Rate Product -->
-    <!-- <div class="modal fade" id="rateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="rateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -444,7 +445,7 @@
                         </li>
                     </ul>
                     <!-- Content Rate -->
-                    <!-- <div class="tab-content" id="myTabContent">
+                    <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active p-3" id="product-01-tab" role="tabpanel"
                             aria-labelledby="product-01" tabindex="0">
                             <div class="rate__container">
@@ -533,7 +534,7 @@
                 </div>
             </div>
         </div>
-    </div> --> -->
+    </div> -->
 
     <!-- Modal Quick View -->
     <!-- <div class="modal fade" id="QuickViewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

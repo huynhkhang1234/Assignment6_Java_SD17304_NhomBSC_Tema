@@ -57,7 +57,7 @@ public class ShopController {
 		
 		Users u = (Users) session.getAttribute("userLogin");
 		
-		List<Likes> listLike = likesDAO.findAllByUserId(u.getId());				
+		List<Optional<Likes>> listLike = likesDAO.findAllLikesByUserIDAndIslikeTrue(u.getId());				
 		model.addAttribute("listLike", listLike);		
 		return "user/shop";
 	}

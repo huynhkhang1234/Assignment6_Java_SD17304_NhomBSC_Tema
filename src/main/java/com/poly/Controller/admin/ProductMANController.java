@@ -149,7 +149,6 @@ public class ProductMANController {
 			@RequestParam("dis") Discounts dis) {
 
 		Date now = new Date();
-		System.out.println(entityDis);
 
 		if (entityDis.getStart_day() == null)
 			entityDis.setStart_day(now);

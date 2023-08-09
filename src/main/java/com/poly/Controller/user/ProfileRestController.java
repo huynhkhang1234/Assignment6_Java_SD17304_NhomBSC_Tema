@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
+import com.poly.service.FavoriteService;
+import com.poly.service.OrderDetailService;
+import com.poly.service.OrderService;
 import com.poly.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +28,8 @@ import jakarta.servlet.http.HttpSession;
 
 import com.poly.DAO.LikesDAO;
 import com.poly.Entities.Likes;
+import com.poly.Entities.Order_details;
+import com.poly.Entities.Orders;
 import com.poly.Entities.Users;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +39,15 @@ import jakarta.servlet.http.HttpSession;
 public class ProfileRestController {
 	@Autowired
 	UserService userSer;
+	
+	@Autowired
+	FavoriteService favSer;
+	
+	@Autowired
+	OrderService ordSer;
+	
+	@Autowired
+	OrderDetailService odDeSer;
 	
 //	@Autowired
 //	HttpSession session;
@@ -57,6 +72,38 @@ public class ProfileRestController {
 			return ResponseEntity.notFound().build();
 		}
 		
+	}
+	
+	@GetMapping("api/favorite/{u_id}")
+	public ResponseEntity<List<Optional<Likes>>> viewFavorites(@PathVariable("u_id") Integer u_id) {
+		List<Optional<Likes>> listFav = favSer.getAllFavoriteByUser(u_id);
+		
+		if(!listFav.isEmpty()) {
+			return ResponseEntity.ok(listFav);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+		
+	}
+	
+	@GetMapping("api/order/{u_id}")
+	public ResponseEntity<List<Orders>> viewOrders(@PathVariable("u_id") Integer u_id) {
+		List<Orders> listOrd = ordSer.getAllByUserID(u_id);
+		if(!listOrd.isEmpty()) {
+			return ResponseEntity.ok(listOrd);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@GetMapping("api/profile/order_detail/{u_id}")
+	public ResponseEntity<List<Order_details>> viewOrderDetails(@PathVariable("u_id") Integer u_id) {
+		List<Order_details> listOD = odDeSer.getAllByUserID(u_id);
+		if(!listOD.isEmpty()) {
+			return ResponseEntity.ok(listOD);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 //	@PostMapping("/user/profile/account/{id}")
