@@ -41,31 +41,32 @@
 	<nav th:replace="~{/admin/component/_header :: nav}"></nav>
 	<!-- End Header -->
 
-	<main>
+<main>
 
 		<!-- Start Menu Aside -->
-		<aside th:replace="~{/admin/component/_menu :: aside}"></aside>
+		<div th:insert="~{/admin/component/_menu.html}"></div>
 		<!-- End Menu Aside -->
 
 		<section class="middle">
 
-
-
-			<div class="">
+			<div class="tab">
 
 				<ul class="nav nav-pills mb-1 avtive" id="pills-tab" role="tablist">
+
 					<li class="nav-item" role="presentation">
-						<button class="nav-link " id="pills-home-tab"
-							data-bs-toggle="pill" data-bs-target="#pills-home" type="button"
-							role="tab" aria-controls="pills-home" aria-selected="true">Sản
-							phẩm</button>
+						<button class="nav-link" id="pills-home-tab" data-bs-toggle="pill"
+							data-bs-target="#pills-home" type="button" role="tab"
+							aria-controls="pills-home" aria-selected="true">Sản phẩm</button>
 					</li>
+
+
 					<li class="nav-item " role="presentation">
 						<button class="nav-link active" id="pills-profile-tab"
 							data-bs-toggle="pill" data-bs-target="#pills-profile"
 							type="button" role="tab" aria-controls="pills-profile"
 							aria-selected="false">Mã giảm giá</button>
 					</li>
+
 					<li class="nav-item" role="presentation">
 						<button class="nav-link" id="pills-contact-tab"
 							data-bs-toggle="pill" data-bs-target="#pills-contact"
@@ -78,263 +79,401 @@
 
 					<div class="tab-pane fade" id="pills-home" role="tabpanel"
 						aria-labelledby="pills-home-tab">
+
 						<div class="list-products">
+
 							<div class="container">
 								<div class="d-flex justify-content-between">
+
 									<button type="button" class="btn btn-primary"
 										style="width: 100px;" data-bs-toggle="modal"
 										data-bs-target="#exampleModal" data-bs-whatever="@mdo">Thêm</button>
+
+
 									<div class="d-flex column-gap-3 me-6">
 										<div class="col-auto">
-											<form action="/admin/product" method="POST">
+
+											<!-- 											<form action="/admin/product" method="POST">
 												<input
 													style="border-radius: 9px; background: lightgray; height: 32px; width: 298px"
-													name="keyword" th:value="${param.keyword}"
+													name="keyword" value="${param.keyword}"
 													placeholder="Tìm kiếm ở đây..." />
-											</form>
+
+											</form> -->
 										</div>
+
 									</div>
 								</div>
+
 								<div class="row">
-									<th:block th:each="item : ${list.content}">
+
+									<div th:each="item : ${list}">
+
 										<div class="item">
 											<div class="content">
 												<div class="left">
+
+
 													<div class="name" th:text="${item.titles}"></div>
-													<li class="price">Giá: <span
-														th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">
-															</span> <span>VNĐ</span></li>
-													<li>Ngày tạo: <span
-														th:text="${#dates.format(item.create_date, 'hh:mm dd-MM-yyyy')}"></span></li>
-													<li>Loại: <span th:text="${item.categories.names}"></span></li>
-													<li>Trạng thái: <span
-														th:text="${item.is_status == 1 ? 'Còn hàng' : 'Hết hàng'}"></span></li>
-													<li>Nhà cung cấp: <span
-														th:text="${item.suppliers.user_names}"></span></li>
-													<li>Giá gốc: <span
-														th:text="${#numbers.formatDecimal(item.original_price, 0, 'COMMA', 0, 'POINT')}">
-															</span><span>VNĐ</span></li>
-													<li>Giảm giá: <span
-														th:text="${item.discounts.price_discounts}">0</span>%
-													</li>
+
+													<li class="price">Giá: <span th:text="${item.price}" /></li>
+
+													<li>Ngày tạo: <span th:text="${#dates.format(item.create_date, 'hh:mm dd-MM-yyyy')}" /></li>
+													
+													<li>Ngày cập nhật: <span th:text="${#dates.format(item.update_date, 'hh:mm dd-MM-yyyy')}" /></li>
+
+													<li>Loại: <span th:each="cate : ${item.categories.id}" th:text="${cate}" /></li>
+
+													<li>Trạng thái: <span th:text="${item.is_status == 1 ? 'Còn hàng':'Hết hàng'}" /></li>
+
+																									
+													<li>Nhà cung cấp: <span th:each="supp : ${item.suppliers.user_names}" th:text="${supp}" /></li>
+
+													<li>Giá gốc: <span th:text="${item.original_price + ' VNĐ'}" /> 
+													
+													<!-- <li>Giảm giá: <span th:text="${item.discounts.id} + '%' "/></li>  -->
+													
+
+													<li>Tình trạng: <span th:text="${item.is_active}" /></li>
+
 													<li>Mô tả: <span th:text="${item.description}"></span></li>
+
 												</div>
+
+
 												<div class="right">
-													<img th:src="@{|/images/product-img/${item.images}|}" />
+
+													<img th:src="@{/images/product-img/{images}(images=${item.images})}" />
 												</div>
+											
+
+
 												<div class="bottom">
 													<div class="btn-pro">
-														<button class="btn btn-primary" data-bs-toggle="modal"
-															th:data-bs-target="'#exampleModal' + ${item.id}"
+														
+														<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+															th:data-bs-target=" '#exampleModal' + ${item.id} "
 															data-bs-whatever="@mdo">
-															<i class="bi bi-pencil-square"></i>
+															
+															<i class="bi bi-pencil-square"></i>														 
 														</button>
-														<a th:href="@{|/admin/product/delete/${item.id}|}"
+
+														<a th:href="@{/admin/product/delete/{id}(id=${item.id})}"
 															class="btn btn-danger"> <i class="bi bi-trash"></i>
 														</a>
+
 													</div>
 												</div>
 											</div>
 										</div>
-										<div class="modal fade" th:id="'exampleModal' + ${item.id}"
+
+
+										
+										<div class="modal fade" th:id=" 'exampleModal' + ${item.id}"
 											tabindex="-1" aria-labelledby="exampleModalLabel"
 											aria-hidden="true">
+
 											<div class="modal-dialog">
+
 												<div class="modal-content">
 													<div class="modal-header">
 														<h5 class="modal-title" id="exampleModalLabel">Sửa
 															Sản Phẩm</h5>
+															
 														<button type="button" class="btn-close"
-															data-bs-dismiss="modal" aria-label="Close"></button>
+															data-bs-dismiss="modal" aria-label="Close">
+														</button>
+														
 													</div>
-													<form th:action="@{|/admin/product/update/${item.id}|}"
-														method="post" modelAttribute="products"
+
+													<form th:action="@{/admin/save}" th:object=${products}
+														th:modelAttribute="products" th:method="post"
 														enctype="multipart/form-data">
+
 														<div class="modal-body">
+
 															<div class="col-md-6">
-																<label for="inputId" class="form-label">Mã:</label> <input
-																	name="id" th:value="${item.id}" class="form-control" />
+																<label for="inputId" class="form-label">Mã:</label> 
+																<input name="id" th:value="${item.id}" class="form-control" />
+
 															</div>
+
 															<div class="col-md-6">
-																<label for="inputTitle" class="form-label">Tiêu
-																	đề:</label> <input name="titles" th:value="${item.titles}"
-																	class="form-control" />
+																<label for="inputTitle" class="form-label">Tiêu đề:</label>
+																
+																<input name="titles" th:value="${item.titles}" class="form-control" />
 															</div>
+
 															<div class="col-md-12">
 																<label for="inputPrice" class="form-label">Giá:</label>
-																<input name="price" th:value="${item.price}"
-																	class="form-control" />
+																
+																<input name="price" th:value="${item.price}" class="form-control" />
 															</div>
+
 															<div class="col-md-12">
-																<label for="inputCraetDate" class="form-label">Ngày
-																	đăng:</label> <input readonly th:value="${item.create_date}"
-																	class="form-control" />
+																<label for="inputCraetDate" class="form-label">Ngày đăng:</label> 
+																	
+																<input readonly name="createDay" th:value="${item.create_date}" class="form-control" />
+
 															</div>
+
 															<div class="col-md-12">
-																<label for="inputCraetDate" class="form-label">Ngày
-																	cập nhật:</label> <input readonly
-																	th:value="${item.update_date}" class="form-control" />
+																<label for="inputCraetDate" class="form-label">Ngày cập nhật:</label> 
+																
+																<input readonly name="updateDay" th:value="${item.update_date}" class="form-control" />
 															</div>
+
 															<div class="col-md-12">
 																<label for="categoryId" class="form-label">Loại:</label>
-																<select name="cate" class="form-control">
-																	<option th:each="cate : ${listCate.content}"
-																		th:value="${cate.id}" th:text="${cate.names}"
-																		th:selected="${item.categories.id == cate.id}"></option>
+
+																<select name="cate" th:value="${item.categories}" class="form-control">
+																	
+																	<option th:each="cate : ${listCate}" th:value="${cate.id}" th:text="${cate.names}"></option>
+
 																</select>
+
 															</div>
+
 															<fieldset class="row mb-3" style="margin-top: 1rem;">
-																<legend class="col-form-label col-sm-2 pt-0">Trạng
-																	thái:</legend>
+																<legend class="col-form-label col-sm-2 pt-0">Trạng thái:</legend>
 																<div class="col-sm-4">
 																	<div class="form-check">
 																		<label class="form-check-label" for="gridRadios1">
-																			<input name="is_status"
-																			th:checked="${item.is_status == 1}" th:value="1"
+																			
+																			<input name="is_status" th:value="${item.is_status}"
+																			th:checked="${item.is_status == 1}" value="1"
 																			class="form-check-input" type="radio"
-																			id="gridRadios1" /> Còn hàng
+																			id="gridRadios1" checked />Còn hàng
+
 																		</label>
 																	</div>
 																</div>
+
 																<div class="col-sm-4">
+
 																	<div class="form-check">
 																		<label class="form-check-label" for="gridRadios2">
-																			<input name="is_status"
-																			th:checked="${item.is_status == 0}" th:value="0"
+																			
+																			<input name="is_status" th:value="${item.is_status}"
+																			th:checked="${item.is_status == 0}" value="0"
 																			class="form-check-input" type="radio"
-																			id="gridRadios2" /> Hết hàng
+																			id="gridRadios1" checked />Hết hàng
+
 																		</label>
 																	</div>
 																</div>
 															</fieldset>
+
 															<div class="col-md-12">
-																<label for="inputSuppliers" class="form-label">Nhà
-																	cung cấp:</label> <select name="supp" class="form-control">
+																<label for="inputSuppliers" class="form-label">Nhà cung cấp:</label>
+																	<select name="supp" th:value="${item.suppliers}" class="form-control">
+
 																	<option th:each="supp : ${listSupp}"
-																		th:value="${supp.id}" th:text="${supp.user_names}"
-																		th:selected="${item.suppliers.id == supp.id}"></option>
-																</select>
-															</div>
-															<div class="col-md-6">
-																<label for="inputSuppliers" class="form-label">Giá
-																	gốc:</label> <input name="original_price"
-																	th:value="${item.original_price}" class="form-control" />
-															</div>
-															<div class="col-md-6">
-																<label for="inputSuppliers" class="form-label">Giảm
-																	giá:</label> <select name="dis" class="form-control">
-																	<option th:each="dis : ${listDis}" th:value="${dis.id}"
-																		th:text="${dis.price_discounts}"
-																		th:selected="${item.discounts.id == dis.id}">
-																		<span>%</span>
+												
+																     	th:value="${supp.id}"
+																		th:text="${supp.user_names}">
 																	</option>
+
+																</select>
+
+															</div>
+
+															<div class="col-md-6">
+																<label for="inputSuppliers" class="form-label">Giá gốc:</label> 
+																
+																<input name="original_price" th:value="${item.original_price}" class="form-control" />
+
+															</div>
+
+															<div class="col-md-6">
+																<label for="inputSuppliers" class="form-label">Giảm giá:</label> 
+																<select name="dis" th:value="${item.discounts}" class="form-control">
+
+																	<option th:each="dis : ${listDis}"
+																		
+																     	th:value="${dis.id}"
+																		th:text="${dis.price_discounts + '%' }"></option>
+
 																</select>
 															</div>
-															<label class="form-label" for="customFile">Tải
-																ảnh:</label> <input th:value="${item.images}" name="file"
-																type="file" class="form-control" id="customFile" />
+
+
+															<label class="form-label" for="customFile">Tải ảnh:</label> 
+															<input th:value="${item.images}" name="file" type="file" class="form-control" id="customFile" />
+
+
 															<div class="col-12">
-																<label for="inputDescription" class="form-label">Mô
-																	tả</label>
-																<textarea name="description" class="form-control"
-																	th:text="${item.description}"></textarea>
+																<label for="inputDescription" class="form-label">Mô tả</label>
+																
+																<textarea name="description" th:value="${item.description}"
+																	class="form-control" rows="4"></textarea>
 															</div>
+
 														</div>
+
 														<div class="modal-footer">
 															<button type="button" class="btn btn-secondary"
 																data-bs-dismiss="modal">Đóng</button>
-															<button type="submit" class="btn btn-primary">Lưu
-																thay đổi</button>
+
+														
+															 <button th:formaction="@{|/admin/product/update/${item.id}|}" type=" button" class="btn btn-primary">
+																Lưu thay đổi
+															</button> 
+															
+															
 														</div>
 													</form>
 												</div>
 											</div>
 										</div>
-									</th:block>
-									<div class="row" style="margin-top: 15px;">
+									</div>
+
+									<div style="margin-top: 15px;">
 										<ul class="pagination pagination-lg justify-content-end">
-											<li class="page-item"><a
-												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-												th:href="@{/admin/product?p=0}">1</a></li>
-											<li class="page-item"><a
-												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{/admin/product?p=1}">2</a></li>
+											<li class="page-item "><a
+												class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+												href="/admin/product?p=0">1</a></li>
 											<li class="page-item"><a
 												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{/admin/product?p=2}">3</a></li>
+												href="/admin/product?p=1">2</a></li>
+											<li class="page-item"><a
+												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+												href="/admin/product?p=2">3</a></li>
 											<li class="page-item"><a
 												class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{|/admin/product?p=${list.totalPages}|}">4</a></li>
+												href="/admin/product?p=${listproduts.totalPages-1}">4</a></li>
 										</ul>
 									</div>
+
 								</div>
 							</div>
+
 						</div>
 					</div>
+					<!-- kết thúc div product -->
+
 
 					<div class="tab-pane fade show active" id="pills-profile"
 						role="tabpanel" aria-labelledby="pills-profile-tab">
+
 						<section class="middle">
-							<!--form-->
-							<form action="/admin/save/discount" modelAttribute="discounts"
-								method="post" enctype="multipart/form-data">
+
+							
+							<form th:action="@{/admin/save/discount}" th:object=${discounts}
+								th:modelAttribute="discounts" th:method="post"
+								enctype="multipart/form-data">
+
 								<div class="row">
-									<!--row1-->
+
 									<div class="col-6">
 										<div class="col-auto">
 											<label class="col-form-label">Mã:</label>
 										</div>
-										<input name="id" th:value="${discounts.id}"
+
+									
+										<input name="id" th:field="*{id}"
 											class="form-control" />
+
 									</div>
+
 									<div class="col-6">
 										<div class="col-auto">
 											<label class="col-form-label">Tiêu đề:</label>
 										</div>
-										<input name="titles" th:value="${discounts.titles}"
+
+										
+										<input name="titles" th:field="*{titles}"
 											class="form-control" />
 									</div>
+
 									<div class="col-12">
+
 										<label for="inputSuppliers" class="form-label">Giảm
-											giá:</label> <select name="dis" class="form-control">
-											<option th:each="dis : ${listDis}" th:value="${dis.id}"
-												th:text="${dis.price_discounts}"
-												th:selected="${discounts.id == dis.id}"></option>
-										</select>
-									</div>
-									<div class="col-md-12">
-										<label for="inputCraetDate" class="form-label">Ngày
-											bắt đầu:</label> <input th:value="${discounts.start_day}"
+											giá:</label> 
+
+										<input type="text" th:field="*{price_discounts}"
 											class="form-control" />
 									</div>
+
 									<div class="col-md-12">
 										<label for="inputCraetDate" class="form-label">Ngày
-											kết thúc:</label> <input th:value="${discounts.end_day}"
+											bắt đầu:</label> 
+											
+											<input type="date" name="startDay" th:value="${startDate}"
 											class="form-control" />
+
 									</div>
+
+									<div class="col-md-12">
+										<label for="inputCraetDate" class="form-label">Ngày
+											kết thúc:</label> 
+											
+											<input type="date" name="endDay" th:value="${endDate}"
+											class="form-control" />
+
+									</div>
+
+									
+									<!-- <fieldset class="row mb-3" style="margin-top: 1rem;">
+										<legend class="col-form-label col-sm-2 pt-0">Tình
+											trạng:</legend>
+										<div class="col-sm-4">
+											<div class="form-check">
+												<label class="form-check-label" for="gridRadios1"> <input
+													name="is_status" th:checked="${discounts.is_active == 1}"
+													name="is_active" th:field="*{is_active}" th:checked="*{is_active == 1}"
+													value="1" class="form-check-input" type="radio"
+													id="gridRadios1" checked />Đang hoạt động
+
+												</label>
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+
+											<div class="form-check">
+												<label class="form-check-label" for="gridRadios2"> <input
+													name="is_status" th:checked="${discounts.is_active == 0}"
+													name="is_active" th:field="*{is_active}" th:checked="*{is_active == 0}"
+													value="0" class="form-check-input" type="radio"
+													id="gridRadios1" checked />Đã đóng cửa
+
+												</label>
+											</div>
+										</div>
+									
+									</fieldset> -->
+
+
 									<div class="col-12">
 										<div class="col-auto">
-											<label class="col-form-label">Mô tả</label>
+											<label class="col-form-label">Mô tả:</label>
 										</div>
-										<textarea name="descriptions" class="form-control">[[${discounts.descriptions}]]</textarea>
-										<label for="floatingTextarea2"></label>
+
+										
+										<textarea name="descriptions" th:field="*{descriptions}"
+											class="form-control" rows="4"></textarea>
+
 									</div>
 								</div>
-								<!--btn-->
+
+
 								<div class="btn-add">
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-										<button th:formaction="@{/admin/save/discount}" type="submit"
-											class="btn btn-primary">
-											<i class="bi bi-plus-lg"></i>
-										</button>
-										<button
-											th:formaction="@{|/admin/discount/update/${discounts.id}|}"
-											type="submit" class="btn btn-primary">
-											<i class="bi bi-pencil-square"> </i>
-										</button>
+
+											<button type="submit" class="btn btn-primary">
+												<i class="bi bi-plus-lg"></i>
+											</button>			
+										
+											<button th:formaction="@{|/admin/discount/update/${id}|}" type=" button" class="btn btn-primary">
+												<i class="bi bi-pencil-square"></i>
+											</button>										
+
 									</div>
 								</div>
+
 							</form>
+
 							<div class="below">
 								<div class="table-responsive mt-5" style="overflow-x: auto">
 									<table class="table table-bordered col-12">
@@ -345,81 +484,133 @@
 												<th>Giảm giá</th>
 												<th>Ngày bắt đầu</th>
 												<th>Ngày kết thúc</th>
+												<th>Tình trạng</th>
 												<th>Mô tả</th>
 												<th></th>
 											</tr>
 										</thead>
+
 										<tbody>
+
 											<tr th:each="item : ${listDis}">
+											
 												<td th:text="${item.id}"></td>
+
 												<td th:text="${item.titles}"></td>
-												<td th:text="${item.price_discounts}"> <span>%</span></td>
+
+												<td th:text="${item.price_discounts + '%' }"></td>
+
 												<td th:text="${item.start_day}"></td>
+
 												<td th:text="${item.end_day}"></td>
-												<td>[[${item.descriptions}]]</td>
-												<td><a
-													th:href="@{/admin/discount/edit/{id}(id=${item.id})}"
-													class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
-												</a> <a th:href="@{/admin/discount/delete/{id}(id=${item.id})}"
-													class="btn btn-danger"> <i class="bi bi-trash"></i>
-												</a></td>
+
+												<td th:text="${item.is_active}"></td>
+
+												<td th:text="${item.descriptions}"></td>
+
+												<td>
+													<a
+														th:href="@{/admin/discount/edit/{id}(id=${item.id})}"
+														class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
+													</a> 
+													
+					
+													<a
+														th:href="@{/admin/discount/delete/{id}(id=${discounts.id})}"
+														class="btn btn-danger"> <i class="bi bi-trash"></i>
+													</a>
+												</td>
+
 											</tr>
 										</tbody>
 
 									</table>
-									<nav class="d-flex justify-content-center">
-										<ul class="pagination pagination-s">
-											<li class="page-item disabled"><a class="page-link"
-												href="#" tabindex="-1">1</a></li>
-											<li class="page-item"><a class="page-link" href="#">2</a></li>
-											<li class="page-item"><a class="page-link" href="#">3</a></li>
+
+
+					
+									
+										<nav class="d-flex justify-content-center">
+										<ul class="pagination pagination-lg justify-content-end">
+											<li class="page-item "><a
+												class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+												href="/admin/product?p=0">1</a></li>
+											<li class="page-item"><a
+												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+												href="/admin/product?p=1">2</a></li>
+											<li class="page-item"><a
+												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+												href="/admin/product?p=2">3</a></li>
+											<li class="page-item"><a
+												class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
+												href="/admin/product?p=${listproduts.totalPages-1}">4</a></li>
 										</ul>
 									</nav>
+
 								</div>
 							</div>
+
 						</section>
+
 					</div>
+
 
 					<div class="tab-pane fade" id="pills-contact" role="tabpanel"
 						aria-labelledby="pills-contact-tab">
 						<section class="middle">
-							<!--from-->
-							<form th:action="@{/admin/save/category}"
-								th:object="${categories}" method="post">
+
+							
+							<form th:action="@{/admin/save/category}" th:object=${categories}
+								th:modelAttribute="categories" th:method="post"
+								enctype="multipart/form-data">
+
 								<div class="row">
-									<!--row1-->
+
 									<div class="col-12">
 										<div class="col-auto">
 											<label class="col-form-label">Mã:</label>
 										</div>
 										<div class="col-auto">
-											<input th:field="*{id}" class="form-control" />
+										
+										
+											<input name="id" th:field="*{id}"
+												class="form-control" />
 										</div>
+										
 									</div>
+									
 									<div class="col-12">
 										<div class="col-auto">
 											<label class="col-form-label">Tên:</label>
 										</div>
+
 										<div class="col-auto">
-											<input th:field="*{names}" class="form-control" />
+											
+											<input name="names" th:field="*{names}"
+												class="form-control" />
 										</div>
+										<!-- <p th:if="${categories.names == null}" style="color: red;">Vui lòng nhập tên</p> -->
 									</div>
+
 								</div>
-								<!--btn-->
+
 								<div class="btn-add">
 									<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-										<button th:formaction="@{/admin/save/category}" type="submit"
-											class="btn btn-primary">
-											<i class="bi bi-plus-lg"></i>
+	
+											<button type="submit" class="btn btn-primary">
+												<i class="bi bi-plus-lg"></i>
+											</button>
+										
+										
+										<button th:formaction="@{|/admin/category/update/${id}|}" type=" button" class="btn btn-primary">
+												<i class="bi bi-pencil-square"> </i>
 										</button>
-										<button
-											th:formaction="@{|/admin/category/update/${id}(id=${categories.id})|}"
-											type="submit" class="btn btn-primary">
-											<i class="bi bi-pencil-square"></i>
-										</button>
+
+
 									</div>
 								</div>
 							</form>
+
+
 							<div class="below">
 								<div class="table-responsive mt-5" style="overflow-x: auto">
 									<table class="table table-bordered col-12">
@@ -427,39 +618,44 @@
 											<tr>
 												<th>Mã:</th>
 												<th>Tên:</th>
-												<th></th>
+												<th>Tình trạng:</th>
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="item : ${listCate.content}">
+											<tr th:each="item : ${listCate}">
 												<td th:text="${item.id}"></td>
 												<td th:text="${item.names}"></td>
-												<td><a
-													th:href="@{/admin/category/edit/{id}(id=${item.id})}">
-														<button class="btn btn-primary">
-															<i class="bi bi-pencil-square"></i>
-														</button>
-												</a> <a
-													th:href="@{/admin/category/delete/{id}(id=${categories.id})}"
-													class="btn btn-danger"> <i class="bi bi-trash"></i>
-												</a></td>
+												<td th:text="${item.is_active}"></td>
+
+												<td>
+													<a
+														th:href="@{/admin/category/edit/{id}(id=${item.id})}"
+														class="btn btn-primary"> <i class="bi bi-pencil-square"></i>
+													</a> 
+													
+													<a th:href="@{/admin/category/delete/{id}(id=${categories.id})}"
+														class="btn btn-danger"> <i class="bi bi-trash"></i>
+													</a>
+												</td>
 											</tr>
+
 										</tbody>
 									</table>
+
 									<nav class="d-flex justify-content-center">
 										<ul class="pagination pagination-lg justify-content-end">
-											<li class="page-item"><a
-												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
-												th:href="@{/admin/product?p=0}">1</a></li>
-											<li class="page-item"><a
-												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{/admin/product?p=1}">2</a></li>
+											<li class="page-item "><a
+												class="page-link  rounded-0 mr-3 shadow-sm border-top-0 border-left-0"
+												href="/admin/product?p=0">1</a></li>
 											<li class="page-item"><a
 												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{/admin/product?p=2}">3</a></li>
+												href="/admin/product?p=1">2</a></li>
+											<li class="page-item"><a
+												class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+												href="/admin/product?p=2">3</a></li>
 											<li class="page-item"><a
 												class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
-												th:href="@{/admin/product?p=${list.totalPages-1}}">4</a></li>
+												href="/admin/product?p=${listproduts.totalPages-1}">4</a></li>
 										</ul>
 									</nav>
 								</div>
@@ -467,139 +663,172 @@
 						</section>
 					</div>
 
+
+					<div class="modal fade" id="exampleModal" tabindex="-1"
+						th:fragment="modal" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+
+							<div class="modal-content">
+
+								<div class="modal-header">
+
+									<h1 class="modal-title fs-5" id="exampleModalLabel">Thêm
+										Sản Phẩm</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+
+								
+								<form th:action="@{/admin/save/product}" th:object=${products}
+									th:method="post" th:modelAttribute="product"
+									enctype="multipart/form-data">
+
+									<div class="modal-body">
+
+										<div class="col-md-12">
+											<label for="inputTitle" class="form-label">Tiêu đề:</label> 
+											
+											<input name="titles" th:field="*{titles}" class="form-control" />
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputPrice" class="form-label">Giá:</label>
+											 
+											<input name="price" th:field="*{price}" class="form-control" />
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputCraetDate" class="form-label">Ngày đăng:</label> 
+																							
+											<input type="date" name="createDay" th:value="${createDate}"
+													class="form-control" />
+
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputCraetDate" class="form-label">Ngày cập nhật:</label> 
+					
+											<input type="date" name="updateDay" th:value="${updateDate}"
+													class="form-control" />
+
+										</div>
+
+										<div class="col-md-12">
+											<label for="categoryId" class="form-label">Loại:</label> <select
+												th:field="*{categories}" class="form-control">
+
+												<option th:each="cate : ${listCate}"							
+													th:value="${cate.id}"
+													th:text="${cate.names}">
+												</option>
+
+											</select>
+
+										</div>
+
+										<fieldset class="row mb-3" style="margin-top: 1rem;">
+											<legend class="col-form-label col-sm-2 pt-0">Trạng
+												thái:</legend>
+											<div class="col-sm-4">
+												<div class="form-check">
+													<label class="form-check-label" for="gridRadios1">
+														<input name="is_status" th:checked="*{is_status == 1}"
+														value="1" class="form-check-input" type="radio"
+														id="gridRadios1" checked />Còn hàng
+
+													</label>
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+
+												<div class="form-check">
+													<label class="form-check-label" for="gridRadios2">
+														<input name="is_status" th:checked="*{is_status == 0}"
+														value="0" class="form-check-input" type="radio"
+														id="gridRadios1" checked />Hết hàng
+
+													</label>
+												</div>
+											</div>
+										</fieldset>
+
+										<div class="col-md-12">
+											<label for="inputSuppliers" class="form-label">Nhà cung cấp:</label> 
+											
+											<select name="supp" th:field="*{suppliers}" class="form-control">
+
+												<option th:each="supp : ${listSupp}" 
+													th:value="${supp.id}"
+													th:text="${supp.user_names}"></option>
+
+											</select>
+
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputSuppliers" class="form-label">Giá gốc:</label>
+											
+											<input name="original_price" th:field="*{original_price}" class="form-control" />
+
+										</div>
+
+										<div class="col-md-12">
+											<label for="inputSuppliers" class="form-label">Giảm giá:</label> 
+											
+												<select name="dis" th:field="*{discounts}" class="form-control">
+
+												<option th:each="dis : ${listDis}" 
+													th:value="${dis.id}"
+													th:text="${dis.price_discounts + '%' }">
+												</option>
+
+											</select>
+										</div>
+
+
+										<label class="form-label" for="customFile">Tải ảnh:</label> 
+										
+						
+										<input th:field="*{images}" name="file" type="file" class="form-control" id="customFile" />
+
+										<div class="col-12">
+											<label for="inputDescription" class="form-label">Mô tả</label>
+											
+											<textarea name="description" th:field="*{description}" class="form-control"
+												rows="4"></textarea>
+												
+										</div>
+
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Đóng</button>
+
+											<button type="submit" class="btn btn-primary">
+												Thêm sản phẩm
+											</button>
+										
+									</div>
+
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
+				<!-- kết thúc div tab-content -->
 
 			</div>
-
+			<!-- kết thúc div tab -->
 
 		</section>
 
-		<!-- Modal Add Product -->
-		<div class="modal fade" id="exampleModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-
-				<div class="modal-content">
-
-					<div class="modal-header">
-						<h5 class="modal-title">Thêm Sản Phẩm</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-
-					<form method="post" th:action="@{/admin/save/product}"
-						th:object="${products}" enctype="multipart/form-data">
-						<div class="modal-body">
-
-							<div class="col-md-6">
-								<label for="inputId" class="form-label">Mã:</label> <input
-									name="id" th:field="*{id}" class="form-control" />
-							</div>
-
-							<div class="col-md-6">
-								<label for="inputTitle" class="form-label">Tiêu đề:</label> <input
-									name="titles" th:field="*{titles}" class="form-control" />
-							</div>
-
-							<div class="col-md-12">
-								<label for="inputPrice" class="form-label">Giá:</label> <input
-									name="price" th:field="*{price}" class="form-control" />
-							</div>
-
-							<div class="col-md-12">
-								<label for="inputCraetDate" class="form-label">Ngày
-									đăng:</label> <input readonly
-									th:value="${#dates.format(now, 'dd-MM-yyyy hh:mm')}"
-									class="form-control" />
-							</div>
-
-							<div class="col-md-12">
-								<label for="categoryId" class="form-label">Loại:</label> <select
-									name="cate" class="form-control">
-									<option th:each="cate : ${listCate.content}"
-										th:value="${cate.id}">
-										<!-- th:selected="*{categories.id == cate.id}"	 --> <span
-											th:text="${cate.names}"></span>
-									</option>
-								</select>
-							</div>
-
-							<fieldset class="row mb-3" style="margin-top: 1rem;">
-								<legend class="col-form-label col-sm-2 pt-0">Trạng
-									thái:</legend>
-								<div class="col-sm-4">
-									<div class="form-check">
-										<label class="form-check-label" for="gridRadios1"> <input
-											name="is_active" th:checked="*{is_active == 1}" th:value="1"
-											class="form-check-input" type="radio" id="gridRadios1"
-											checked /> Còn hàng
-										</label>
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div class="form-check">
-										<label class="form-check-label" for="gridRadios2"> <input
-											name="is_active" th:checked="*{is_active == 0}" th:value="0"
-											class="form-check-input" type="radio" id="gridRadios2" />
-											Hết hàng
-										</label>
-									</div>
-								</div>
-							</fieldset>
-
-							<div class="col-md-12">
-								<label for="inputSuppliers" class="form-label">Nhà cung
-									cấp:</label> <select name="supp" class="form-control">
-									<option th:each="supp : ${listSupp}" th:value="${supp.id}"><!-- th:selected="${suppliers.id == supp.id}" -->
-										<span th:text="${supp.user_names}"></span>
-									</option>
-								</select>
-							</div>
-
-							<div class="col-md-6">
-								<label for="inputSuppliers" class="form-label">Giá gốc:</label>
-								<input name="original_price" th:field="*{original_price}"
-									class="form-control" />
-							</div>
-
-							<div class="col-md-6">
-								<label for="inputSuppliers" class="form-label">Giảm giá:</label>
-								<select name="dis" class="form-control">
-									<option th:each="dis : ${listDis}" th:value="${dis.id}">
-										<!-- th:selected="${products.discounts.id == ${dis.id}}" --> <span
-											th:text="${dis.price_discounts}"></span> <span>%</span>
-									</option>
-								</select>
-							</div>
-
-							<label class="form-label" for="customFile">Tải ảnh:</label> <input
-								name="file" type="file" class="form-control" id="customFile" />
-
-							<div class="col-12">
-								<label for="inputDescription" class="form-label">Mô tả</label>
-								<textarea name="description" th:field="*{description}"
-									class="form-control"></textarea>
-							</div>
-						</div>
-
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Đóng</button>
-							<button type="submit" class="btn btn-primary">Thêm sản
-								phẩm</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
-
 		<!--end of middle-->
 
-
 	</main>
-
+	
 	<!-- Link To Base JS -->
 	<th:block th:include="/admin/component/_linkJS :: jsLinks" />
 
