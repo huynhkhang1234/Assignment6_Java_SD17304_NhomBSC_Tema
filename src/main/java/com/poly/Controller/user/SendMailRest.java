@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -34,6 +35,9 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+
+
+@SpringBootApplication
 @CrossOrigin("*")
 @RestController
 public class SendMailRest {
@@ -67,7 +71,8 @@ public class SendMailRest {
 		if(u != null ) {
 			
 		mail.setFrom("hotrovienBSCTeam@gmail.com");
-		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.getUser_names() + " ==> Mật khẩu của bạn là: " + u.getPass_words());
+		
+		mail.setBody("Thông tin tài khoản hiện tại của bạn:\r\n "+"  ==> Tên đăng nhập : " + u.getUser_names() + "==> Mật khẩu của bạn là: " + u.getPass_words());
 		try {
 
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");

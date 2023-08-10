@@ -21,11 +21,11 @@ INSERT INTO dbo.users
            ,update_date
 ,is_active)
      VALUES
-	 (N'huynhkhang',N'Khang',N'Huỳnh','khanghbpc04012@fpt.edu.vn','123',N'10.png','0123456789','Cà Mau',1,'2023-5-27','2023-5-28',1)
-	 ,(N'nguyenphi',N'Phi',N'Nguyễn','phinvhpc04124@fpt.edu.vn','123',N'kazuha.jpg','0123456789',N'Trà Vinh',1,'2023-5-27','2023-5-28',1)           
-	 ,(N'trantham',N'Thắm',N'Trần','thamtthpc03916@fpt.edu.vn','123',N'7.png','0123456789',N'Hậu Giang',2,'2023-5-27','2023-5-28',1)           
-	 ,(N'phamvan',N'Vương',N'Phạm','vuongpvpc04104@fpt.edu.vn','123',N'8.png','0123456789',N'Phú Quốc',2,'2023-5-27','2023-5-28',1)           
-	 ,(N'nguyenhong',N'Ngoan',N'Nguyễn','ngoannpc04172@fpt.edu.vn','123',N'9.png','0123456789',N'Cần Thơ',2,'2023-5-27','2023-5-28',1)           
+	 (N'huynhkhang',N'Khang',N'Huỳnh','Khanghbpc04012@fpt.edu.vn','123',N'hình ảnh','0123456789','Cà Mau',1,'2023-5-27','2023-5-28',1)
+	 ,(N'nguyenphi',N'Phi',N'Nguyễn','Phinvhpc04124@fpt.edu.vn','123',N'hình ảnh','0123456789',N'Trà Vinh',1,'2023-5-27','2023-5-28',1)           
+	 ,(N'trantham',N'Thắm',N'Trần','Thamtthpc03916@fpt.edu.vn','123',N'hình ảnh','0123456789',N'Hậu Giang',2,'2023-5-27','2023-5-28',1)           
+	 ,(N'phamvan',N'Vương',N'Phạm','Vuongpvpc04124@fpt.edu.vn','123',N'hình ảnh','0123456789',N'Phú Quốc',2,'2023-5-27','2023-5-28',1)           
+	 ,(N'nguyenhong',N'Ngoan',N'Nguyễn','Ngoannpc04172@fpt.edu.vn','123',N'hình ảnh','0123456789',N'Cần Thơ',2,'2023-5-27','2023-5-28',1)           
 GO
 -----------------------------------------------------------------------------------------
 INSERT INTO [dbo].[orders]
