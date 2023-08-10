@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,9 +31,6 @@ import com.poly.Entities.News;
 import com.poly.Entities.Users;
 import com.poly.utils.XImage;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 
 @Controller
 public class NewsMANController {
@@ -129,7 +129,7 @@ public class NewsMANController {
 	@GetMapping("/admin/news/edit/{id}")
 	public String edit(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 
-		entity = dao.getById(id);
+		/* entity = dao.findById(id); */
 		model.addAttribute("news", entity);
 
 		List<Categories_news> listLoai = cateNewsDao.findAll();

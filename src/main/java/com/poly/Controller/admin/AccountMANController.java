@@ -4,8 +4,11 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,14 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.poly.Beans.AccountAdmin;
 import com.poly.DAO.RolesDAO;
 import com.poly.DAO.UsersDAO;
-import com.poly.Entities.Products;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
 import com.poly.utils.XDate;
-
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 public class AccountMANController {
@@ -59,7 +57,6 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
-		model.addAttribute("list2", this.userDao.findAll());
 		return "admin/account";
 	}
 
@@ -133,7 +130,7 @@ public class AccountMANController {
 			}else {
 				System.out.println("Email đã tồn tại");
 				model.addAttribute("error", "Email đã tồn tại trong hệ thông");
-				return "/admin/account";
+				return "redirect:/admin/account";
 			}
 		}
 
@@ -191,7 +188,7 @@ public class AccountMANController {
 		model.addAttribute("users", entity);
 		// tìm kiếm để ia ra dữ liệu toàn bộ
 		model.addAttribute("list", listproduts);
-		return "/admin/account";
+		return "admin/account";
 	}
 
 	@GetMapping("/account/delete/{id}")

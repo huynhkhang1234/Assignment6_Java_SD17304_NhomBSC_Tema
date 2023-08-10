@@ -4,9 +4,9 @@
 <div class="header__user-left d-flex gap-4 me-3">
     <a th:href="@{/user/cart}" class="d-flex header__action-btn">
         <i class="bi bi-bag"></i>
-        <span id="cartIcon" class="count">
-            <span th:if="${session.cartSize == null}">0</span>
-            <span th:if="${session.cartSize != null}" th:text="${session.cartSize}"></span>
+        <span id="cartIcon" class="count" >
+            <span style="transform: rotate(0deg);">{{cart.count}}</span>
+           
         </span>
     </a>
 
@@ -69,29 +69,28 @@
 			class="profile d-flex flex-row-reverse align-items-center gap-2 btn btn-outline-dark dropdown-toggle"
 			type="button" data-bs-toggle="dropdown" aria-expanded="false">
 			<div class="profile-photo overflow-hidden">
-				 <c:if test="${not empty session.userLogin.images}">
-							<img src="/images/user-img/${session.userLogin.getImages()}" id="img" 
+			 <span ng-if="${ #strings.isEmpty(session.userLogin.images)}">
+							<img th:src="@{/images/user-img/1.png}" id="img" 
 							style="width: auto !important;">
-						</c:if> 
+						</span>  
 
 				<img src="/images/profile-1.jpg">
 			</div>
 			<div class="profile__content d-flex flex-column ">
-				<p style="margin: 0;">
-					<c:if test="${empty session.userLogin}">Chưa đăng nhập</c:if>
-					<c:if test="${not empty session.userLogin}">${session.userLogin.getUser_names()}</c:if>
+				<p style="margin: 0;" th:text="${username}">
+				 
 				</p>
 			</div>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end d-right">
-			<c:if test="${session.userLogin.roles.id != 2}">
+			<!-- <th:block th:if="${session.userLogin.roles.id != 2}">
 				<li><a class="dropdown-item" href="/admin/index"> <i
 						class="bi bi-person-lines-fill"></i> Quản lý
 				</a></li>
 				<li>
 					<hr class="dropdown-divider">
 				</li>
-			</c:if>
+			</th:block> -->
 			<li><a class="dropdown-item" href="/user/profile/account"> <i
 					class="bi bi-person-fill"></i> Tài khoản
 			</a></li>
