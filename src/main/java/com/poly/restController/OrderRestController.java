@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.poly.Entities.Orders;
 import com.poly.RestService.OrderService;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:8080/user/cart")
 @RestController
 @RequestMapping("/rest/orders")
 public class OrderRestController {

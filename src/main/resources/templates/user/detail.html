@@ -78,7 +78,7 @@ i.bi-star {
 				<div class="col-lg-5 mt-5">
 					<div class="card mb-3">
 						<img class="card-img img-fluid"
-							src="../images/product-img/${productDetail.images}"
+							src="../images/product-img/{{productInfo.images}}"
 							alt="Card image cap" id="product-detail">
 					</div>
 					<div class="row">
@@ -99,15 +99,13 @@ i.bi-star {
 								<!--First slide-->
 								<div class="carousel-item active">
 									<div class="row">
-										<c:forEach var="item" items="${galleriesList}" begin="0"
-											end="2">
-											<div class="col-4">
-												<a href="#"> <img class="card-img img-fluid"
-													src="../images/product-img/${item.images}"
-													alt="Product Image 3">
-												</a>
-											</div>
-										</c:forEach>
+										<div class="col-4"
+											ng-repeat="item in galleriesList | limitTo:3">
+											<a href="#"> <img class="card-img img-fluid"
+												ng-src="../images/product-img/{{ item.images }}"
+												alt="Product Image 3">
+											</a>
+										</div>
 
 
 									</div>
@@ -117,7 +115,7 @@ i.bi-star {
 								<!--Second slide-->
 								<div class="carousel-item">
 									<div class="row">
-										<c:forEach var="item" items="${galleriesList}" begin="2"
+										<!-- 	<c:forEach var="item" items="${galleriesList}" begin="2"
 											end="4">
 											<div class="col-4">
 												<a href="#"> <img class="card-img img-fluid"
@@ -125,7 +123,7 @@ i.bi-star {
 													alt="Product Image 3">
 												</a>
 											</div>
-										</c:forEach>
+										</c:forEach> -->
 									</div>
 								</div>
 							</div>
@@ -143,29 +141,21 @@ i.bi-star {
 				<div class="col-lg-7 mt-5">
 					<div class="card">
 						<div class="card-body">
-							<h1 class="h2">{{product_Detail.titles}}</h1>
-							
-							<c:if test="${productDetail.discounts != null}">
+							<h1 class="h2">{{productInfo.titles}}</h1>
+
+							<div
+								ng-if="!productInfo.discounts || productInfo.discounts === 0">
+								<div class="price">{{ productInfo.price | number:0 }} VNĐ</div>
+							</div>
+							<div
+								ng-if="productInfo.discounts != null && productInfo.discounts != 0">
 								<div class="price">
-									<p class="h3 py-2" style="color: red">
-										<fmt:formatNumber
-											value="${productDetail.price - (productDetail.price * (productDetail.discounts.price_discounts / 100))}"
-											pattern="###,###,### VNĐ" />
-									</p>
-									<del><span style="color: #ccc"><fmt:formatNumber
-										value="${productDetail.price}"
-										pattern="###,###,### VNĐ" /></span></del>
+									{{ (productInfo.price - (productInfo.price *
+									productInfo.discounts.price_discounts) / 100) | number:0 }} VNĐ
+									<del style="color: #ccc"> {{ productInfo.price | number:0
+										}} VNĐ </del>
 								</div>
-							</c:if>
-							<c:if test="${productDetail.discounts == null}">
-								<div class="price">
-									<p class="h3 py-2" style="color: red">
-										<fmt:formatNumber
-											value="${productDetail.price - (productDetail.price * (productDetail.discounts.price_discounts / 100))}"
-											pattern="###,###,### VNĐ" />
-									</p>
-								</div>
-							</c:if>
+							</div>
 
 
 							<div class="rate">
@@ -182,18 +172,18 @@ i.bi-star {
 
 							<h5>Thông tin sản phẩm:</h5>
 							<ul class="list-unstyled pb-3">
-								<li>${productDetail.description}</li>
+								<li>{{productInfo.description}}</li>
 							</ul>
 
 							<form>
 								<div class="row pb-3">
 									<div class="col d-grid">
-										<button onclick="addAndRedirect()"
+										<button ng-click="cart.userCart(productInfo.id)"
 											class="btn btn-success btn-lg" name="submit" value="buy">Buy</button>
 									</div>
 									<div class="col d-grid">
-										<button class="btn btn-success btn-lg" onclick="addToCart()">Add
-											To Cart</button>
+										<button class="btn btn-success btn-lg"
+											ng-click="cart.add(productInfo.id)">Add To Cart</button>
 
 										<!-- //----------- mình sẽ set giá trị lấy -------------------------->
 										<input type="hidden" id="productId"
@@ -215,420 +205,407 @@ i.bi-star {
 			</div>
 		</div>
 
-<div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <nav>
-                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active text-uppercase fw-bold" id="nav-home-tab"
-                                data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home"
-                                aria-selected="true">Mô Tả Sản Phẩm</a>
-                            <a class="nav-item nav-link text-uppercase fw-bold" id="nav-profile-tab" data-toggle="tab"
-                                href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Đánh
-                                Giá Sản Phẩm</a>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<nav>
+						<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active text-uppercase fw-bold"
+								id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+								aria-controls="nav-home" aria-selected="true">Mô Tả Sản Phẩm</a>
+							<a class="nav-item nav-link text-uppercase fw-bold"
+								id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+								role="tab" aria-controls="nav-profile" aria-selected="false">Đánh
+								Giá Sản Phẩm</a>
 
-                        </div>
-                    </nav>
-                    <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                            aria-labelledby="nav-home-tab">
-                            <ul class="list-unstyled pb-3">
-                                <li>Chất liệu : được làm từ chất liệu da PU bên trong là lớp cao su non, bên ngoài được
-                                    bọc lớp da.</li>
-                                <li>Kích thước: Đường kính vô lăng từ 37 – 38 cm</li>
-                                <li>Đặc tính : thoải mái, êm, ôm sát vô lăng, dễ dàng lắp đặt. Loại bọc này có tuổi thọ
-                                    cao hơn so với các loại bọc vô lăng thông thường khác. Được tinh chế chống bay màu
-                                    theo thời gian sử dụng</li>
-                                <li>Phù hợp với hầu hết các loại xe 4 – 7 chỗ</li>
+						</div>
+					</nav>
+					<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="nav-home"
+							role="tabpanel" aria-labelledby="nav-home-tab">
+							<ul class="list-unstyled pb-3">
+								<li>{{productInfo.titles}}</li>
+								<li>{{productInfo.description}}</li>
 
-                            </ul>
-                        </div>
-                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <div class="m-5 pb-4" style="border-bottom: 1px solid #ccc;">
-                                <div class="content__preview-header d-flex gap-2 align-items-center">
-                                    <div class="content__preview-image">
-                                        <img alt="" style="background-image: url(../images/anh7.jpg);">
-                                    </div>
-                                    <div class="content__preview-title">
-                                        <span class="fw-bold">Tên người dùng</span>
-                                        <div class="d-flex gap-1">
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </div>
-                                        <div class="date-rate">
-                                            dd-MM-yyyy hh:mm
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content__preview-body mt-2">
-                                    <div>
-                                        Nội dung đánh giá
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
+							</ul>
+						</div>
+						<div class="tab-pane fade" id="nav-profile" role="tabpanel"
+							aria-labelledby="nav-profile-tab">
+							<div class="m-5 pb-4" style="border-bottom: 1px solid #ccc;">
+								<div
+									class="content__preview-header d-flex gap-2 align-items-center">
+									<div class="content__preview-image">
+										<img alt="" style="background-image: url(../images/anh7.jpg);">
+									</div>
+									<div class="content__preview-title">
+										<span class="fw-bold">Tên người dùng</span>
+										<div class="d-flex gap-1">
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+												class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+												class="bi bi-star"></i>
+										</div>
+										<div class="date-rate">dd-MM-yyyy hh:mm</div>
+									</div>
+								</div>
+								<div class="content__preview-body mt-2">
+									<div>Nội dung đánh giá</div>
+								</div>
+							</div>
 
-                </div>
-            </div>
+						</div>
+					</div>
 
-        </div>
-        <!-- Close Content -->
+				</div>
+			</div>
 
-        <!-- Start Article -->
-        <section class="py-5">
-            <div class="container">
-                <div class="row text-left p-2 pb-3 text-center">
-                    <h4>Có Thể Bạn Thích</h4>
-                </div>
+		</div>
+		<!-- Close Content -->
 
-                <!--Start Carousel Wrapper-->
-                <div id="carousel-related-product">
+		<!-- Start Article -->
+		<section class="py-5">
+			<div class="container">
+				<div class="row text-left p-2 pb-3 text-center">
+					<h4>Có Thể Bạn Thích</h4>
+				</div>
 
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/bomlop.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Bơm Lốp Ô Tô Tự Ngắt Steelmate P05</a></h3>
-                                    <div class="price">
-                                        <span class="new__price">$39.00</span>
-                                        <span class="old__price">$60.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/volang.jpg">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Bọc Vô Lăng Ô Tô Da Cao Cấp SPARCO Italia</a></h3>
-                                    <div class="price">$99.00
-                                        <span>$111.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/phukien1.jpg">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Đèn Bi Aozoom X Led Pro Domax Light</a></h3>
-                                    <div class="price">$55.00
-                                        <span>$75.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/manhinh1.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Màn hình NaviPlay N360 – Màn hình cao cấp cho ô tô</a>
-                                    </h3>
-                                    <div class="price">$19.00
-                                        <span>$21.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/thamlot1.jpg">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Thảm Lót Sàn Ô Tô 5D, 6D Xe Mazda CX5</a></h3>
-                                    <div class="price">$50.00
-                                        <!-- <span>$14.00</span> -->
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/camera1.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Camera hành trình trước sau Vietmap KC01</a></h3>
-                                    <div class="price">$79.00
-                                        <!-- <span>$14.00</span> -->
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/pic-51.jpg">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Sạc Không Dây Thông Minh Smart Sensor R1 - Vàng</a>
-                                    </h3>
-                                    <div class="price">$50.00
-                                        <!-- <span>$14.00</span> -->
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid"
-                                            src="../images/product-img/cambien1.png">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Cảm Biến Áp Suất Lốp ELLISAFE ADI4</a></h3>
-                                    <div class="price">$35.00
-                                        <span>$55.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                    <div class="p-2 pb-3">
-                        <div class="product-grid6">
-                            <div class="card rounded-0">
-                                <div class="product-image6">
-                                    <a href="#">
-                                        <img class="card-img rounded-0 img-fluid" src="../images/product-img/loa1.jpg">
-                                    </a>
-                                </div>
-                                <div class="product-content">
-                                    <a href="shop-single.html" class="h3 text-decoration-none"></a>
-                                    <ul class="list-unstyled d-flex justify-content-center mb-1">
-                                        <li>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                            <i class="bi bi-star"></i>
-                                        </li>
-                                    </ul>
-                                    <h3 class="title"><a href="#">Hệ Thống Âm Thanh Ô Tô DB DRIVE ES7 6C</a></h3>
-                                    <div class="price">$11.00
-                                        <span>$14.00</span>
-                                    </div>
-                                </div>
-                                <ul class="social">
-                                    <li><a href="" data-tip="Xem lướt qua"><i class="bi bi-eye"></i></a></li>
-                                    <li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
-                                                class="bi bi-heart"></i></a>
-                                    </li>
-                                    <li><a href="shop-single.html" data-tip="Thêm vào giỏ hàng"><i
-                                                class="bi bi-cart"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="product-item__sale"><span class="percent-count sale-txt">-15%</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- End Article -->
-		
+				<!--Start Carousel Wrapper-->
+				<div id="carousel-related-product">
+
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/bomlop.png">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Bơm Lốp Ô Tô Tự Ngắt Steelmate P05</a>
+									</h3>
+									<div class="price">
+										<span class="new__price">$39.00</span> <span
+											class="old__price">$60.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/volang.jpg">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Bọc Vô Lăng Ô Tô Da Cao Cấp SPARCO Italia</a>
+									</h3>
+									<div class="price">
+										$99.00 <span>$111.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/phukien1.jpg">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Đèn Bi Aozoom X Led Pro Domax Light</a>
+									</h3>
+									<div class="price">
+										$55.00 <span>$75.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/manhinh1.png">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Màn hình NaviPlay N360 – Màn hình cao cấp cho
+											ô tô</a>
+									</h3>
+									<div class="price">
+										$19.00 <span>$21.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/thamlot1.jpg">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Thảm Lót Sàn Ô Tô 5D, 6D Xe Mazda CX5</a>
+									</h3>
+									<div class="price">
+										$50.00
+										<!-- <span>$14.00</span> -->
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/camera1.png">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Camera hành trình trước sau Vietmap KC01</a>
+									</h3>
+									<div class="price">
+										$79.00
+										<!-- <span>$14.00</span> -->
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/pic-51.jpg">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Sạc Không Dây Thông Minh Smart Sensor R1 -
+											Vàng</a>
+									</h3>
+									<div class="price">
+										$50.00
+										<!-- <span>$14.00</span> -->
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/cambien1.png">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Cảm Biến Áp Suất Lốp ELLISAFE ADI4</a>
+									</h3>
+									<div class="price">
+										$35.00 <span>$55.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+					<div class="p-2 pb-3">
+						<div class="product-grid6">
+							<div class="card rounded-0">
+								<div class="product-image6">
+									<a href="#"> <img class="card-img rounded-0 img-fluid"
+										src="../images/product-img/loa1.jpg">
+									</a>
+								</div>
+								<div class="product-content">
+									<a href="shop-single.html" class="h3 text-decoration-none"></a>
+									<ul class="list-unstyled d-flex justify-content-center mb-1">
+										<li><i class="bi bi-star"></i> <i class="bi bi-star"></i>
+											<i class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+											class="bi bi-star"></i></li>
+									</ul>
+									<h3 class="title">
+										<a href="#">Hệ Thống Âm Thanh Ô Tô DB DRIVE ES7 6C</a>
+									</h3>
+									<div class="price">
+										$11.00 <span>$14.00</span>
+									</div>
+								</div>
+								<ul class="social">
+									<li><a href="" data-tip="Xem lướt qua"><i
+											class="bi bi-eye"></i></a></li>
+									<li><a href="" data-tip="Thêm vào danh sách yêu thích"><i
+											class="bi bi-heart"></i></a></li>
+									<li><a href="shop-single.html"
+										data-tip="Thêm vào giỏ hàng"><i class="bi bi-cart"></i></a></li>
+								</ul>
+							</div>
+							<div class="product-item__sale">
+								<span class="percent-count sale-txt">-15%</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- End Article -->
+
 	</main>
 
 
@@ -642,9 +619,9 @@ i.bi-star {
 		src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script
 		src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	
+
 	<!-- Link To Base JS -->
-		<th:block th:include="/user/component/_linkJS::jsLinks" />
+	<th:block th:include="/user/component/_linkJS::jsLinks" />
 
 	<script src="../js/detail/jquery-1.11.0.min.js"></script>
 	<script src="../js/detail/jquery-migrate-1.2.1.min.js"></script>
@@ -654,36 +631,35 @@ i.bi-star {
 	<!-- Start Slider Script -->
 	<script src="/js/detail/slick.min.js"></script>
 	<!-- LINK js shop -->
-		<!-- <script th:src="@{/angular.js/shop.js}"></script> -->
- <script th:src="@{/angular.js/Detail_Product/_product.js}"></script> 
+	<!-- <script th:src="@{/angular.js/shop.js}"></script> -->
+	<script th:src="@{/angular.js/Detail_Product/_product.js}"></script>
 	<script>
-	
-	$('#carousel-related-product').slick({
-		infinite : true,
-		arrows : false,
-		slidesToShow : 4,
-		slidesToScroll : 3,
-		dots : true,
-		responsive : [ {
-			breakpoint : 1024,
-			settings : {
-				slidesToShow : 3,
-				slidesToScroll : 3
-			}
-		}, {
-			breakpoint : 600,
-			settings : {
-				slidesToShow : 2,
-				slidesToScroll : 3
-			}
-		}, {
-			breakpoint : 480,
-			settings : {
-				slidesToShow : 2,
-				slidesToScroll : 3
-			}
-		} ]
-	});
+		$('#carousel-related-product').slick({
+			infinite : true,
+			arrows : false,
+			slidesToShow : 4,
+			slidesToScroll : 3,
+			dots : true,
+			responsive : [ {
+				breakpoint : 1024,
+				settings : {
+					slidesToShow : 3,
+					slidesToScroll : 3
+				}
+			}, {
+				breakpoint : 600,
+				settings : {
+					slidesToShow : 2,
+					slidesToScroll : 3
+				}
+			}, {
+				breakpoint : 480,
+				settings : {
+					slidesToShow : 2,
+					slidesToScroll : 3
+				}
+			} ]
+		});
 		// sử lí code ajax
 		function addToCart() {
 			var cartNumber = document.getElementById("cartIcon");
@@ -746,6 +722,8 @@ i.bi-star {
 		
 	</script>
 	<!-- End Slider Script -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
 </body>
 
 </html>

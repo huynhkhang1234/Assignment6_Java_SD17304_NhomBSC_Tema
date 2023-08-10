@@ -19,6 +19,7 @@ public class HomepageController {
 	@GetMapping("/user/index")
 	public String view(Model m ) {
 		m.addAttribute("username", b64s.getUserName());			
+		
 		return "user/index";
 	}
 }

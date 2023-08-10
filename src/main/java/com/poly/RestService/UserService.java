@@ -22,6 +22,10 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	BCryptPasswordEncoder pe;
 	
+	@Autowired
+	HttpSession session;
+
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		try {
@@ -39,21 +43,17 @@ public class UserService implements UserDetailsService {
 		}
 		
 }
-	@Autowired
-	HttpSession session;
-	
-	
-	
+	public Users getRoles(String email) {
+		return  dao.findByEmail(email);
+		
+	}
+		
 	public void setToken(String username, String password,String images,String email) {
 		 String authInfo = username + ":" + password + ":" + images+ ":" +email;
 	        String encodedString = Base64.getEncoder().encodeToString(authInfo.getBytes());
 		
-		session.setAttribute("userLogin", encodedString);
-		//session.setAttribute("userLogin", username);
+		session.setAttribute("userLogin", encodedString);	
 	}
-	
-	public String getToken() {
-		return (String) session.getAttribute("token");
-	}
+		
 
 }

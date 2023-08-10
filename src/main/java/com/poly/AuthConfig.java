@@ -41,8 +41,10 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 		
 		// Phân quyền sử dụng
 		http.authorizeRequests()
-			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("1")						
-			.anyRequest().permitAll(); // anonymous
+			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("2")	
+			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("1")	
+			.antMatchers("/user/bill").hasAnyRole("1")
+			.anyRequest().permitAll(); ////tất cả các quyền còn lại.
 		
 		// Điều khiển lỗi truy cập không đúng vai trò
 		http.exceptionHandling()
@@ -50,23 +52,26 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 		
 		// Giao diện đăng nhập
 		http.formLogin()
-			.loginPage("/auth/login/form")
+			.loginPage("/user/login")
 			.loginProcessingUrl("/auth/login") // [/login]
 			.defaultSuccessUrl("/auth/login/success", false)
 			.failureUrl("/auth/login/error")
 			.usernameParameter("email") // [username]// trùng với tên name trong input.
-			.passwordParameter("pass_words"); // [password]
+			.passwordParameter("pass_words"); // [password]		
 		http.rememberMe()
 			.rememberMeParameter("remember"); // [remember-me]
+		
 		
 		// Đăng xuất
 		http.logout()
 			.logoutUrl("/auth/logoff") // [/logout]
-			.logoutSuccessUrl("/auth/logoff/success");	
+			.logoutSuccessUrl("/auth/logoff/success")
+			.invalidateHttpSession(true) // Hủy bỏ HttpSession sau khi đăng xuất
+			.deleteCookies("JSESSIONID"); // Xóa cookie JSESSIONID sau khi đăng xuất
 	}
 	/*--Cho phép request đến REST API từ browser--*/
-	@Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
-    }
+	/*
+	 * @Override public void configure(WebSecurity web) throws Exception {
+	 * web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**"); }
+	 */
 }

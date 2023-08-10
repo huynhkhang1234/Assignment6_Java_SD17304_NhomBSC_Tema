@@ -32,24 +32,24 @@ public class ProductDetailController {
 
 	@GetMapping("/user/product{id}")
 	public String view(Model model) {
-		int id = Integer.parseInt(request.getParameter("id"));
-		// tìm kiếm 1 sản phẩm
-		Products ps = this.productRepo.findByProductId(id);
-		model.addAttribute("productDetail", ps);
-
-		// tìm kiếm all sản phẩm thích bên dưới
-		List<Products> listProductLike = this.productRepo.findAll();
-		model.addAttribute("listProductLike", listProductLike);
-
-		// chuyển đồi tiền tệ
-		model.addAttribute("productDetailPrice", NumberFormatMoney.formatMoney(ps.getPrice()));
-		System.out.println(ps.getTitles());
-		System.out.println("trang hiện thị sản phẩm");
-
-		// hiện thi slide show ảnh
-		List<Galleries> galleriesList = this.galleriesRepo.findByImages(ps);
-		model.addAttribute("galleriesList", galleriesList);
-		System.out.println("slide show :" + galleriesList);
+		/*
+		 * int id = Integer.parseInt(request.getParameter("id")); // tìm kiếm 1 sản phẩm
+		 * Products ps = this.productRepo.findByProductId(id);
+		 * model.addAttribute("productDetail", ps);
+		 * 
+		 * // tìm kiếm all sản phẩm thích bên dưới List<Products> listProductLike =
+		 * this.productRepo.findAll(); model.addAttribute("listProductLike",
+		 * listProductLike);
+		 * 
+		 * // chuyển đồi tiền tệ model.addAttribute("productDetailPrice",
+		 * NumberFormatMoney.formatMoney(ps.getPrice()));
+		 * System.out.println(ps.getTitles());
+		 * System.out.println("trang hiện thị sản phẩm");
+		 * 
+		 * // hiện thi slide show ảnh List<Galleries> galleriesList =
+		 * this.galleriesRepo.findByImages(ps); model.addAttribute("galleriesList",
+		 * galleriesList); System.out.println("slide show :" + galleriesList);
+		 */
 		return "user/detail";
 	}
 

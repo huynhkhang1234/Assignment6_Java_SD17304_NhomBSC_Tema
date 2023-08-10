@@ -28,7 +28,10 @@ public class LikeService {
 	UsersDAO usDAO;
 	public List<Likes> getAll() {
 		Users us = usDAO.findByEmail(b64s.getemail());	
-		return dao.findAllByUserId(us.getId());
+		if(us != null) {
+			return dao.findAllByUserId(us.getId());	
+		}
+		return null;		
 	}
 
 }

@@ -6,7 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.Order_detailsDAO;
 import com.poly.DAO.OrdersDAO;
+import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Orders;
+import com.poly.Entities.Users;
+import com.poly.service.B64Session;
 import com.poly.utils.XDate;
 
 @Controller
@@ -25,10 +31,18 @@ import com.poly.utils.XDate;
 public class HomepageMANController {
 	
 	@Autowired
+	UsersDAO uDAO;
+	
+	@Autowired
 	OrdersDAO oDAO;
 	
 	@Autowired
 	Order_detailsDAO odDAO;
+	
+	@Autowired
+	HttpSession session;
+	@Autowired
+	B64Session b64s;
 	
 	@GetMapping("/index")
 	public String view(Model m) {
@@ -45,7 +59,11 @@ public class HomepageMANController {
 	    m.addAttribute("listO", listO);
 	    m.addAttribute("startDate", startDate);
 	    m.addAttribute("endDate", endDate);
-	    System.out.println("test");
+	    
+		m.addAttribute("img", b64s.getImg());
+		
+		Users u = uDAO.findByUsername(b64s.getUserName());
+		m.addAttribute("u", u);
 	    return "admin/index";
 	}
 	

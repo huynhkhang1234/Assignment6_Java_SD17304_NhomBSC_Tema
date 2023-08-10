@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.RestService.BillsService;
 
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:8080/user/cart/checkout")
 @RestController
 @RequestMapping("/rest/bills")
 public class RestBillsController {
