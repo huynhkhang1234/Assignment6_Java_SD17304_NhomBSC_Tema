@@ -60,13 +60,13 @@ public class ProfileRestController {
 	
 	
 	@GetMapping("api/account")
-	public ResponseEntity<Optional<Users>> viewAccount() {
+	public ResponseEntity<Users> viewAccount() {
 		// Set username mặc định
 		String username = "Phinvhpc04124@fpt.edu.vn";
 		
 		Users u = userSer.getUser(username);
 		
-		if (u.isPresent()) {
+		if (u != null) {
 			return ResponseEntity.ok(u);
 		} else {
 			return ResponseEntity.notFound().build();
@@ -75,8 +75,8 @@ public class ProfileRestController {
 	}
 	
 	@GetMapping("api/favorite/{u_id}")
-	public ResponseEntity<List<Optional<Likes>>> viewFavorites(@PathVariable("u_id") Integer u_id) {
-		List<Optional<Likes>> listFav = favSer.getAllFavoriteByUser(u_id);
+	public ResponseEntity<List<Likes>> viewFavorites(@PathVariable("u_id") Integer u_id) {
+		List<Likes> listFav = favSer.getAllFavoriteByUser(u_id);
 		
 		if(!listFav.isEmpty()) {
 			return ResponseEntity.ok(listFav);

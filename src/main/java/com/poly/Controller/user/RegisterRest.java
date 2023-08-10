@@ -53,7 +53,7 @@ public class RegisterRest {
 		} else {
 			// nếu không trùng pass2
 			if (model.getPass_words2().equalsIgnoreCase(model.getPass_words())) {
-				Optional<Users> us = this.userDao.findByEmail(model.getEmail().trim());
+				Users us = this.userDao.findByEmail(model.getEmail().trim());
 				if (us != null) {
 					session.setAttribute("registerError", "Email đã tồn vui lòng nhập lại thông tin !!");
 					System.out.println("Email đã tồn vui lòng nhập lại thông tin !!");

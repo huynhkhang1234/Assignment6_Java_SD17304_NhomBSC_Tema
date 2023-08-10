@@ -63,12 +63,12 @@ public class SendMailRest {
 	public ResponseEntity<MailModel> send(Model m, @RequestBody MailModel mail) throws IOException {
 		MimeMessage message = sender.createMimeMessage();
 		System.out.println(mail.getTo());
-		Optional<Users> u = uDAO.findByEmail(mail.getTo());
+		Users u = uDAO.findByEmail(mail.getTo());
 		
 		if(u != null ) {
 			
 		mail.setFrom("hotrovienBSCTeam@gmail.com");
-		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.get().getUser_names() + " ==> Mật khẩu của bạn là: " + u.get().getPass_words());
+		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.getUser_names() + " ==> Mật khẩu của bạn là: " + u.getPass_words());
 		try {
 
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
