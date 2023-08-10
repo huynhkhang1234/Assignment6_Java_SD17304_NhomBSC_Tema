@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.Beans.Categories_bean;
 import com.poly.DAO.CategoriesDAO;
 import com.poly.DAO.DiscountsDAO;
 import com.poly.DAO.ProductsDAO;
@@ -36,6 +39,8 @@ import com.poly.utils.XDate;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
+
+
 
 @Controller
 public class ProductMANController {
@@ -61,25 +66,34 @@ public class ProductMANController {
 	@GetMapping("/admin/product")
 	public String product(Model model, @ModelAttribute("product") Products ps, @RequestParam("p") Optional<Integer> p) {
 
-		// products
+
 		Products entity = new Products();
-		model.addAttribute("products", entity);
+		
+		entity.setCreate_date(new Date());
+		entity.setUpdate_date(new Date());
+		entity.setIs_status(1);
+		
+		model.addAttribute("product", entity);
 		Pageable pageable;
+		
 		try {
 			pageable = PageRequest.of(p.orElse(0), 9);
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 9);
 		}
+		
+		Sort sort = Sort.by(Sort.Direction.DESC, "create_date");
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
+		
 		model.addAttribute("list", listproduts);
-		//
+		
 		List<Suppliers> listSupp = suppdao.findAll();
 		model.addAttribute("listSupp", listSupp);
 
 		Date now = new Date();
 		model.addAttribute("now", now);
 
-		// discounts
+		
 		Discounts entityDis = new Discounts();
 		
 		String startDate = XDate.toString(new Date(), "yyyy-MM-dd");
@@ -88,63 +102,74 @@ public class ProductMANController {
 	    model.addAttribute("startDate", startDate);
 	    model.addAttribute("endDate", endDate);
 		model.addAttribute("discounts", entityDis);
-		List<Discounts> listDis = disdao.findAll();
+		
+		List<Discounts> listDis = disdao.findByAndIdNew();
 		model.addAttribute("listDis", listDis);
 
-		// categories
+	
 		try {
 			pageable = PageRequest.of(p.orElse(0), 8);
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 8);
 		}
-		Page<Categories> listCate = this.catedao.getIsActive(pageable);
-		model.addAttribute("listCate", listCate);
+		
+		
+		  List<Categories> listCate = catedao.findByAndIdNew();
+		  model.addAttribute("listCate", listCate);
+		 
+		/*
+		 * Page<Categories> listCate = this.catedao.getIsActive(pageable);
+		 * model.addAttribute("listCate", listCate);
+		 */
 
 		Categories entityCate = new Categories();
 		model.addAttribute("categories", entityCate);
 		
-		/*
-		 * List<Categories> listCate = catedao.findAll(); model.addAttribute("listCate",
-		 * listCate);
-		 */
+		
+	
 		 
 
 		return "admin/product";
 	}
 
 	@PostMapping("/admin/save/product")
-	public String saveProduct(Model model, @ModelAttribute("product") Products entity,
-			@RequestParam("cate") Categories cate, @RequestParam("supp") Suppliers supp,
-			@RequestParam("dis") Discounts dis, @RequestParam("file") MultipartFile file, 
+	public String saveProduct(Model model, @ModelAttribute("product") Products entity, @RequestParam("file") MultipartFile file, 
 			@RequestParam("createDay") String createDate, @RequestParam("updateDay") String updateDate) throws ParseException {	
-
-		entity.setCategories(cate);
-		entity.setSuppliers(supp);
-		entity.setDiscounts(dis);
 
 		if (entity.getCreate_date() == null) 
 			entity.setCreate_date(new Date());
 			entity.setUpdate_date(new Date());
 		
-		entity.setCreate_date(XDate.toDate(createDate));
-		entity.setUpdate_date(XDate.toDate(updateDate));
-		
-		entity.setIs_active(1);
-
+			/*
+			 * entity.setCreate_date(XDate.toDate(createDate));
+			 * entity.setUpdate_date(XDate.toDate(updateDate));
+			 */
+			
+			/* entity.setIs_status(1); */	
+			entity.setIs_active(1);
+			
+			
 		// Xử lý hình ảnh String
-		/*
-		 * String uploadRootPath = app.getRealPath("images/product-img/"); File
-		 * uploadRootDir = new File(uploadRootPath);
-		 * 
-		 * if (!uploadRootDir.exists()) { uploadRootDir.mkdirs(); } try { String
-		 * fileName = file.getOriginalFilename(); File serverFile = new
-		 * File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-		 * BufferedOutputStream stream = new BufferedOutputStream(new
-		 * FileOutputStream(serverFile)); stream.write(file.getBytes()); stream.close();
-		 * entity.setImages(fileName); } catch (Exception e) {
-		 * model.addAttribute("message", "Lỗi upload file!"); }
-		 */
-
+		
+		  String uploadRootPath = app.getRealPath("images/product-img/"); 
+		  File uploadRootDir = new File(uploadRootPath);
+		  
+		  if (!uploadRootDir.exists()) { 
+			  uploadRootDir.mkdirs(); 
+		  } 
+		  
+		  try { 
+			  String fileName = file.getOriginalFilename(); 
+			  File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
+			  BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile)); 
+			  stream.write(file.getBytes()); 
+			  stream.close();
+			  entity.setImages(fileName); 
+		  } 
+		  catch (Exception e) {
+		  model.addAttribute("message", "Lỗi upload file!");
+		  }
+		
 		dao.save(entity);
 
 		return "redirect:/admin/product";
@@ -208,10 +233,12 @@ public class ProductMANController {
 
 			entityDis.setStart_day(XDate.toDate(startDate));
 			entityDis.setEnd_day(XDate.toDate(endDate));
-
-		disdao.saveAndFlush(entityDis);
-
-		return "redirect:/admin/product";
+			entityDis.setIs_active(1);
+			
+			disdao.saveAndFlush(entityDis);
+		
+			
+			return "redirect:/admin/product";
 	}
 
 	@PostMapping("/admin/product/update/{id}")
@@ -229,37 +256,28 @@ public class ProductMANController {
 		if (entity.getCreate_date() == null)
 			entity.setCreate_date(new Date());
 			entity.setUpdate_date(new Date());
-		
-			/*
-			 * entity.setCreate_date(XDate.toDate(createDate));
-			 * entity.setUpdate_date(XDate.toDate(updateDate));
-			 */
 
-		if (file.getOriginalFilename() == null || file.getOriginalFilename().length() == 0) {
-			Products p = dao.getById(entity.getId());
-
-			if (!(p.getImages() == null || p.getImages().length() == 0)) {
-				entity.setImages(p.getImages());
-			}
-		}
-
-		String uploadRootPath = app.getRealPath("images/product-img/");
-		File uploadRootDir = new File(uploadRootPath);
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
-
-		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi upload file");
-
-		}
+			// Xử lý hình ảnh String
+			
+			  String uploadRootPath = app.getRealPath("images/product-img/"); 
+			  File uploadRootDir = new File(uploadRootPath);
+			  
+			  if (!uploadRootDir.exists()) { 
+				  uploadRootDir.mkdirs(); 
+			  } 
+			  
+			  try { 
+				  String fileName = file.getOriginalFilename(); 
+				  File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
+				  BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile)); 
+				  stream.write(file.getBytes()); 
+				  stream.close();
+				  entity.setImages(fileName); 
+			  } 
+			  catch (Exception e) {
+			  model.addAttribute("message", "Lỗi upload file!");
+			  }
+			
 
 		dao.saveAndFlush(entity);
 
@@ -269,8 +287,8 @@ public class ProductMANController {
 	@GetMapping("/admin/product/delete/{id}")
 	public String delete(@ModelAttribute("products") Products entity, @PathVariable("id") Integer id) {
 
-	
 		entity = dao.getOne(id);
+		
 		entity.setIs_active(0);
 
 		dao.saveAndFlush(entity);
@@ -318,12 +336,13 @@ public class ProductMANController {
 	}
 
 	@PostMapping("/admin/save/category")
-	public String saveProduct(Model model, @ModelAttribute("category") Categories entityCate) {
+	public String saveProduct(Model model, @Validated @ModelAttribute("category") Categories entityCate) {
 
 		catedao.saveAndFlush(entityCate);
 
 		return "redirect:/admin/product";
 	}
+	
 
 	@GetMapping("/admin/category/delete/{id}")
 	
