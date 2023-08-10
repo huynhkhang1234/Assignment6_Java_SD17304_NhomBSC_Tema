@@ -13,7 +13,7 @@ public class UserService {
 	@Autowired
     private UsersDAO userRepo;
 	
-	public Optional<Users> getUser(String username) {
+	public Users getUser(String username) {
 		if (username.contains("@")) {
 			return userRepo.findByEmail(username);
 		} else {

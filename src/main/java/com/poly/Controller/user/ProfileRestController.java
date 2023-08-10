@@ -64,7 +64,7 @@ public class ProfileRestController {
 		// Set username mặc định
 		String username = "Phinvhpc04124@fpt.edu.vn";
 		
-		Optional<Users> u = userSer.getUser(username);
+		Users u = userSer.getUser(username);
 		
 		if (u.isPresent()) {
 			return ResponseEntity.ok(u);

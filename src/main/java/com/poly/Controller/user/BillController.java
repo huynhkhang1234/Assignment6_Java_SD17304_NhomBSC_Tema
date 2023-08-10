@@ -34,10 +34,10 @@ public class BillController {
 	@PostMapping("/user/bill/success")
 	public String Bill() {
 		//Integer us = dao.findIdOrder( (Users) session.getAttribute("userLogin"));
-		Integer order = this.dao.finByOrder(1);
-		System.out.println("id của order là: " + order);
+//		Orders order = this.dao.findByOrder(1);
+//		System.out.println("id của order là: " + order);
 		System.out.println("không xóa session bill");			
-		session.setAttribute("isOrder", order);
+//		session.setAttribute("isOrder", order);
 		session.setAttribute("dataNow", XDate.now());
 		return "redirect:/user/bill";
 	}

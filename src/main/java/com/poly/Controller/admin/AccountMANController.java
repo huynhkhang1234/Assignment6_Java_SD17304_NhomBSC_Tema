@@ -94,7 +94,7 @@ public class AccountMANController {
 			return "/admin/account";
 		} else {
 			System.out.println("không lỗi nủa");
-			Optional<Users> uss = this.userDao.findByEmail(entity.getEmail().trim());
+			Users uss = this.userDao.findByEmail(entity.getEmail().trim());
 			if (uss == null) {
 				if (entity.getCreate_date() == null)
 					entity.setCreate_date(new Date());
