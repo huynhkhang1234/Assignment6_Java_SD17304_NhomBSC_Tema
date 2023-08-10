@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.DAO.CategoriesDAO;
@@ -27,6 +26,7 @@ import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
 import com.poly.Entities.Users;
+import com.poly.utils.XImage;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
@@ -70,37 +70,29 @@ public class NewsMANController {
 		return "admin/news";
 	}
 
-	@PostMapping("/admin/news/update/{id}")
-	public String update(Model model, @ModelAttribute("news") News entity, @RequestParam("username") String username,
-			@RequestParam("image") MultipartFile file) {
-
-		Optional<Users> u = userDao.findByUsername(username);
-		entity.setUsers(u.get());
-
-		Date now = new Date();
+	@PostMapping("admin/news/update/{id}")
+	public String update(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id,
+			@RequestParam("file") MultipartFile file) {
 
 		if (entity.getCreate_date() == null)
-			entity.setCreate_date(now);
+			entity.setCreate_date(new Date());
+		entity.setUpdate_date(new Date());
 
-		entity.setUpdate_date(now);
+		Users u = (Users) session.getAttribute("userLogin");
+
+		entity.setUsers(u);
+
 		entity.setIs_active(1);
 
-		String uploadRootPath = app.getRealPath("images/news-img/");
-		File uploadRootDir = new File(uploadRootPath);
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
+		Optional<News> n = dao.findById(id);
 
-		} catch (Exception e) {
-			model.addAttribute("message", "Loi upload file");
-
+		if (n.get().getImages() == null || n.get().getImages().contains(".")) {
+			if (file.getOriginalFilename().contains(".")) {
+				entity.setImages(file.getOriginalFilename());
+				XImage.addImageToPackage(file, "/images/news-imgae/");
+			} else {
+				entity.setImages(n.get().getImages());
+			}
 		}
 
 		dao.saveAndFlush(entity);
@@ -108,38 +100,25 @@ public class NewsMANController {
 		return "redirect:/admin/news";
 	}
 
-	@PostMapping("admin/news/save")
+	@PostMapping("/admin/news/save")
 	public String save(Model model, @ModelAttribute("news") News entity,
 
-			@RequestParam("image") MultipartFile file) {
+			@RequestParam("file") MultipartFile file) {
 
 		Users u = (Users) session.getAttribute("userLogin");
 		entity.setUsers(u);
-		
+
 		Date now = new Date();
 		if (entity.getCreate_date() == null)
 			entity.setCreate_date(now);
 		System.out.println(entity.getContents().length());
 		entity.setUpdate_date(now);
 		entity.setIs_active(1);
-
-		String uploadRootPath = app.getRealPath("images/news-img/");
-		File uploadRootDir = new File(uploadRootPath);
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
-
-		} catch (Exception e) {
-			model.addAttribute("message", "Loi upload file");
-
-		}
+		
+		entity.setImages(file.getOriginalFilename());
+		XImage.addImageToPackage(file, "/images/news-imgae/");
+		
+		
 
 		dao.save(entity);
 		return "redirect:/admin/news";
@@ -159,6 +138,7 @@ public class NewsMANController {
 		List<News> list = dao.findAllActiveTrue();
 		model.addAttribute("list", list);
 		return "admin/news";
+		
 	}
 
 	@GetMapping("/admin/news/delete/{id}")
