@@ -1,7 +1,8 @@
 const app = angular.module("detail_products", []);
 
-app.controller("ctrl", function($scope, $http, $location) {
+app.controller("ctrl", function($scope, $http, $location,$timeout) {
 	$scope.productInfo = {}
+	$scope.isFirstTime = true;
 	// Sử dụng $location để lấy thông tin về URL
 	var url = $location.absUrl();
 
@@ -38,27 +39,45 @@ app.controller("ctrl", function($scope, $http, $location) {
 
 		items: [],
 		// hiện thị thông tin xem nhanh sản phẩm.
-		add(id) {	
-			alert('Thêm sản phẩm thành công !')		
-			var item = this.items.find(item => item.id == id);
-			if (item) {
-				item.qty++;
-				this.saveToLocal();
-			} else {
-				$http.get(`/rest/product/${id}`).then(resp => {
-					resp.data.qty = 1;
-					if (resp.data.discounts != null || resp.data.discounts > 0) {
-						resp.data.salePirce = resp.data.price - (resp.data.price * (resp.data.discounts.price_discounts / 100));
-					} else {
-						resp.data.salePirce = resp.data.price;
-					}
-
-					this.items.push(resp.data);
+		add(id) {
+			if ($scope.isFirstTime) {
+				var item = this.items.find(item => item.id == id);
+				if (item) {
+					item.qty++;
 					this.saveToLocal();
+					this.showNotification();
+				} else {
+					$http.get(`/rest/product/${id}`).then(resp => {
+						resp.data.qty = 1;
+						if (resp.data.discounts != null || resp.data.discounts > 0) {
+							resp.data.salePirce = resp.data.price - (resp.data.price * (resp.data.discounts.price_discounts / 100));
+						} else {
+							resp.data.salePirce = resp.data.price;
+						}
 
-				})
+						this.items.push(resp.data);
+						this.saveToLocal();
+						this.showNotification();
+					})
 
+				}
+				$scope.isFirstTime = false;
+				 $timeout(function() {
+      			$scope.isFirstTime = true;
+      			}, 1000);				
+				
 			}
+		},
+		showNotification() {			
+			var notification = document.getElementById("idtt");
+			notification.className = "notification";
+			
+			notification.textContent = 'Thêm thành công sản phẩm';
+			document.body.appendChild(notification);
+
+			setTimeout(function() {
+				notification.style.animation = "fadeOut 2s ease-in-out forwards";				
+			}, 2000);
 		},
 
 		//hàm lưu dữ liệu

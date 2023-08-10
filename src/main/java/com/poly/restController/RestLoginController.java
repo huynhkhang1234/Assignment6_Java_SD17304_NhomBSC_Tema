@@ -52,6 +52,7 @@ import com.poly.RestService.UserService;
 		@RequestMapping("/auth/login/error")
 		public String error(Model model){
 			model.addAttribute("message", "Sai thông tin đăng nhập!");
+			
 			return "forward:/user/login";
 		}
 		
