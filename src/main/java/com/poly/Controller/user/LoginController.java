@@ -1,8 +1,6 @@
 package com.poly.Controller.user;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +16,10 @@ import com.poly.Beans.LoginBean;
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
 import com.poly.service.CookieService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class LoginController {
@@ -56,9 +58,9 @@ public class LoginController {
 			System.out.println("Có lỗi");
 			return "user/login";
 		} else {
-			Users userLogin = this.dao.findByEmail(email);
-			if (userLogin != null && userLogin.getPass_words().equals(password)) {
-				System.out.println("Vai trò" + userLogin.getRoles());
+			Optional<Users> userLogin = this.dao.findByEmail(email);
+			if (userLogin != null && userLogin.get().getPass_words().equals(password)) {
+				System.out.println("Vai trò" + userLogin.get().getRoles());
 				String remember = request.getParameter("remember");
 				if (remember != null) {
 					System.out.println(remember);
@@ -72,17 +74,17 @@ public class LoginController {
 
 				Users u = (Users) session.getAttribute("userLogin");
 				System.out.println(userLogin);
-				if (userLogin.getRoles().getRoles().equals("admin")
-						&& (userLogin.getIs_active() == 1)) {
+				if (userLogin.get().getRoles().getRoles().equals("admin")
+						&& (userLogin.get().getIs_active() == 1)) {
 					session.removeAttribute("errorMessage");
 					System.out.println("Đăng nhập thành công với admin");
 					session.setAttribute("userLogin", userLogin);
 					return "redirect:/admin/index";
-				} else if (userLogin.getIs_active() == 3) {
+				} else if (userLogin.get().getIs_active() == 3) {
 					session.setAttribute("errorMessage", "Tài khoản hiện tại của bạn đang bị khóa !!");
 					return "user/login";
 				} else {
-					if (userLogin.getIs_active() == 0) {
+					if (userLogin.get().getIs_active() == 0) {
 						session.setAttribute("errorMessage", "Tài khoản của bạn đã bị xóa hoặc không tồn tại !!");
 						
 					} else {

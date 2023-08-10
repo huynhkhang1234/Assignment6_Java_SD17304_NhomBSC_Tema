@@ -6,11 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -26,8 +24,10 @@ import com.poly.DAO.ProductsDAO;
 import com.poly.Entities.Likes;
 import com.poly.Entities.Products;
 import com.poly.Entities.Users;
-import com.poly.service.B64Session;
 import com.poly.service.CartItem;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ShopController {
@@ -43,12 +43,8 @@ public class ShopController {
 	@Autowired
 	LikesDAO likesDAO;
 
-	@Autowired
-	B64Session b64s;
 	@GetMapping("/user/shop")
 	public String view(Model model,@RequestParam("p") Optional<Integer> p) {
-		
-		
 		/// lấy tổng sản phẩm hiện thi
 		Pageable pageable;			
 		try {
@@ -58,11 +54,11 @@ public class ShopController {
 		}								
 		Page<Products> listproduts =  this.productRepo.getIsActive(pageable);
 		model.addAttribute("listproduts", listproduts);
-		model.addAttribute("username", b64s.getUserName());	
-		//Users u = (Users) session.getAttribute("userLogin");
 		
-		//List<Likes> listLike = likesDAO.findAllByUserId(u.getId());				
-		//model.addAttribute("listLike", listLike);		
+		Users u = (Users) session.getAttribute("userLogin");
+		
+		List<Optional<Likes>> listLike = likesDAO.findAllLikesByUserIDAndIslikeTrue(u.getId());				
+		model.addAttribute("listLike", listLike);		
 		return "user/shop";
 	}
 

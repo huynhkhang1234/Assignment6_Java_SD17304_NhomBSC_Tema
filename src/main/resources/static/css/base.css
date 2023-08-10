@@ -388,7 +388,7 @@ nav.my-navbar .nav-menu {
     gap: 10px;
 }
 
-.header__user-actions span:not(.count, .money, .shopping-cart__total) {
+.header__user-actions span:not(.money, .shopping-cart__total) {
     transform: rotate(90deg);
 }
 

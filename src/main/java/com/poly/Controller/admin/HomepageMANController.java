@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.Order_detailsDAO;
 import com.poly.DAO.OrdersDAO;
+import com.poly.Entities.Order_details;
 import com.poly.Entities.Orders;
 import com.poly.utils.XDate;
 
@@ -32,12 +33,29 @@ public class HomepageMANController {
 	
 	@GetMapping("/index")
 	public String view(Model m) {
+		double doanhThu = 0;
+		int soLuong = 0;
+		double chiPhi = 0;
+		double chiPhiKhac = 0;
+		double von = 0;
 		
 		List<Orders> listO = (List<Orders>) m.asMap().get("listO");
 
 	    if (listO == null) {
 	        listO = oDAO.findAll();
 	    }
+	    
+	    
+	    for (Orders o : listO) {
+			for (Order_details od : o.getOrder_details()) {
+				if(od.getProducts().getDiscounts() == null)
+					von += od.getProducts().getOriginal_price() * od.getQuanlity();
+				else 
+					von += od.getProducts().getOriginal_price()*((100 - od.getProducts().getDiscounts().getPrice_discounts()) / 100) * od.getQuanlity();
+				soLuong += od.getQuanlity();
+			}
+			doanhThu += o.getMoney_received() - von;
+		}
 
 	    String startDate = XDate.toString(new Date(), "yyyy-MM-dd");
 	    String endDate = XDate.toString(XDate.getDateAfter(10), "yyyy-MM-dd");
@@ -45,6 +63,9 @@ public class HomepageMANController {
 	    m.addAttribute("listO", listO);
 	    m.addAttribute("startDate", startDate);
 	    m.addAttribute("endDate", endDate);
+	    m.addAttribute("doanhThu", doanhThu);
+	    m.addAttribute("soLuong", soLuong);
+
 	    return "admin/index";
 	}
 	
@@ -53,8 +74,6 @@ public class HomepageMANController {
 			@RequestParam("startDate") String startDateTemp,
 			@RequestParam("endDate") String endDateTemp,
 			Model m) {
-		
-		
 		try {
 			
 			LocalDate date1 = LocalDate.parse(startDateTemp);
@@ -71,16 +90,15 @@ public class HomepageMANController {
 			java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
 			java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
 
-			
+			List<Orders> listO = null;
 			 //phương thức before sẽ kiểm tra ngày của tham số truyền vào có lớn hơn ngày bắt đầu hay không
 			if (endDate.before(startDate)) {
 				m.addAttribute("message", "Ngày kết thúc phải lớn ngày bắt đầu nhe bé!!!");
-				
-				return "admin/index";
+				listO = null;
 			} else {
-				List<Orders> listO = oDAO.findByCreateDateBetween(sqlStartDate, sqlEndDate);
-	            m.addAttribute("listO", listO);
-	            
+				listO = oDAO.findByCreateDateBetween(sqlStartDate, sqlEndDate);
+				if (listO.size() <= 0) 
+					listO = null;
 			}
 			
 			 String startDate1 = XDate.toString(startDate, "yyyy-MM-dd");
@@ -88,8 +106,9 @@ public class HomepageMANController {
 
 		     m.addAttribute("startDate", startDate1);
 		     m.addAttribute("endDate", endDate1);
-
-		     return "redirect:/admin/index?startDate=" + startDate1 + "&endDate=" + endDate1;
+	         m.addAttribute("listO", listO);
+		     
+		     return "admin/index";
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	         //Xử lý trường hợp lỗi và chuyển hướng đến "/admin/index" với thông báo lỗi

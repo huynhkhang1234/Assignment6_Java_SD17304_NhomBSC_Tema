@@ -4,11 +4,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,23 +18,32 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.Beans.AccountAdmin;
 import com.poly.DAO.RolesDAO;
 import com.poly.DAO.UsersDAO;
+import com.poly.Entities.Products;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
 import com.poly.utils.XDate;
+import com.poly.utils.XImage;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class AccountMANController {
 	@Autowired
 	UsersDAO userDao;
+	
 	@Autowired
 	RolesDAO rolesDao;
-
+	
 	@Autowired
 	ServletContext app;
 	// ko thể khóa tài khoản hiện tại.
@@ -47,7 +53,11 @@ public class AccountMANController {
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
 		 Users entity = new Users();
+		 
+		 entity.setCreate_date(new Date());
+		 
 		 model.addAttribute("users", entity);
+		 
 		Pageable pageable;
 		try {
 			pageable = PageRequest.of(p.orElse(0), 5);
@@ -57,44 +67,44 @@ public class AccountMANController {
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
+		
 		return "admin/account";
 	}
 
 	@PostMapping("/account/create")
-	public String Create(Model model, @Valid @ModelAttribute("users") AccountAdmin entity, BindingResult result,
+	public String Create(
+			Model model, 
+			@Valid @ModelAttribute("users") AccountAdmin entity, 
+			BindingResult result,
+			@RequestParam("p") Optional<Integer> p,
 			@RequestParam("file") MultipartFile file) {
 
 		if (result.hasErrors()) {
-
-			System.out.println("có lỗi.");
-			System.out.println(entity);
+			
+			Pageable pageable;
+			try {
+				pageable = PageRequest.of(p.orElse(0), 5);
+			} catch (Exception e) {
+				pageable = PageRequest.of(0, 5);
+				e.printStackTrace();
+			}						
+			Page<Users> listproduts =  this.userDao.getIsActive(pageable);
+			model.addAttribute("list", listproduts);
+			
 			return "/admin/account";
 		} else {
-
 			System.out.println("không lỗi nủa");
-			Users uss = this.userDao.findByEmail(entity.getEmail().trim());
+			Optional<Users> uss = this.userDao.findByEmail(entity.getEmail().trim());
 			if (uss == null) {
 				if (entity.getCreate_date() == null)
 					entity.setCreate_date(new Date());
 				entity.setUpdate_date(new Date());
 
 				/* Xử lý hình ảnh */
-				String uploadRootPath = app.getRealPath("images/user-img/");
-				File uploadRootDir = new File(uploadRootPath);
-				if (!uploadRootDir.exists()) {
-					uploadRootDir.mkdirs();
-				}
-				try {
-					String fileName = file.getOriginalFilename();
-					File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(file.getBytes());
-					stream.close();
-					entity.setImages(fileName);
-				} catch (Exception e) {
-					model.addAttribute("message", "Lỗi upload file!");
-				}
-
+				XImage.addImageToPackage(file, "/images/user-img/");
+				
+				entity.setImages(file.getOriginalFilename());
+				
 				Users us = new Users();
 				us.setUser_names(entity.getUser_names());
 				us.setFirst_names(entity.getFirst_names());
@@ -149,20 +159,21 @@ public class AccountMANController {
 		entity.setIs_active(1);
 
 		/* Xử lý hình ảnh */
-		String uploadRootPath = app.getRealPath("images/user-img/");
-		File uploadRootDir = new File(uploadRootPath);
-		if (!uploadRootDir.exists()) {
-			uploadRootDir.mkdirs();
-		}
-		try {
-			String fileName = file.getOriginalFilename();
-			File serverFile = new File(uploadRootDir.getAbsoluteFile() + File.separator + fileName);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-			stream.write(file.getBytes());
-			stream.close();
-			entity.setImages(fileName);
-		} catch (Exception e) {
-			model.addAttribute("message", "Lỗi upload file!");
+		// Kiểm tra xem trong database thì account đó, có hình ảnh hay chưa
+		if(userDao.findById(id).get().getImages().contains(".")) {
+			// Nếu có hình rồi, thì xem trên giao diện, có thêm hình ảnh nào không.
+			if (file.getOriginalFilename().contains(".")) {
+				// Nếu mà account đó cập nhật hình mới thì thêm vào thư mục, và set lại trong database
+				XImage.addImageToPackage(file, "/images/user-img/");
+				entity.setImages(file.getOriginalFilename());
+			} else {
+				entity.setImages(userDao.findById(id).get().getImages());
+			}
+				
+		} else {
+			// Nếu chưa có thì thêm vào thư mục, rồi thêm vào database
+			XImage.addImageToPackage(file, "/images/user-img/");
+			entity.setImages(file.getOriginalFilename());
 		}
 
 		userDao.saveAndFlush(entity);

@@ -1,7 +1,6 @@
 package com.poly.Controller.user;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,24 +19,17 @@ public class NewDetailController {
 	@Autowired
 	NewsDAO dao;
 	
-	@GetMapping("/user/news/detail")
+	@GetMapping("/user/news/details/{id}")
 	public String view(Model model) {
-		News entity = new News();
-		model.addAttribute("news", entity);
-
-
-		List<News> list = dao.findAllActiveTrue();
-
-		model.addAttribute("list", list);
 		return "user/news-detail";
 	}
 	
 	
 	
 	@GetMapping("/admin/show/{id}")
-	public String edit(Model model, @ModelAttribute("news") Optional<News> entity, @PathVariable("id") Integer id) {
+	public String edit(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 //
-		entity = dao.findById(id);
+		entity = dao.getById(id);
 		model.addAttribute("news", entity);
 
 		

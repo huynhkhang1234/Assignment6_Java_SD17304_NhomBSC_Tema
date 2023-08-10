@@ -1,9 +1,5 @@
 package com.poly.Controller.user;
 
-
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +11,9 @@ import com.poly.Entities.Likes;
 import com.poly.Entities.Products;
 import com.poly.Entities.Users;
 import com.poly.utils.XDate;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LikeController {

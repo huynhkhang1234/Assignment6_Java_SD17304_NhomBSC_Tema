@@ -1,35 +1,35 @@
 
 
 /* ====================== Dropdown Menu ====================== */
-const dropdownMenu = document.querySelector(".my-dropdown-menu");
-const toggleNavbar = document.querySelector(".toggle-navbar");
-const dropdownClose = document.querySelector(".dropdown-close");
-const navMenu = document.querySelector(".nav-menu");
+// const dropdownMenu = document.querySelector(".my-dropdown-menu");
+// const toggleNavbar = document.querySelector(".toggle-navbar");
+// const dropdownClose = document.querySelector(".dropdown-close");
+// const navMenu = document.querySelector(".nav-menu");
 
-dropdownMenu.previousElementSibling.addEventListener("click", function () {
-    if (window.innerWidth < 576) {
-        dropdownMenu.classList.add('show');
-        toggleNavbar.classList.add('hide');
-    }
-});
+// dropdownMenu.addEventListener("click", function () {
+//     if (window.innerWidth < 576) {
+//         dropdownMenu.classList.add('show');
+//         toggleNavbar.classList.add('hide');
+//     }
+// });
 
-dropdownClose.addEventListener('click', function () {
-    if (window.innerWidth < 576) {
-        dropdownMenu.classList.remove('show');
-        toggleNavbar.classList.remove('hide');
-    }
-});
+// dropdownClose.addEventListener('click', function () {
+//     if (window.innerWidth < 576) {
+//         dropdownMenu.classList.remove('show');
+//         toggleNavbar.classList.remove('hide');
+//     }
+// });
 
-toggleNavbar.addEventListener('click', function () {
-    if (window.innerWidth < 576) {
-        navMenu.classList.toggle('show');
-        if (navMenu.classList.contains('show')) {
-            this.classList.replace('bi-list', 'bi-x');
-        } else {
-            this.classList.replace('bi-x', 'bi-list');
-        }
-    }
-});
+// toggleNavbar.addEventListener('click', function () {
+//     if (window.innerWidth < 576) {
+//         navMenu.classList.toggle('show');
+//         if (navMenu.classList.contains('show')) {
+//             this.classList.replace('bi-list', 'bi-x');
+//         } else {
+//             this.classList.replace('bi-x', 'bi-list');
+//         }
+//     }
+// });
 
 /* Button Back To Top Javascript */
 const backToTopBtn = document.querySelector('#btn-back-top');
@@ -53,11 +53,11 @@ window.addEventListener('scroll', function () {
     }
 });
 
+
 backToTopBtn.addEventListener('click', function () {
     window.scrollTo(0, 0);
 });
 
-'use strict';
 
 // /* Mobile Navbar Toggle */
 // const navbar = document.querySelector('[data-navbar]');
@@ -74,3 +74,5 @@ const searchBtn = document.querySelector('#search-icon');
 searchBtn.addEventListener('click', function () {
     search.classList.toggle('active');
 });
+
+

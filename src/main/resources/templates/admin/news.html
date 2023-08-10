@@ -51,7 +51,7 @@
             <h1>Thêm bài viết</h1>
             <br>
             <section class="content-header">
-                <form action="/admin/save" modelAttribute="news" method="POST"
+                <form th:action="@{/admin/news/save}" th:modelAttribute="news" th:method="POST"
                       enctype="multipart/form-data">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -67,7 +67,7 @@
                                                     <div class="card-body" style="height: 285px;">
                                                         <div class="form-group">
                                                             <label for="title">Tên bài viết</label>
-                                                            <input type="text" id="title" th:value="${news.titles}" name="titles"
+                                                            <input type="text" id="titles" th:value="${news.titles}" name="titles"
                                                                    class="form-control"/>
                                                         </div>
                                                         <br>
@@ -94,13 +94,13 @@
                                                                                th:value="${#dates.format(news.create_date, 'dd-MM-yyyy HH:mm')}"/>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4">
-                                                                    <div class="form-group">
+                                                        <div class="col-sm-4">
+                                                                    <!-- <div class="form-group">
                                                                         <label for="username">Tài khoản</label>
-                                                                        <input th:if="${#fields.hasErrors('news.users.user_names')}" th:errors="*{users.user_names}" class="form-control is-invalid" type="text"/>
+                                                                        <input name="username " th:if="${#fields.hasErrors('news.users.user_names')}" th:errors="*{users.user_names}" class="form-control is-invalid" type="text"/>
                                                                         <input th:unless="${#fields.hasErrors('news.users.user_names')}" readonly th:value="${session.userLogin.user_names}" class="form-control" type="text"/>
-                                                                    </div>
-                                                                </div>
+                                                                    </div> -->
+                                                                </div> 
                                                                 <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="category">Thể loại</label>
@@ -125,7 +125,7 @@
                                     </div>
                                     <div class="col-10" style="margin: 25px; width: 90%">
                                         <div style="width: 100%; height: 200px; border: 1px dotted gray;">
-                                            <img th:if="${news.images}" th:src="@{/images/news-img/${news.images}}" id="img"
+                                            <img th:if="${news.images}" th:src="@{|/images/news-imgae/${news.images}|}" id="img"
                                                  width="100%" height="100%" style="object-fit: contain;"/>
                                             <img th:unless="${news.images}" th:src="${name}" id="img"
                                                  width="100%" height="100%" style="object-fit: contain;"/>
@@ -133,7 +133,7 @@
                                     </div>
                                     <div style="margin: 25px; width: 90%; margin-top: 0px;" class="input-group date"
                                          id="reservationdate" data-target-input="nearest">
-                                        <input name="image" th:value="${news.images}" id="inputGroupFile01" type="file"
+                                        <input name="file" th:value="${news.images}" id="inputGroupFile01" type="file"
                                                class="form-control datetimepicker-input" placeholder="choose file"/>
                                         <div class="input-group-append"></div>
                                     </div>
@@ -142,7 +142,6 @@
                         </div>
                     </div>
                     <!-- /.container-fluid -->
-                </form>
             </section>
             <section class="content-header">
     <div class="container-fluid">
@@ -164,13 +163,10 @@
             </div>
         </div>
     </div>
-    <div class="row">
-    	<form th:action="@{/admin/news/save}" modelAttribute="news" method="POST" class="col-md-1">
-        	<button type="submit" class="btn btn-success">Đăng Bài</button>
-    	</form>
-    	<form th:action="@{|/admin/news/update/${news.id}|}" method="POST" class="col-md-1">
-        	<button type="submit" class="btn btn-warning">Lưu</button>
-    	</form>
+    <div class="row d-flex flex-row">
+        	<button type="submit" class="btn btn-success col-md-1">Đăng Bài</button>
+        	<button th:formaction="@{|/admin/news/update/${news.id}|}" type="submit" class="btn btn-warning col-md-1">Lưu</button>
+    
 	    <a th:href="@{/admin/news}" class="btn btn-primary col-md-1">
 	        Làm mới
 	    </a>
@@ -179,6 +175,7 @@
 		
         </div>
     
+                </form>
     
 
 		<!-- Danh sách bài viết -->
@@ -220,15 +217,35 @@
                         <td th:text="${item.create_date}"></td>
                         <td class="text-center">
                             <!-- Modal update -->
-                            <a th:href="@{/admin/news/edit/{id}(id=${item.id})}" class="btn btn-primary">
+                            <a th:href="'/admin/news/edit/' + ${item.id}" class="btn btn-primary">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelte${item.id }">
+                            <button class="btn btn-danger" data-bs-toggle="modal"   th:data-bs-target="'#modalDelte' + ${item.id}">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
                             <!-- Modal delete -->
+                            
+                            <!-- Modal delete -->
+						    <div class="modal fade" th:id="'modalDelte' + ${item.id}" tabindex="-1" data-bs-backdrop="static"
+								        data-bs-keyboard="false" aria-labelledby="exampleModalLabel"
+						        aria-hidden="true">
+						        <div class="modal-dialog">
+						            <div class="modal-content">
+						                <div class="modal-header">
+						                    <h1 class="modal-title fs-5" th:id="exampleModalLabel">Modal title</h1>
+						                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						                </div>
+						                <div class="modal-body">Bạn muốn bài viết [[${item.titles}]]</div>
+						                <div class="modal-footer">
+						                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+						                    <a th:href="@{/admin/news/delete/{id}(id=${item.id})}" class="btn btn-primary">YES</a>
+						                </div>
+						            </div>
+						        </div>
+						    </div>
+                            
                         </td>
                     </tr>
                 </tbody>
@@ -281,9 +298,10 @@
         </div>
     </div>
 </div>
+
+ 
 <!-- Modal -->
 	
-
 
 	<!-- Link To Base JS -->
 	<th:block th:replace="/admin/component/_linkJS :: jsLinks" />

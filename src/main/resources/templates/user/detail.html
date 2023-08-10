@@ -1,6 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="fr"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
 <meta charset="UTF-8">
@@ -9,7 +15,7 @@
 <title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-<th:block th:include="/user/component/_linkCSS :: cssLinks" />
+<%@include file="component/_linkCSS.jsp"%>
 
 <!-- Slick -->
 <link rel="stylesheet" type="text/css" href="../css/slick/slick.min.css">
@@ -47,15 +53,14 @@ i.bi-star {
 }
 </style>
 
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
 </head>
 
-<body ng-app="detail_products" ng-controller="ctrl">
+<body>
 
 
 	<!-- Header Start -->
-	<th:block th:include="/user/component/_header :: header" />
+	<%@include file="component/_header.jsp"%>
 	<!-- Header End -->
 
 	<main>
@@ -143,7 +148,7 @@ i.bi-star {
 				<div class="col-lg-7 mt-5">
 					<div class="card">
 						<div class="card-body">
-							<h1 class="h2">{{product_Detail.titles}}</h1>
+							<h1 class="h2">${productDetail.titles}</h1>
 							
 							<c:if test="${productDetail.discounts != null}">
 								<div class="price">
@@ -633,7 +638,7 @@ i.bi-star {
 
 
 	<!-- Footer Start -->
-	<th:block th:include="/user/component/_footer :: _footer" />
+	<%@include file="component/_footer.jsp"%>
 	<!-- Footer End -->
 
 	<!-- Start Script -->
@@ -644,7 +649,7 @@ i.bi-star {
 		src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	
 	<!-- Link To Base JS -->
-		<th:block th:include="/user/component/_linkJS::jsLinks" />
+	<%@include file="component/_linkJS.jsp"%>
 
 	<script src="../js/detail/jquery-1.11.0.min.js"></script>
 	<script src="../js/detail/jquery-migrate-1.2.1.min.js"></script>
@@ -653,9 +658,7 @@ i.bi-star {
 
 	<!-- Start Slider Script -->
 	<script src="/js/detail/slick.min.js"></script>
-	<!-- LINK js shop -->
-		<!-- <script th:src="@{/angular.js/shop.js}"></script> -->
- <script th:src="@{/angular.js/Detail_Product/_product.js}"></script> 
+	<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 	<script>
 	
 	$('#carousel-related-product').slick({

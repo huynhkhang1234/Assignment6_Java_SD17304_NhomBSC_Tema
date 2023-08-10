@@ -1,7 +1,14 @@
 
-
+<%-- <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%> --%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="fr"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ page import="java.text.DecimalFormat"%>
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
 <meta charset="UTF-8">
@@ -10,26 +17,22 @@
 <title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-		<th:block th:include="/user/component/_linkCSS :: cssLinks"/>
+<%@include file="component/_linkCSS.jsp"%>
+
 <style>
 .pro-thumbnail {
 	width: 80px;
 }
-input:disabled {
-  background-color: red;
-  color: blue;
-}
 </style>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
 </head>
 
-<body ng-app="shop-cart" ng-controller="ctrl">
+<body>
 	<!--  đọc dữ liệu từ trang khi mà người dùng click chuột vào giỏ hàng
 	kiểm tra -->
 
 	<!-- Header Start -->
-	<th:block th:include="/user/component/_header :: header" />
-	
+	<%@include file="component/_header.jsp"%>
 	<!-- Header End -->
 
 	<main>
@@ -60,54 +63,74 @@ input:disabled {
 					</thead>
 					<tbody class="text-center">
 
-						<!-- ------------------------vòng lập---------------------------------------------- -->						 																					
-							<tr ng-repeat="item in cart.items">
-							<td class="pro-thumbnail"><a href="#"> <img
-										th:src="@{/images/product-img/{{item.images}}}" alt="" height="70px;">
-								</a></td> 
-								<td>{{item.titles}}</td>													
+						<!-- ------------------------vòng lập---------------------------------------------- -->
+						<c:forEach items="${listCart}" var="item">
+
+							<tr id="cart" data-product-id="${item.value.id}">
+								<td class="pro-thumbnail"><a href="#"> <img
+										src="/images/product-img/${item.value.images}" alt="" height="70px;">
+								</a></td>
+								<td>${item.value.name}</td>
 								<!----------------- giá có trong cart------------------------------------ -->
-								<td ng-if="{{item.price}}">
-									
-									<td>{{item.salePirce | number:2}}</td>									
-								</td>
-							<!-- 	-------------------------------------------------------- -->
-								<!-- <c:if test="${ empty item.value.price}">
+								<c:if test="${not empty item.value.price}">
+									<!-- sdfsdffsdf -->
+									<td><fmt:formatNumber type="currency"
+											value="${item.value.price}" currencySymbol="đ"
+											pattern="###,###" /> VNĐ
+									<%-- ///
+									<fmt:formatNumber value="${item.price - (item.price * (item.discounts.price_discounts / 100))}" pattern="###,###,### VNĐ" />
+									///	 --%>	
+											
+											</td>
+								</c:if>
+								<!-- -------------------------------------------------------- -->
+								<c:if test="${ empty item.value.price}">
 									<td>0 VNĐ</td>
-								</c:if> -->
+								</c:if>
 								<!-- --------------------------------------------------------------------- -->
-							<td class="me-2 ms-2">
-									<div class="input-group" data-product-id="{{item.id}}"
+								<td class="me-2 ms-2">
+									<div class="input-group" data-product-id="${item.value.id}"
 										data-min-qty="1" data-max-qty="10" data-curr-qty="1">
 
 										<!-- Cộng -->
-										<button ng-click="cart.cong(item.id)"
+										<button onclick="onUp(${item.value.id},'${item.value.price}')"
 											class="btn btn-outline-warning qty-plus">+</button>
 											<!-- sl -->
-										<input readonly
-										 ng-model="item.qty" class="form-control text-center qty-input"
-											 placeholder="1" aria-describedby="quantityBtn">
+										<input onclick="inputClick(${item.value.id})"
+											id="${item.value.id}" value="${item.value.quantity}"
+											type="text" class="form-control text-center qty-input"
+											min="1" placeholder="1" aria-describedby="quantityBtn">
 										<!-- trừ -->
-										<button ng-click="cart.tru(item.id)"
-											
+										<button id="bt${item.value.id}"
+											onclick="onDown(${item.value.id},'${item.value.price}')"
 											class="btn btn-outline-warning">-</button>
 									</div>
 								</td>
 								<!-- Giá tiền -->
 
-							<td>
-							{{item.qty * item.salePirce | number:2}}
-							</td>
+								<c:if test="${not empty item.value.orderMoney}">
+									<td id="td${item.value.id}"><fmt:formatNumber
+											type="currency" value="${item.value.orderMoney}"
+											currencySymbol="đ" pattern="###,###" /> VNĐ</td>
+								</c:if>
 
-								<!-- <c:if test="${ empty item.value.orderMoney}">
+								<c:if test="${ empty item.value.orderMoney}">
 									<td>0 VNĐ</td>
-								</c:if> -->
+								</c:if>
 
-							 <!-- -------------------- xóa dữ liệu -------------------------------- -->
-								<td><a	ng-click="cart.delete(item.id)"								
+								<!---------------------- xóa dữ liệu ---------------------------------->
+								<td><a
+									onclick="orderdelete(${item.value.id},'${sessionScope.total}','${item.value.price}','${item.value.quantity}','${sessionScope.cartSize}')"
 									href="#" class="btn btn-danger" > <i class="bi bi-trash3"
 										style="color: #fff;"></i>
-								</a></td>													
+								</a></td>
+								<!-- -------------------------------------------------------------------------- -->
+								<%-- <c:set var="total" value="${total + item.value.orderMoney}" /> --%>
+							</tr>
+
+						</c:forEach>
+
+
 					</tbody>
 				</table>
 			</div>
@@ -123,10 +146,13 @@ input:disabled {
 						<div class="card-header">Hóa đơn</div>
 						<div class="card-body text-secondary">
 							<div class="d-flex justify-content-between" style="color: #333;">
-								<p class="card-text" style="font-weight: 500;">Tạm tính:</p>						
-								<span>
-									{{cart.amount | number:2}} VNĐ
-								</span>																									
+								<p class="card-text" style="font-weight: 500;">Tạm tính:</p>
+								<span id="moneyT">
+								<fmt:formatNumber  type="currency"
+											value="${sessionScope.total}" currencySymbol="đ"
+											pattern="###,### VNĐ" /> 
+								
+								 </span>
 							</div>
 							<div class="d-flex justify-content-between"
 								style="color: #333; border-bottom: 1px solid #ccc;">
@@ -137,10 +163,19 @@ input:disabled {
 								style="color: #333;">
 								<h5 class="card-title" style="font-weight: 500;">Tổng cộng:</h5>
 								<!-- Tính  tổng tiền -->
-									<span>
-										{{cart.amount | number:2}} VNĐ
-										
+								<c:if test="${not empty sessionScope.total}">
+
+									<span id="showSumMoney"> 
+									  <fmt:formatNumber  type="currency"
+											value="${sessionScope.total}" currencySymbol="đ"
+											pattern="###,### VNĐ"  /> 
 									</span>
+									<span style="display: none;" id="setMoney">${sessionScope.total} </span>
+
+								</c:if>
+								<c:if test="${ empty sessionScope.total}">
+									<span>0 VNĐ</span>
+								</c:if>
 							</div>
 							<a  href="/user/cart/checkout"
 								class="btn btn-warning w-100 mt-4 fw-bolder">Tiến hành đặt
@@ -155,15 +190,11 @@ input:disabled {
 
 
 	<!-- Footer Start -->
-	
-	<th:block th:include="/user/component/_footer :: _footer" />
-	
+	<%@include file="component/_footer.jsp"%>
 	<!-- Footer End -->
 
 	<!-- Link To Base JS -->
-	<th:block th:include="/user/component/_linkJS::jsLinks" />
-	
-
+	<%@include file="component/_linkJS.jsp"%>
 	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>	
 function onUp(id,price) {
@@ -378,8 +409,6 @@ function orderdelete(id,total,price,quantity,cartNumber){
 		 
 	</script>
 	
-
-<script th:src="@{/angular.js/shop.js}"></script>
 
 	
 </body>

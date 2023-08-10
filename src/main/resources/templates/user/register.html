@@ -1,10 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="fr"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  ng-app="myApp">
 
 <head>
 <meta charset="UTF-8">
@@ -13,8 +9,20 @@
 <title>B.S.C.Team - CarService</title>
 
 <!-- Link To Base CSS -->
-<%@include file="component/_linkCSS.jsp"%>
+    
+	<!-- Link To Favicon -->
+    <link rel="shortcut icon" href="/images/favicon.svg" type="image/svg+xml">
 
+    <!-- Link To Base CSS -->
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- Link To Icon Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Link To Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<link href="/user/component/_linkCSS">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
 <style>
 .login-form-container {
 	background: #f3f3f3 none repeat scroll 0 0;
@@ -86,102 +94,92 @@
 
 </head>
 
-<body>
+<body ng-controller="registerController">
 
 	<!-- Header Start -->
-	<%@include file="component/_header.jsp"%>
+<header th:insert="~{/user/component/_header}" ></header>
+
 	<!-- Header End -->
 
-	<main>
+	    <main>
 
-		<!-- ========================== BREADCRUMB ========================== -->
-		<section class="breadcrumb">
-			<ul class="breadcrumb__list d-flex container">
-				<li><a href="/user/index" class="breadcrumb__link">Trang
-						chủ</a></li>
-				<li><span class="breadcrumb__link">></span></li>
-				<li><span class="breadcrumb__link active">Đăng ký</span></li>
-			</ul>
-		</section>
+        <!-- ========================== BREADCRUMB ========================== -->
+        <section class="breadcrumb">
+            <ul class="breadcrumb__list d-flex container">
+                <li><a href="../html/index.html" class="breadcrumb__link">Trang chủ</a></li>
+                <li><span class="breadcrumb__link">></span></li>
+                <li><span class="breadcrumb__link active">Đăng ký</span></li>
+            </ul>
+        </section>
 
-		<div class="customer-page theme-default-margin">
+        <div class="customer-page theme-default-margin">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
 
 						<div class="login">
 							<div id="CustomerLoginForm">
-								<fr:form action="/user/register" method="POST"
-									modelAttribute="user" id="customer_register"
-									accept-charset="UTF-8" data-login-with-shop-sign-in="true">
+								<form action="/user/register" id="customer_register"
+									    accept-charset="UTF-8" data-login-with-shop-sign-in="true">
+
+									
 									<input type="hidden" name="form_type" value="customer_register">
 									<input type="hidden" name="utf8" value="✓">
-
+									
+									
 									<div class="login-form-container">
 										<div class="login-text" style="text-align: center;">
-											<h2>Tạo Tài Khoản</h2>
-											<c:if test="${not empty sessionScope.registerError}">
-												
-												<span>${sessionScope.registerError}</span>													
-												
-											</c:if>
+										    <h2>Tạo Tài Khoản</h2>
+										    <!-- <div th:if="${session.registerError != null}">
+										        <span th:text="${session.registerError}"></span>
+										    </div> -->
 										</div>
+
 										<div class="register-form">
-											<div id="create_customer" accept-charset="UTF-8"
-												data-login-with-shop-sign-up="true">
-												<input type="hidden" name="form_type"
-													value="create_customer"><input type="hidden"
-													name="utf8" value="✓">
-
-
-												<div class="col-md-5" style="margin-right: 70px;">
-													<label class="hidden-label">Họ</label>
-													<fr:input path="first_names" type="text" name="first_names"
-														id="first_names" class="input-full" placeholder=""
-														autocapitalize="words" autofocus="" />
-													<fr:errors path="first_names" element="small"
-														cssClass="form-text text-danger"></fr:errors>
-												</div>
-
-
-												<div class="col-md-5" style="width: 250px;">
-													<label class="hidden-label">Tên</label>
-													<fr:input path="last_names" type="text" name="last_names"
-														id="last_names" class="input-full" placeholder=""
-														autocapitalize="words" />
-													<fr:errors path="last_names" element="small"
-														cssClass="form-text text-danger"></fr:errors>
-												</div>
-												<br> <label class="hidden-label">Tên Đăng Nhập</label>
-												<fr:input path="user_names" type="text" name="user_names"
-													id="user_names" class="input-full" placeholder=""
-													autocapitalize="words" autofocus="" />
-												<fr:errors path="user_names" element="small"
-													cssClass="form-text text-danger"></fr:errors>
-												<br> <label class="hidden-label">Email</label> 
-												<fr:input path="email"
-													type="email" name="email" id="email" class="input-full"
-													placeholder="" autocorrect="off" autocapitalize="off"/>
-												<fr:errors path="email" element="small"
-													cssClass="form-text text-danger"></fr:errors>
-												<br> <label class="hidden-label">Mật Khẩu</label> 
-												<fr:input path="pass_words"
-													type="password" name="pass_words" id="pass_words"
-													class="input-full" placeholder=""/>
-												<fr:errors path="pass_words" element="small"
-													cssClass="form-text text-danger"></fr:errors>
-													<!--  -->
-													<br> <label class="hidden-label">Nhập lại mật Khẩu</label> 
-												<fr:input path="pass_words2"
-													type="password" name="pass_words" id="pass_words2"
-													class="input-full" placeholder=""/>
-												<fr:errors path="pass_words2" element="small"
-													cssClass="form-text text-danger"></fr:errors>
-												<span style="color: red">${errorPass}</span>
-
-												<div class="form-action-button">
-													<button type="submit" class="theme-default-button">Tạo</button>
-												</div>
+									<div id="create_customer" accept-charset="UTF-8" data-login-with-shop-sign-up="true">
+											    <input type="hidden" name="form_type" value="create_customer">
+											    <input type="hidden" name="utf8" value="✓">
+											
+											    <div class="col-md-5" style="margin-right: 70px;">
+											        <label class="hidden-label">Họ</label>
+											        <input type="text" ng-model="users.first_names" id="first_names" class="input-full" placeholder="" autocapitalize="words" autofocus>
+											        <!-- <small class="form-text text-danger" th:errors="*{first_names}"></small> -->
+											    </div>
+											
+											    <div class="col-md-5" style="width: 250px;">
+											        <label class="hidden-label">Tên</label>
+											        <input type="text" ng-model="users.last_names" id="last_names" class="input-full" placeholder="" autocapitalize="words">
+											        <!-- <small class="form-text text-danger" th:errors="*{last_names}"></small> -->
+											    </div>
+											
+											    <br>
+											
+											    <label class="hidden-label">Tên Đăng Nhập</label>
+											    <input type="text" ng-model="users.user_names" id="user_names" class="input-full" placeholder="" autocapitalize="words" autofocus>
+											    <!-- <small class="form-text text-danger" th:errors="*{user_names}"></small> -->
+											
+											    <br>
+											
+											    <label class="hidden-label">Email</label>
+											    <input type="email" ng-model="users.email" id="email" class="input-full" placeholder="" autocorrect="off" autocapitalize="off">
+											    <!-- <small class="form-text text-danger" th:errors="*{email}"></small> -->
+											
+											    <br>
+											
+											    <label class="hidden-label">Mật Khẩu</label>
+											    <input type="password" ng-model="users.pass_words" id="pass_words" class="input-full" placeholder="">
+											    <!-- <small class="form-text text-danger" th:errors="*{pass_words}"></small> -->
+											
+											    <br>
+											
+											    <label class="hidden-label">Nhập lại mật khẩu</label>
+											    <input type="password" ng-model="users.pass_words2" id="pass_words2" class="input-full" placeholder="">
+											    <!-- <small class="form-text text-danger" th:errors="*{pass_words2}"></small> -->
+											    <!-- <label style="color: red" type="hidden">${errorPass}</label> -->
+											
+											    <div class="form-action-button">
+											        <button type="submit" ng-click="create()" class="theme-default-button">Tạo</button>
+											    </div>
 											</div>
 
 											<div class="account-optional-action">
@@ -189,7 +187,7 @@
 											</div>
 										</div>
 									</div>
-								</fr:form>
+								</form>
 							</div>
 
 						</div>
@@ -200,16 +198,81 @@
 
 
 
-	</main>
+
+    </main>
+
 
 
 	<!-- Footer Start -->
-	<%@include file="component/_footer.jsp"%>
+	
 	<!-- Footer End -->
-
+<th:block th:insert="~{/user/component/_footer}" /> 
 
 	<!-- Link To Base JS -->
-	<%@include file="component/_linkJS.jsp"%>
+	
+	<!-- <th:block th:insert="~{/user/component/_linkJS}" /> -->
+	<script src="../js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+	
+	
+	
+	<script >
+var app = angular.module('myApp', []);
+	
+	app.controller('registerController', function ($scope, $http) {
+		$scope.users = "";
+		$scope.view = function () {
+			var RegisterURL2 = "http://localhost:8080/api/user/register";
+			
+			$http.get(RegisterURL2)
+				.then(function (rep) {
+					$scope.users = rep.data;
+				})
+				.catch(function (e) {
+					console.log(e);
+				});
+		}
+		
+		$scope.create = function() {
+	        var RegisterURL = "http://localhost:8080/api/user/register";
+	        
+	        $http.post(RegisterURL, $scope.users)
+			.then(function (rep) {
+				$scope.users = rep.data;
+				
+				window.location.href = "http://localhost:8080/user/login";
+			})
+			.catch(function (e) {
+				console.log(e);
+				window.location.href = "http://localhost:8080/user/register";
+			});
+	      
+	    }
+		
+		$scope.logined = function(username, password) {
+			var url = "http://localhost:8080/user/login";
+			$http.post(url)
+				.then(function (resp) {
+					
+				})
+		}
+			
+		
+		
+		$scope.view();
+		
+	});
+	
+	
+	
+	</script>
+	
+	
+	
+	
+	
+	
+	
 </body>
 
 </html>
