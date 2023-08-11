@@ -15,19 +15,20 @@
 			<div class=" btn-group">
 				<button class="profile btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 					<div class="profile-photo">
-						<!-- Sử dụng thymeleaf để kiểm tra session.userLogin -->
-						<th:block th:if="${session.userLogin}">
-							<img th:src="@{/images/user-img/{images}(images=${session.userLogin.images})}" style="width: auto !important;">
+						<!-- Sử dụng thymeleaf để kiểm tra userLogin -->
+						<th:block th:if="${userLogin}">
+							<img th:src="@{/images/user-img/{images}(images=${userLogin.images})}" style="width: auto !important;">
 						</th:block>
 					</div>
 					<div class="profile__content d-flex flex-column">
-						<th:block th:unless="${session.userLogin}">
+						<th:block th:unless="${userLogin}">
 							<h5>Tên: Chu Hua</h5>
 							<span>Vai trò: Admin</span>
 						</th:block>
 						
-						<th:block th:if="${session.userLogin}">
-							<span th:text="${session.userLogin.user_names}"></span>
+						<th:block th:if="${userLogin}">
+							<h5 th:text="${userLogin.user_names}"></h5>
+							<span>Vai trò: [[${userLogin.roles.roles}]]</span>
 						</th:block>
 					</div>
 				</button>

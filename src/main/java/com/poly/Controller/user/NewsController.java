@@ -35,16 +35,15 @@ public class NewsController {
 		return "user/news";
 	}
 	
-	@GetMapping("/user/news/detail/{id}")
-	public String detail(Model m, @PathVariable("id") Integer id) {
-		News entity = new News();
-		
-		entity = dao.getOne(id);
-		
-		m.addAttribute("news", entity);
-		
-		List<News> list = dao.findAllActiveTrue();
-		m.addAttribute("list", list);
-		return "user/news-detail";
-	}
+	/*
+	 * @GetMapping("/user/news/detail/{id}") public String detail(Model
+	 * m, @PathVariable("id") Integer id) { News entity = new News();
+	 * 
+	 * entity = dao.getOne(id);
+	 * 
+	 * m.addAttribute("news", entity);
+	 * 
+	 * List<News> list = dao.findAllActiveTrue(); m.addAttribute("list", list);
+	 * return "user/news-detail"; }
+	 */
 }

@@ -30,7 +30,7 @@ import com.poly.utils.XImage;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import javax.websocket.Session;
 
 @Controller
 public class NewsMANController {
@@ -105,7 +105,8 @@ public class NewsMANController {
 
 			@RequestParam("file") MultipartFile file) {
 
-		Users u = (Users) session.getAttribute("userLogin");
+		/* Users u = (Users) session.getAttribute("userLogin"); */
+		Users u = userDao.findByEmail("Phinvhpc04124@fpt.edu.vn");
 		entity.setUsers(u);
 
 		Date now = new Date();
@@ -116,7 +117,7 @@ public class NewsMANController {
 		entity.setIs_active(1);
 		
 		entity.setImages(file.getOriginalFilename());
-		XImage.addImageToPackage(file, "/images/news-imgae/");
+		XImage.addImageToPackage(file, "/images/news-img/");
 		
 		
 
@@ -129,7 +130,7 @@ public class NewsMANController {
 	@GetMapping("/admin/news/edit/{id}")
 	public String edit(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 
-		entity = dao.findById(id).get();
+		entity = dao.getOne(id);
 		model.addAttribute("news", entity);
 
 		List<Categories_news> listLoai = cateNewsDao.findAll();

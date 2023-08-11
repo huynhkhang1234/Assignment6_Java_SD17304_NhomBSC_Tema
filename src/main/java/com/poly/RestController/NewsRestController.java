@@ -1,4 +1,4 @@
-package com.poly.Controller.user;
+package com.poly.RestController;
 
 import java.util.Date;
 import java.util.List;
@@ -29,25 +29,6 @@ public class NewsRestController {
 		
 		return ResponseEntity.ok(listNews);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	@GetMapping("/api/user/news/detail/{id}")
 	public String detail(Model m, @PathVariable("id") Integer id) {
