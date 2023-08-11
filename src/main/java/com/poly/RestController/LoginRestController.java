@@ -1,4 +1,5 @@
-package com.poly.RestController;
+
+ package com.poly.RestController;
   
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.poly.Entities.Users;
 import com.poly.RestService.UserService;
   
-  @Controller public class LoginRestController {
+ @Controller
+ public class LoginRestController {
 	  @Autowired
 	  UserService userService;
 	  @Autowired
