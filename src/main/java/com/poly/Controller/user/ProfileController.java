@@ -16,17 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
-import com.poly.service.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.poly.DAO.LikesDAO;
 import com.poly.Entities.Likes;
 import com.poly.Entities.Users;
 
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProfileController {

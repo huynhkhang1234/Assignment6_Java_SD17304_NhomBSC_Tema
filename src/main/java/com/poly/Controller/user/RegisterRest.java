@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Date;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,8 +22,8 @@ import com.poly.Entities.MailModel;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @CrossOrigin("*")
 @RestController

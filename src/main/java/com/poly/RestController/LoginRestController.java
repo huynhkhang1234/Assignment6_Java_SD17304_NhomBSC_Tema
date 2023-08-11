@@ -61,7 +61,7 @@ import com.poly.RestService.UserService;
 			System.out.println("xoa rồi.");
 			   Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		        if (authentication != null) {
-		            new SecurityContextLogoutHandler().logout(request, response, authentication)
+		            new SecurityContextLogoutHandler().logout(request, response, authentication);
 		        }		     
 			return "forward:/user/login";
 		}

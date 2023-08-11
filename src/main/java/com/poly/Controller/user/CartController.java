@@ -16,8 +16,8 @@ import com.poly.DAO.ProductsDAO;
 import com.poly.Entities.Products;
 import com.poly.service.CartItem;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class CartController {

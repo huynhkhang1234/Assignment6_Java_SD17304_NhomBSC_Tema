@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
+
 @Service	
 public class UserService implements UserDetailsService {
 	@Autowired
@@ -54,6 +55,13 @@ public class UserService implements UserDetailsService {
 		
 		session.setAttribute("userLogin", encodedString);	
 	}
+	
+	public Users getUser(String username) {
+		if (username.contains("@")) {
+			return dao.findByEmail(username);
+		} else {
+			return dao.findByUsername(username);
+		}
+	}
 		
-
 }

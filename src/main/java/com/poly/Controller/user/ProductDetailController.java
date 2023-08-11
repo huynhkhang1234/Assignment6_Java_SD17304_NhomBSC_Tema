@@ -13,8 +13,8 @@ import com.poly.Entities.Galleries;
 import com.poly.Entities.Products;
 import com.poly.service.NumberFormatMoney;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProductDetailController {

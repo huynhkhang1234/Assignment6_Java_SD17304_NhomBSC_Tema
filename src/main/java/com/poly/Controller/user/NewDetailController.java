@@ -36,7 +36,7 @@ public class NewDetailController {
 	@GetMapping("/admin/show/{id}")
 	public String edit(Model model, @ModelAttribute("news") News entity, @PathVariable("id") Integer id) {
 //
-		entity = dao.getById(id);
+		entity = dao.getOne(id);
 		model.addAttribute("news", entity);
 
 		

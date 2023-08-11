@@ -34,8 +34,8 @@ import com.poly.Entities.Products;
 import com.poly.Entities.Suppliers;
 import com.poly.utils.XDate;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProductMANController {
@@ -171,7 +171,7 @@ public class ProductMANController {
 		model.addAttribute("list", listproduts);
 
 
-		pro = dao.getById(id);
+		pro = dao.getOne(id);
 		
 		String createDay = XDate.toString(pro.getCreate_date(), "yyyy-MM-dd");
 	    String updateDay = XDate.toString(pro.getUpdate_date(), "yyyy-MM-dd");
@@ -236,7 +236,7 @@ public class ProductMANController {
 			 */
 
 		if (file.getOriginalFilename() == null || file.getOriginalFilename().length() == 0) {
-			Products p = dao.getById(entity.getId());
+			Products p = dao.getOne(entity.getId());
 
 			if (!(p.getImages() == null || p.getImages().length() == 0)) {
 				entity.setImages(p.getImages());
@@ -358,7 +358,7 @@ public class ProductMANController {
 
 		model.addAttribute("list", listproduts);
 
-		d = disdao.getById(id);
+		d = disdao.getOne(id);
 		
 		String startDate = XDate.toString(d.getStart_day(), "yyyy-MM-dd");
 	    String endDate = XDate.toString(d.getEnd_day(), "yyyy-MM-dd");
@@ -407,7 +407,7 @@ public class ProductMANController {
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
 
-		cate = catedao.getById(id);
+		cate = catedao.getOne(id);
 		model.addAttribute("categories", cate);
 
 		try {
@@ -420,7 +420,7 @@ public class ProductMANController {
 		
 		model.addAttribute("listCate", listCate);
 		
-		cate = catedao.getById(id);
+		cate = catedao.getOne(id);
 		model.addAttribute("categories", cate);
 		
 		Discounts d = new Discounts();

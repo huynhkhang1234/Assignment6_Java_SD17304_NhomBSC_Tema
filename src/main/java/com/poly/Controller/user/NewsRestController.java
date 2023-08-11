@@ -17,10 +17,6 @@ import com.poly.DAO.NewsDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
 
-import com.poly.DAO.NewsDAO;
-import com.poly.Entities.Categories_news;
-import com.poly.Entities.News;
-
 @CrossOrigin("*")
 @RestController
 public class NewsRestController {
@@ -57,7 +53,7 @@ public class NewsRestController {
 	public String detail(Model m, @PathVariable("id") Integer id) {
 		News entity = new News();
 		
-		entity = dao.getById(id);
+		entity = dao.getOne(id);
 		
 		m.addAttribute("news", entity);
 		return "user/news-detail";

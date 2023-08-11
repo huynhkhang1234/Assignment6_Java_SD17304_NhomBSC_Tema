@@ -17,9 +17,9 @@ import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
 import com.poly.service.CookieService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 public class LoginController {

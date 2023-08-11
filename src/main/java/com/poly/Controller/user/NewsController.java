@@ -39,7 +39,7 @@ public class NewsController {
 	public String detail(Model m, @PathVariable("id") Integer id) {
 		News entity = new News();
 		
-		entity = dao.getById(id);
+		entity = dao.getOne(id);
 		
 		m.addAttribute("news", entity);
 		

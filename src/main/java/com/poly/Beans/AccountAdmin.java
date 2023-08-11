@@ -3,6 +3,9 @@ package com.poly.Beans;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.poly.Entities.Histories;
 import com.poly.Entities.Likes;
@@ -12,8 +15,6 @@ import com.poly.Entities.Products_reviews;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

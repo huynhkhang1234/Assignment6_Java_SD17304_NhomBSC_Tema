@@ -64,4 +64,8 @@ public class OrderService {
 		return order;
 	}
 
+	public List<Orders> getAllByUserID(Integer user_id) {
+		List<Orders> listOrder = dao.findAllByUserIDAndIsActiveTrue(user_id);
+		return listOrder;
+	}
 }

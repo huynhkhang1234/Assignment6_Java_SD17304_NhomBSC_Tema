@@ -17,22 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
+import com.poly.RestService.OrderService;
+import com.poly.RestService.UserService;
 import com.poly.service.FavoriteService;
 import com.poly.service.OrderDetailService;
-import com.poly.service.OrderService;
-import com.poly.service.UserService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import com.poly.DAO.LikesDAO;
 import com.poly.Entities.Likes;
 import com.poly.Entities.Order_details;
 import com.poly.Entities.Orders;
-import com.poly.Entities.Users;
-
-import jakarta.servlet.http.HttpSession;
 
 @CrossOrigin("*")
 @RestController
