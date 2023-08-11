@@ -117,7 +117,7 @@ public class NewsMANController {
 		entity.setIs_active(1);
 		
 		entity.setImages(file.getOriginalFilename());
-		XImage.addImageToPackage(file, "/images/news-imgae/");
+		XImage.addImageToPackage(file, "/images/news-img/");
 		
 		
 
