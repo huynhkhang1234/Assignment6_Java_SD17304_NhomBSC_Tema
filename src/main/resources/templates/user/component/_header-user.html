@@ -69,7 +69,7 @@
 			class="profile d-flex flex-row-reverse align-items-center gap-2 btn btn-outline-dark dropdown-toggle"
 			type="button" data-bs-toggle="dropdown" aria-expanded="false">
 			<div class="profile-photo overflow-hidden">
-			 <span ng-if="${ #strings.isEmpty(session.userLogin.images)}">
+			 <span th-if="${ #strings.isEmpty(session.userLogin.images)}">
 							<img th:src="@{/images/user-img/1.png}" id="img" 
 							style="width: auto !important;">
 						</span>  

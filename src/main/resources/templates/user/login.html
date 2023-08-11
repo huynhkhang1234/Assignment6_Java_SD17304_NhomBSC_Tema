@@ -107,7 +107,7 @@
                             <div class="login-form-container">
                                 <div class="login-text" style="text-align: center;">
                                     <h2>Đăng Nhập</h2>
-                                    <span
+                                    <span style="color: orangered;"
                                         th:text="${message}"></span>
                                 </div>
                                 <div class="login-form">
@@ -120,10 +120,6 @@
                                     <input id="passWord" name="pass_words" type="password" class="input-full"
                                         placeholder="Vui lòng nhập mật khẩu" th:value="${pass}" />
                                     <!-- <span th:errors="*{pass_words}" class="input-full"></span> -->
-                                    <div style="display: flex;">
-                                        <input style="width: 17px" type="checkbox" name="remember" value="true">
-                                        <span style="padding-top: 10px; margin-left: 5px">Lưu thông tin</span>
-                                    </div>
 
                                     <div class="login-toggle-btn">
                                         <div class="form-action-button">

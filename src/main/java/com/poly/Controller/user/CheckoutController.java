@@ -1,7 +1,12 @@
- package com.poly.Controller.user;
+package com.poly.Controller.user;
+
+
 
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,20 +23,15 @@ import com.poly.Entities.Order_details;
 import com.poly.Entities.Orders;
 import com.poly.Entities.Products;
 import com.poly.Entities.Users;
-//import com.poly.service.B64Session;
+import com.poly.service.B64Session;
 import com.poly.service.CartItem;
 import com.poly.utils.XDate;
 
-import javax.servlet.http.HttpSession;
-
-
 @Controller
 public class CheckoutController {
-	
-//	@Autowired
-//	private HttpServletRequest request;
 	@Autowired
-	
+	private HttpServletRequest request;
+	@Autowired
 	private HttpSession session;
 	@Autowired
 	private ProductsDAO productRepo;
@@ -41,18 +41,17 @@ public class CheckoutController {
 
 	@Autowired
 	private Order_detailsDAO orderDetailRepo;
-//	@Autowired
-//	B64Session b64s;
+	@Autowired
+	B64Session b64s;
 	@Autowired
 	UsersDAO usDAO;
-	
 	@GetMapping("/user/cart/checkout")
 	public String view(Model model) {
 		Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart"); 
 		model.addAttribute("checkList", cart);
 		// truyền dữ liệu qua ben email.
-//		Users us = usDAO.findByEmail(b64s.getemail());
-		model.addAttribute("user", null);		
+		Users us = usDAO.findByEmail(b64s.getemail());
+		model.addAttribute("user", us);		
 		
 		return "user/checkout";
 	}
