@@ -52,6 +52,7 @@ public class CheckoutController {
 		// truyền dữ liệu qua ben email.
 		Users us = usDAO.findByEmail(b64s.getemail());
 		model.addAttribute("user", us);		
+		model.addAttribute("userLogin", us);	
 		
 		return "user/checkout";
 	}

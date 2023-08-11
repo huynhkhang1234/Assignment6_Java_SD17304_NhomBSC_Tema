@@ -1,6 +1,6 @@
 const app = angular.module("detail_products", []);
 
-app.controller("ctrl", function($scope, $http, $location,$timeout) {
+app.controller("ctrl", function($scope, $http, $location, $timeout) {
 	$scope.productInfo = {}
 	$scope.isFirstTime = true;
 	// Sử dụng $location để lấy thông tin về URL

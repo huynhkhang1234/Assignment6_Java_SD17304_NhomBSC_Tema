@@ -50,6 +50,8 @@ public class ProductDetailController {
 		List<Galleries> galleriesList = this.galleriesRepo.findByImages(ps);
 		model.addAttribute("galleriesList", galleriesList);
 		System.out.println("slide show :" + galleriesList);
+		
+		
 		return "user/detail";
 	}
 

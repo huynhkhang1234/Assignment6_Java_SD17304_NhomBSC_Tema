@@ -242,7 +242,7 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 					setTimeout(function() {
 						notification.style.animation = "fadeOut 2s ease-in-out forwards";
 					}, 2000);
-					$scope.bill.NotBill();
+					$scope.bill.YesBill();
 				}).catch(error => {
 					alert('lỗi đặt hàng');
 					console.log(order)

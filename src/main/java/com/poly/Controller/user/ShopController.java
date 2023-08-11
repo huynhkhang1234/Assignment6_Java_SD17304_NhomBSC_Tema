@@ -59,10 +59,7 @@ public class ShopController {
 		Page<Products> listproduts =  this.productRepo.getIsActive(pageable);
 		model.addAttribute("listproduts", listproduts);
 		model.addAttribute("username", b64s.getUserName());	
-		//Users u = (Users) session.getAttribute("userLogin");
-		
-		//List<Likes> listLike = likesDAO.findAllByUserId(u.getId());				
-		//model.addAttribute("listLike", listLike);		
+		model.addAttribute("userLogin", b64s.getUserLogin());			
 		return "user/shop";
 	}
 

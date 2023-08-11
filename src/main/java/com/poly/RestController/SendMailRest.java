@@ -1,12 +1,17 @@
-package com.poly.Controller.user;
+package com.poly.RestController;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +33,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+
+
+@SpringBootApplication
 @CrossOrigin("*")
 @RestController
 public class SendMailRest {
@@ -62,7 +71,8 @@ public class SendMailRest {
 		if(u != null ) {
 			
 		mail.setFrom("hotrovienBSCTeam@gmail.com");
-		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.getUser_names() + " ==> Mật khẩu của bạn là: " + u.getPass_words());
+		
+		mail.setBody("Thông tin tài khoản hiện tại của bạn:\r\n "+"  ==> Tên đăng nhập : " + u.getUser_names() + "==> Mật khẩu của bạn là: " + u.getPass_words());
 		try {
 
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");

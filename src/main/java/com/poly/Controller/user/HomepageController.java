@@ -20,7 +20,7 @@ public class HomepageController {
 	@GetMapping("/user/index")
 	public String view(Model m ) {
 		m.addAttribute("username", b64s.getUserName());			
-		
+		m.addAttribute("userLogin", b64s.getUserLogin());
 		return "user/index";
 	}
 }

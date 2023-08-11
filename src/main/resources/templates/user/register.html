@@ -239,7 +239,6 @@ var app = angular.module('myApp', []);
 	        $http.post(RegisterURL, $scope.users)
 			.then(function (rep) {
 				$scope.users = rep.data;
-				
 				window.location.href = "http://localhost:8080/user/login";
 			})
 			.catch(function (e) {

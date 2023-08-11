@@ -41,9 +41,9 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
 		
 		// Phân quyền sử dụng
 		http.authorizeRequests()
-			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("2")	
-			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("1")	
-			.antMatchers("/user/bill").hasAnyRole("1")
+			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("2")
+			.antMatchers("/user/cart","/user/cart/**").hasAnyRole("1", "2")	
+			.antMatchers("/user/bill").hasAnyRole("1", "2")
 			.anyRequest().permitAll(); ////tất cả các quyền còn lại.
 		
 		// Điều khiển lỗi truy cập không đúng vai trò

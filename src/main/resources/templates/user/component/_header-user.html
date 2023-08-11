@@ -71,10 +71,10 @@
 			<div class="profile-photo overflow-hidden">
 			 <span th-if="${ #strings.isEmpty(session.userLogin.images)}">
 							<img th:src="@{/images/user-img/1.png}" id="img" 
-							style="width: auto !important;">
+							style="width: auto !important; transform: rotate(-90deg);">
 						</span>  
 
-				<img src="/images/profile-1.jpg">
+				<img th:src="@{/images/1.png}">
 			</div>
 			<div class="profile__content d-flex flex-column ">
 				<p style="margin: 0;" th:text="${username}">

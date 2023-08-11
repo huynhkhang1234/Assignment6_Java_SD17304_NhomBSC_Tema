@@ -33,6 +33,7 @@ import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Products;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
+import com.poly.service.B64Session;
 import com.poly.utils.XDate;
 import com.poly.utils.XImage;
 
@@ -50,6 +51,9 @@ public class AccountMANController {
 	// ko thể khóa tài khoản hiện tại.
 	@Autowired
 	HttpSession session;
+	
+	@Autowired
+	B64Session b64s;
 
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
@@ -61,9 +65,9 @@ public class AccountMANController {
 		 
 		Pageable pageable;
 		try {
-			pageable = PageRequest.of(p.orElse(0), 5);
+			pageable = PageRequest.of(p.orElse(0), 10);
 		} catch (Exception e) {
-			pageable = PageRequest.of(0, 5);
+			pageable = PageRequest.of(0, 10);
 			e.printStackTrace();
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
@@ -218,7 +222,7 @@ public class AccountMANController {
 		System.out.println(id + "id");
 		
 		entity = userDao.getOne(id);
-		Users us = (Users) session.getAttribute("userLogin");
+		Users us = b64s.getUserLogin();
 		if (!us.getEmail().equals(entity.getEmail())) {
 			if (entity.getIs_active() == 1) {
 
