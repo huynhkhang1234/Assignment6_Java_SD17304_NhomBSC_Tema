@@ -107,8 +107,8 @@
                             <div class="login-form-container">
                                 <div class="login-text" style="text-align: center;">
                                     <h2>Đăng Nhập</h2>
-                                    <span th:if="${not #strings.isEmpty(session.errorMessage)}"
-                                        th:text="${session.errorMessage}"></span>
+                                    <span
+                                        th:text="${message}"></span>
                                 </div>
                                 <div class="login-form">
                                     <label for="Email" class="hidden-label">Email</label>

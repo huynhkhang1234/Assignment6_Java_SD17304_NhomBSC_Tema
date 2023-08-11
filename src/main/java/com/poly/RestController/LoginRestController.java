@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.poly.Entities.Users;
 import com.poly.RestService.UserService;
   
- @Controller
- public class LoginRestController {
+  @Controller public class LoginRestController {
 	  @Autowired
 	  UserService userService;
 	  @Autowired
@@ -53,6 +52,7 @@ import com.poly.RestService.UserService;
 		@RequestMapping("/auth/login/error")
 		public String error(Model model){
 			model.addAttribute("message", "Sai thông tin đăng nhập!");
+			
 			return "forward:/user/login";
 		}
 		

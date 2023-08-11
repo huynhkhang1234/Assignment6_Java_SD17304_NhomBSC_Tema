@@ -18,6 +18,45 @@
 .likeCss .iconCss {
 	color: #fff;
 }
+
+
+.notification {
+color: lightgoldenrodyellow;
+    position: fixed;
+    top: 90px;
+    right: 10px;
+    padding: 20px;
+    background-color: yellowgreen;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    animation: fadeIn 0.7s ease-in-out forwards;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
 </style>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
@@ -141,11 +180,11 @@
 										</a></li> -->
 
 										<!-- ------------ Thêm vào giỏ hàng trên trang  shop ---------------------- -->
-											
+
 										<li><a class="add-to-cart" ng-click="cart.add(item.id)"
-											data-tip="Thêm vào giỏ hàng login"><i class="bi bi-cart"></i></a></li>
-										
-											
+											data-tip="Thêm vào giỏ hàng "><i class="bi bi-cart"></i></a></li>
+
+
 									</ul>
 
 								</div>
@@ -322,14 +361,10 @@
 								<div class="price d-flex align-items-center gap-2">
 									<span id="price" class="old__price">Giá:
 										{{product_Detail.price}} </span> <span class="new__price">
-										<p id="disPrice" class="h3 py-2" style="color: red">
-										
-										
-											{{ (product_Detail.price - (product_Detail.price *
-												product_Detail.discounts.price_discounts) / 100) | number:0 }} VNĐ
-																										
-											
-											</p>
+										<p id="disPrice" class="h3 py-2" style="color: red">{{
+											(product_Detail.price - (product_Detail.price *
+											product_Detail.discounts.price_discounts) / 100) | number:0
+											}} VNĐ</p>
 									</span>
 								</div>
 								<div class="my-4">
@@ -360,10 +395,10 @@
 			</div>
 		</div>
 	</div>
-	
+
 
 	</main>
-
+	<div id="idtt"></div>
 
 	<!-- Footer Start -->
 	<th:block th:include="/user/component/_footer :: _footer" />

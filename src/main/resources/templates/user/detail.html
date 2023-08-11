@@ -45,6 +45,45 @@ i.bi-star {
 .date-rate {
 	font-size: 13px;
 }
+
+.notification {
+color: lightgoldenrodyellow;
+    position: fixed;
+    top: 90px;
+    right: 10px;
+    padding: 20px;
+    background-color: yellowgreen;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    animation: fadeIn 0.4s ease-in-out forwards;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+
 </style>
 
 <script
@@ -608,7 +647,9 @@ i.bi-star {
 
 	</main>
 
-
+<div id="idtt">
+	
+</div>
 	<!-- Footer Start -->
 	<th:block th:include="/user/component/_footer :: _footer" />
 	<!-- Footer End -->
