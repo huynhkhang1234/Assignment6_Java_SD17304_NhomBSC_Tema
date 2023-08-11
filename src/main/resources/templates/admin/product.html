@@ -66,14 +66,14 @@
 				<ul class="nav nav-pills mb-1 avtive" id="pills-tab" role="tablist">
 
 					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="pills-home-tab" data-bs-toggle="pill"
+						<button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
 							data-bs-target="#pills-home" type="button" role="tab"
 							aria-controls="pills-home" aria-selected="true">Sản phẩm</button>
 					</li>
 
 
 					<li class="nav-item " role="presentation">
-						<button class="nav-link active" id="pills-profile-tab"
+						<button class="nav-link" id="pills-profile-tab"
 							data-bs-toggle="pill" data-bs-target="#pills-profile"
 							type="button" role="tab" aria-controls="pills-profile"
 							aria-selected="false">Mã giảm giá</button>
@@ -89,18 +89,25 @@
 
 				<div class="tab-content" id="pills-tabContent">
 
-					<div class="tab-pane fade" id="pills-home" role="tabpanel"
+					<div class="tab-pane fade show active" id="pills-home" role="tabpanel"
 						aria-labelledby="pills-home-tab">
 
 						<div class="list-products">
 
 							<div class="container">
-								<div class="d-flex justify-content-between">
+								<div class="d-flex">
 
-									<button type="button" class="btn btn-primary"
+									<button type="button" class="btn btn-primary me-2" 
 										style="width: 100px;" data-bs-toggle="modal"
 										data-bs-target="#exampleModal" data-bs-whatever="@mdo">Thêm</button>
-
+										 
+										 <form th:action="@{/export}" class="btn btn-primary me-2">
+										    <button type="submit" class="btn btn-primary" style="width: 100px;">Export</button>
+										</form>
+										
+										<button type="button" class="btn btn-primary"
+										style="width: 100px;" data-bs-toggle="modal"
+										data-bs-target="#exampleModal-Export" data-bs-whatever="@mdo2">Import</button>
 
 									<div class="d-flex column-gap-3 me-6">
 										<div class="col-auto">
@@ -119,9 +126,9 @@
 
 								<div class="row">
 
-									<div th:each="item : ${list}">
+									<div th:each="item : ${list}" class="col-md-4">
 
-										<div class="item">
+										<div class="item col-md-12">
 											<div class="content">
 												<div class="left">
 
@@ -364,7 +371,7 @@
 					<!-- kết thúc div product -->
 
 
-					<div class="tab-pane fade show active" id="pills-profile"
+					<div class="tab-pane fade" id="pills-profile"
 						role="tabpanel" aria-labelledby="pills-profile-tab">
 
 						<section class="middle">
@@ -787,6 +794,48 @@
 									</div>
 
 								</form>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="modal fade" id="exampleModal-Export" tabindex="-1"
+						th:fragment="modal2" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+
+							<div class="modal-content">
+
+								<div class="modal-header">
+
+									<h1 class="modal-title fs-5" id="exampleModalLabel">Export</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+
+								
+							 <form method="post" action="/import" enctype="multipart/form-data">
+
+									<div class="modal-body">
+
+										<label class="form-label" for="customFile">Export:</label> 
+										
+										<input type="file" name="file" class="form-control" required />
+										<input type="text" name="folder" placeholder="Đường dẫn thư mục" required>
+
+
+									</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Đóng</button>
+
+											<button type="submit" class="btn btn-primary">Import</button>
+										
+									</div>
+
+								</form> 
+								
 							</div>
 						</div>
 					</div>
