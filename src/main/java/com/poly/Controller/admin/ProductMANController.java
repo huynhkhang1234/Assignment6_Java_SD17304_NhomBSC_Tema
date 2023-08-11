@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-/*import javax.servlet.http.HttpServletResponse;*/
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.DAO.CategoriesDAO;
@@ -41,12 +43,14 @@ import com.poly.Entities.Products;
 import com.poly.Entities.Suppliers;
 import com.poly.utils.XDate;
 
-
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 
+@RestController
+@RequestMapping("/api")
 @Controller
 public class ProductMANController {
 
@@ -496,6 +500,33 @@ public class ProductMANController {
         // Đóng workbook
         workbook.close();
     }
+	
+	// Import sản phẩm từ file Excel
+		@PostMapping("/products/import")
+		public void importProducts(@RequestParam("file") MultipartFile file) throws IOException {
+			
+		    Workbook workbook = WorkbookFactory.create(file.getInputStream());
+		    Sheet sheet = workbook.getSheetAt(0); 
+		    
+		    // Đặt chỉ số sheet tương ứng
 
+		    for (Row row : sheet) {
+		        int id = (int) row.getCell(0).getNumericCellValue();
+		        String titles = row.getCell(1).getStringCellValue();
+		        int price = (int) row.getCell(2).getNumericCellValue();
+		        String images = row.getCell(3).getStringCellValue();
+		        Date create_date = row.getCell(4).getDateCellValue();
+	            Date update_date = row.getCell(5).getDateCellValue();
+	            int is_status = (int) row.getCell(6).getNumericCellValue();
+	            int original_price = (int) row.getCell(7).getNumericCellValue();
+	            String description = row.getCell(8).getStringCellValue();
+	            
+	            System.out.println();
+		        
+	            
+	         // Lưu sản phẩm vào cơ sở dữ liệu
+				/* productRepository.save(products); */
+		    }
+		}
 
 }
