@@ -67,7 +67,10 @@
                     </div>
                     <div class="col-md-12 mt-5">
                         <div>
-                            <span style="font-size: 18px;">{{news.create_date}}</span>
+                            <span style="font-size: 18px;">
+                            Ngày đăng: {{getHourDiff(news)}} giờ trước - 
+                             {{news.create_date | date: 'dd/MM/yyyy'}}
+                             </span>
                         </div>
                     </div>
                     <div class="col-md-12 mt-4">
@@ -107,7 +110,10 @@
 						</div>
 						<div class="col-md-7 ">
 							<div class="content__news d-flex flex-column h-100 ps-4">
-								<div class="content__news-date">{{item.create_date}}</div>
+								<div class="content__news-date">
+									Ngày đăng: {{getHourDiff(news)}} giờ trước - 
+                             		{{item.create_date | date: 'dd/MM/yyyy'}}
+								</div>
 								<div class="my-auto">
 
 									<div class="content__news-title">

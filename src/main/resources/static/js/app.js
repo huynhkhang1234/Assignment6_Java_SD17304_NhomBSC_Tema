@@ -4,12 +4,27 @@ var data = -1;
 
 
 //controller #NewsController
-app.controller('NewsController', function($rootScope, $scope, $http) {
+app.controller('NewsController', function($rootScope, $scope, $http, $sce) {
 	$scope.view = function() {
 		var url = "http://localhost:8080/api/user/news";
 		$http.get(url)
 			.then(function(response) {
 				$scope.listNews = response.data;
+
+				$scope.getHourDiff = function(date) {
+					//lấy giờ
+
+					$scope.today = new Date(); // Ngày hiện tại
+					$scope.myDate = new Date($sce.trustAsHtml(date.create_date)); // Ngày từ dữ liệu
+
+					var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+					var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+					return diffInHours;
+				};
+
+
+
 				$scope.news = $scope.listNews[2];
 			})
 			.catch(function(e) {
@@ -41,22 +56,58 @@ app.controller("NewsDetailController", function($scope, $http, $location, $sce) 
 			$scope.newInfo = respone.data;
 			$scope.nd = $sce.trustAsHtml($scope.newInfo.contents);
 			console.log($scope.newInfo);
+
+			//lấy giờ
+
+			$scope.today = new Date(); // Ngày hiện tại
+			$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date)); // Ngày từ dữ liệu
+
+			$scope.getHourDiff = function(date) {
+
+				var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+				return diffInHours;
+			};
+
+
+			/*$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date));*/
 		})
 		.catch(function(error) {
 			console.error('Error fetchinh product:', error);
 		});
 	//
-		$http.get('/api/news/details/all')
-			.then(function(respone) {
-				$scope.list = respone.data;
+	$http.get('/api/news/details/all')
+		.then(function(respone) {
+			$scope.list = respone.data;
 
-				
-			})
-			.catch(function(error) {
-				console.error('Error fetchinh product:', error);
-			});
+			//lấy giờ
+			$scope.getHourDiff = function(date) {
+				$scope.today = new Date(); // Ngày hiện tại
+				$scope.myDate = new Date($sce.trustAsHtml(date.create_date)); // Ngày từ dữ liệu
 
-	
+				var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+				return diffInHours;
+			};
+
+		/*	// lấy ngày
+			$scope.getDayDiff = function(date) {
+
+				var currentDate = $scope.getCurrentDate();
+				var diffInMilliseconds = Math.abs($scope.dataDate - currentDate); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // Chuyển đổi thành số ngày
+
+				return diffInDays;
+			};*/
+			/*$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date));*/
+		})
+		.catch(function(error) {
+			console.error('Error fetchinh product:', error);
+		});
+
+
 
 });
 
