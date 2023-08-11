@@ -3,10 +3,17 @@ package com.poly.Controller.admin;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+/*import javax.servlet.http.HttpServletResponse;*/
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,17 +23,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.poly.Beans.Categories_bean;
 import com.poly.DAO.CategoriesDAO;
 import com.poly.DAO.DiscountsDAO;
 import com.poly.DAO.ProductsDAO;
@@ -37,9 +41,10 @@ import com.poly.Entities.Products;
 import com.poly.Entities.Suppliers;
 import com.poly.utils.XDate;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -63,14 +68,16 @@ public class ProductMANController {
 	@Autowired
 	HttpSession session;
 
+
 	@GetMapping("/admin/product")
 	public String product(Model model, @ModelAttribute("product") Products ps, @RequestParam("p") Optional<Integer> p) {
-
+		
 
 		Products entity = new Products();
 		
 		entity.setCreate_date(new Date());
 		entity.setUpdate_date(new Date());
+		
 		entity.setIs_status(1);
 		
 		model.addAttribute("product", entity);
@@ -82,9 +89,11 @@ public class ProductMANController {
 			pageable = PageRequest.of(0, 9);
 		}
 		
+		/* Sắp xếp giảm dần theo ngày */
 		Sort sort = Sort.by(Sort.Direction.DESC, "create_date");
-		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		
+		
+		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
 		
 		List<Suppliers> listSupp = suppdao.findAll();
@@ -95,6 +104,7 @@ public class ProductMANController {
 
 		
 		Discounts entityDis = new Discounts();
+		
 		
 		String startDate = XDate.toString(new Date(), "yyyy-MM-dd");
 	    String endDate = XDate.toString(XDate.getDateAfter(1), "yyyy-MM-dd");
@@ -111,24 +121,15 @@ public class ProductMANController {
 			pageable = PageRequest.of(p.orElse(0), 8);
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 8);
-		}
-		
+		}	
 		
 		  List<Categories> listCate = catedao.findByAndIdNew();
 		  model.addAttribute("listCate", listCate);
-		 
-		/*
-		 * Page<Categories> listCate = this.catedao.getIsActive(pageable);
-		 * model.addAttribute("listCate", listCate);
-		 */
-
+		 	  
 		Categories entityCate = new Categories();
 		model.addAttribute("categories", entityCate);
-		
-		
 	
-		 
-
+		
 		return "admin/product";
 	}
 
@@ -139,11 +140,6 @@ public class ProductMANController {
 		if (entity.getCreate_date() == null) 
 			entity.setCreate_date(new Date());
 			entity.setUpdate_date(new Date());
-		
-			/*
-			 * entity.setCreate_date(XDate.toDate(createDate));
-			 * entity.setUpdate_date(XDate.toDate(updateDate));
-			 */
 			
 			/* entity.setIs_status(1); */	
 			entity.setIs_active(1);
@@ -190,6 +186,7 @@ public class ProductMANController {
 		} catch (Exception e) {
 			pageable = PageRequest.of(0, 8);
 		}
+		
 		Page<Products> listproduts = this.dao.getIsActive(pageable);
 		model.addAttribute("listproduts", listproduts);
 
@@ -450,6 +447,55 @@ public class ProductMANController {
 
 		return "/admin/product";
 	}
-
 	
+	
+	/* Xuất file sản phẩm */
+	@GetMapping("/export")
+    public void exportProductsToExcel(HttpServletResponse response) throws IOException {
+        List<Products> productList = dao.findAll();
+        
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Products");
+        
+        // Tạo dòng header
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("id");
+        headerRow.createCell(1).setCellValue("titles");
+        headerRow.createCell(2).setCellValue("price");
+        headerRow.createCell(3).setCellValue("images");
+        headerRow.createCell(4).setCellValue("create_date");
+        headerRow.createCell(5).setCellValue("update_date");
+        headerRow.createCell(6).setCellValue("is_status");
+        headerRow.createCell(7).setCellValue("original_price");
+        headerRow.createCell(8).setCellValue("description");
+        
+        // Đổ dữ liệu sản phẩm vào sheet
+        int rowIndex = 1;
+        for (Products pro : productList) {
+            Row row = sheet.createRow(rowIndex);
+            row.createCell(0).setCellValue(pro.getId());
+            row.createCell(1).setCellValue(pro.getTitles());
+            row.createCell(2).setCellValue(pro.getPrice());
+            row.createCell(3).setCellValue(pro.getImages());
+            row.createCell(4).setCellValue(pro.getCreate_date());
+            row.createCell(5).setCellValue(pro.getUpdate_date());
+            row.createCell(6).setCellValue(pro.getIs_status());
+            row.createCell(7).setCellValue(pro.getOriginal_price());
+            row.createCell(8).setCellValue(pro.getDescription());
+            
+            rowIndex++;
+        }
+        
+        // Thiết lập kiểu và tiêu đề file Excel
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=products.xlsx");
+        
+        // Ghi workbook vào luồng đầu ra của response
+        workbook.write(response.getOutputStream());
+
+        // Đóng workbook
+        workbook.close();
+    }
+
+
 }
