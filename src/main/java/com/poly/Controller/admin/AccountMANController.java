@@ -73,6 +73,9 @@ public class AccountMANController {
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
 		
+		// Tìm User đã đăng nhập vào trang web
+	    model.addAttribute("userLogin", b64s.getUserLogin());
+		
 		return "admin/account";
 	}
 
