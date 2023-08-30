@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
 import com.poly.RestService.OrderService;
 import com.poly.RestService.UserService;
+import com.poly.service.B64Session;
 import com.poly.service.FavoriteService;
 import com.poly.service.OrderDetailService;
 
@@ -42,22 +45,14 @@ public class ProfileRestController {
 	@Autowired
 	OrderDetailService odDeSer;
 	
-//	@Autowired
-//	HttpSession session;
-//	
-//	@Autowired
-//	HttpServletRequest req;
-//	
-//	@Autowired
-//	LikesDAO lDAO;
+	@Autowired
+	B64Session b64s;
 	
 	
 	@GetMapping("api/account")
 	public ResponseEntity<Users> viewAccount() {
-		// Set username mặc định
-		String username = "Phinvhpc04124@fpt.edu.vn";
 		
-		Users u = userSer.getUser(username);
+		Users u = b64s.getUserLogin();
 		
 		if (u != null) {
 			return ResponseEntity.ok(u);
@@ -94,6 +89,18 @@ public class ProfileRestController {
 		List<Order_details> listOD = odDeSer.getAllByUserID(u_id);
 		if(!listOD.isEmpty()) {
 			return ResponseEntity.ok(listOD);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	@PutMapping("api/profile/update")
+	public ResponseEntity<Users> update(@RequestBody Users u) {
+		
+		Users user = userSer.update(u);
+		
+		if(user != null) {
+			return ResponseEntity.ok(user);
 		} else {
 			return ResponseEntity.notFound().build();
 		}

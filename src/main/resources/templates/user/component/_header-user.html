@@ -83,14 +83,16 @@
 			</div>
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end d-right">
-			<!-- <th:block th:if="${session.userLogin.roles.id != 2}">
+			<th:block th:if="${userLogin}">
+			<th:block th:if="${userLogin.roles.id != 2}">
 				<li><a class="dropdown-item" href="/admin/index"> <i
 						class="bi bi-person-lines-fill"></i> Quản lý
 				</a></li>
 				<li>
 					<hr class="dropdown-divider">
 				</li>
-			</th:block> -->
+			</th:block>
+			</th:block>
 			<li><a class="dropdown-item" href="/user/profile/account"> <i
 					class="bi bi-person-fill"></i> Tài khoản
 			</a></li>

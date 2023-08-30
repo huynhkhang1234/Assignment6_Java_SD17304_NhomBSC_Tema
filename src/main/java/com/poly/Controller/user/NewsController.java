@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.poly.DAO.NewsDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
-
+import com.poly.service.B64Session;
 import com.poly.DAO.NewsDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
@@ -21,6 +21,9 @@ import com.poly.Entities.News;
 public class NewsController {
 	@Autowired
 	NewsDAO dao;
+	
+	@Autowired
+	B64Session b64s;
 	
 	@GetMapping("/user/news")
 	public String view(Model model) {
@@ -31,6 +34,7 @@ public class NewsController {
 		List<News> list = dao.findAllActiveTrue();
 
 		model.addAttribute("list", list);
+		model.addAttribute("userLogin", b64s.getUserLogin());
 	
 		return "user/news";
 	}

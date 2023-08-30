@@ -63,5 +63,10 @@ public class UserService implements UserDetailsService {
 			return dao.findByUsername(username);
 		}
 	}
+	
+	public Users update(Users u) {
+		Users user = dao.saveAndFlush(u);
+		return user;
+	}
 		
 }

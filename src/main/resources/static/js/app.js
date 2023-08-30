@@ -6,12 +6,27 @@ app.controller('homepageController', function ($scope, $http) {
 });
 
 //controller #NewsController
-app.controller('NewsController', function($rootScope, $scope, $http) {
+app.controller('NewsController', function($rootScope, $scope, $http, $sce) {
 	$scope.view = function() {
 		var url = "http://localhost:8080/api/user/news";
 		$http.get(url)
 			.then(function(response) {
 				$scope.listNews = response.data;
+
+				$scope.getHourDiff = function(date) {
+					//lấy giờ
+
+					$scope.today = new Date(); // Ngày hiện tại
+					$scope.myDate = new Date($sce.trustAsHtml(date.create_date)); // Ngày từ dữ liệu
+
+					var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+					var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+					return diffInHours;
+				};
+
+
+
 				$scope.news = $scope.listNews[2];
 			})
 			.catch(function(e) {
@@ -43,27 +58,63 @@ app.controller("NewsDetailController", function($scope, $http, $location, $sce) 
 			$scope.newInfo = respone.data;
 			$scope.nd = $sce.trustAsHtml($scope.newInfo.contents);
 			console.log($scope.newInfo);
+
+			//lấy giờ
+
+			$scope.today = new Date(); // Ngày hiện tại
+			$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date)); // Ngày từ dữ liệu
+
+			$scope.getHourDiff = function(date) {
+
+				var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+				return diffInHours;
+			};
+
+
+			/*$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date));*/
 		})
 		.catch(function(error) {
 			console.error('Error fetchinh product:', error);
 		});
 	//
-		$http.get('/api/news/details/all')
-			.then(function(respone) {
-				$scope.list = respone.data;
+	$http.get('/api/news/details/all')
+		.then(function(respone) {
+			$scope.list = respone.data;
 
-				
-			})
-			.catch(function(error) {
-				console.error('Error fetchinh product:', error);
-			});
+			//lấy giờ
+			$scope.getHourDiff = function(date) {
+				$scope.today = new Date(); // Ngày hiện tại
+				$scope.myDate = new Date($sce.trustAsHtml(date.create_date)); // Ngày từ dữ liệu
 
-	
+				var diffInMilliseconds = Math.abs($scope.myDate - $scope.today); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60)); // Chuyển đổi thành số giờ
+
+				return diffInHours;
+			};
+
+		/*	// lấy ngày
+			$scope.getDayDiff = function(date) {
+
+				var currentDate = $scope.getCurrentDate();
+				var diffInMilliseconds = Math.abs($scope.dataDate - currentDate); // Độ chênh lệch giữa hai ngày tính bằng mili giây
+				var diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24)); // Chuyển đổi thành số ngày
+
+				return diffInDays;
+			};*/
+			/*$scope.myDate = new Date($sce.trustAsHtml($scope.newInfo.create_date));*/
+		})
+		.catch(function(error) {
+			console.error('Error fetchinh product:', error);
+		});
+
+
 
 });
 
 // controller #PROFILE
-app.controller('profileController', function ($scope, $http) {
+app.controller('profileController', function ($rootScope, $scope, $http) {
     $scope.url = "account";
     $scope.confirmPass = "";
     $scope.showPassword = false;
@@ -76,11 +127,11 @@ app.controller('profileController', function ($scope, $http) {
 
         $http.get(AccountURL)
             .then(function (response) {      
-                $scope.userCurrent = response.data;
-                $scope.getAllFavorites($scope.userCurrent);
-                $scope.getAllOrders($scope.userCurrent);
-                $scope.getAllOrderDetails($scope.userCurrent);
-                $scope.confirmPass = $scope.userCurrent.pass_words;
+                $rootScope.userCurrent = response.data;
+                $scope.getAllFavorites($rootScope.userCurrent);
+                $scope.getAllOrders($rootScope.userCurrent);
+                $scope.getAllOrderDetails($rootScope.userCurrent);
+                $scope.confirmPass = $rootScope.userCurrent.pass_words;
             })
             .catch(function (e) {
                 console.error("Có lỗi rồi: ", e);
@@ -122,6 +173,20 @@ app.controller('profileController', function ($scope, $http) {
                 console.error("Có lỗi rồi: ", e);
             })
     }
+    
+    $scope.save = function () {
+		var UserURL = 'http://localhost:8080/api/profile/update';
+		
+		$http.put(UserURL, $rootScope.userCurrent)
+			.then(function (response) {
+				$rootScope.userCurrent = response.data;
+				window.location.href = "http://localhost:8080/user/profile/account";
+			})
+			.catch(function (e) {
+                console.error("Có lỗi rồi: ", e);
+            })
+	}
+    
 
     $scope.togglePassword = function() {
         $scope.showPassword = !$scope.showPassword;

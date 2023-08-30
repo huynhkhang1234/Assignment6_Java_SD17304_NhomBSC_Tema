@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.poly.DAO.NewsDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
+import com.poly.service.B64Session;
 
 @Controller
 public class NewDetailController {
@@ -19,8 +20,12 @@ public class NewDetailController {
 	@Autowired
 	NewsDAO dao;
 	
+	@Autowired
+	B64Session b64s;
+	
 	@GetMapping("/user/news/details/{id}")
 	public String view(Model model) {
+		model.addAttribute("userLogin", b64s.getUserLogin());
 		return "user/news-detail";
 	}
 	
