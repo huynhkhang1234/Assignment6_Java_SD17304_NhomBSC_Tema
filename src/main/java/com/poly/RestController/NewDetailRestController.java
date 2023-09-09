@@ -1,4 +1,4 @@
-package com.poly.Controller.user;
+package com.poly.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.poly.DAO.NewsDAO;
 
 import com.poly.Entities.News;
-
-
-import com.poly.service.NewsService;
-
+import com.poly.RestService.NewsService;
 
 
 @CrossOrigin("*")

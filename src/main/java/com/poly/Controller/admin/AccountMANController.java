@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,12 +33,10 @@ import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Products;
 import com.poly.Entities.Roles;
 import com.poly.Entities.Users;
+import com.poly.service.B64Session;
 import com.poly.utils.XDate;
 import com.poly.utils.XImage;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Controller
 public class AccountMANController {
@@ -49,6 +51,9 @@ public class AccountMANController {
 	// ko thể khóa tài khoản hiện tại.
 	@Autowired
 	HttpSession session;
+	
+	@Autowired
+	B64Session b64s;
 
 	@GetMapping("admin/account")
 	public String index(Model model,@RequestParam("p") Optional<Integer> p) {
@@ -60,13 +65,16 @@ public class AccountMANController {
 		 
 		Pageable pageable;
 		try {
-			pageable = PageRequest.of(p.orElse(0), 5);
+			pageable = PageRequest.of(p.orElse(0), 10);
 		} catch (Exception e) {
-			pageable = PageRequest.of(0, 5);
+			pageable = PageRequest.of(0, 10);
 			e.printStackTrace();
 		}						
 		Page<Users> listproduts =  this.userDao.getIsActive(pageable);
 		model.addAttribute("list", listproduts);
+		
+		// Tìm User đã đăng nhập vào trang web
+	    model.addAttribute("userLogin", b64s.getUserLogin());
 		
 		return "admin/account";
 	}
@@ -94,7 +102,7 @@ public class AccountMANController {
 			return "/admin/account";
 		} else {
 			System.out.println("không lỗi nủa");
-			Optional<Users> uss = this.userDao.findByEmail(entity.getEmail().trim());
+			Users uss = this.userDao.findByEmail(entity.getEmail().trim());
 			if (uss == null) {
 				if (entity.getCreate_date() == null)
 					entity.setCreate_date(new Date());
@@ -217,7 +225,7 @@ public class AccountMANController {
 		System.out.println(id + "id");
 		
 		entity = userDao.getOne(id);
-		Users us = (Users) session.getAttribute("userLogin");
+		Users us = b64s.getUserLogin();
 		if (!us.getEmail().equals(entity.getEmail())) {
 			if (entity.getIs_active() == 1) {
 

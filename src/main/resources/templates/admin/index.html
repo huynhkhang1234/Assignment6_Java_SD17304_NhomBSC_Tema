@@ -177,11 +177,11 @@
             </li>
         </ul>
     </div>
-    <div class="tab-content" id="pills-tabContent">
+    <div class="tab-content" id="pills-tabContent" >
         <div class="tab-pane fade show active" id="pills-table" role="tabpanel" aria-labelledby="list-tab"
              tabindex="0">
-            <div class="table-responsive mt-5" style="overflow-x: auto">
-                <table class="table table-bordered">
+            <div class="table-responsive mt-5" id="pagination" style="overflow-x: auto">
+                <table class="table table-bordered" id="myTable">
                     <thead>
                         <tr>
                             <th>Mã hóa đơn</th>
@@ -229,6 +229,16 @@
             <canvas id="chart"></canvas>
         </div>
     </div>
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div  role="group" aria-label="First group">
+    <button type="button" class="btn btn-primary" name="first">First</button>
+    <button type="button" class="btn btn-primary" name="prev">Prev</button>
+    <button type="button" class="btn btn-primary" name="next">Next</button>
+    <button type="button" class="btn btn-primary" name="last">Last</button>
+    
+  </div>
+
+</div>
 </section>
 <!--end of middle-->
 		
@@ -251,5 +261,74 @@
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script type="text/javascript">
+var currentPage = 1;
+var pageSize = 5; // số dòng hiển thị trên mỗi trang
+
+function paginateTable() {
+  var table = document.getElementById("myTable");
+  var rows = table.getElementsByTagName("tr");
+  var totalPages = Math.ceil((rows.length - 1) / pageSize); // tổng số trang
+
+  // Ẩn tất cả các dòng trong bảng
+  for (var i = 1; i < rows.length; i++) {
+    rows[i].style.display = "none";
+  }
+
+  // Hiển thị dòng trong phạm vi của trang hiện tại
+  var start = (currentPage - 1) * pageSize + 1;
+  var end = Math.min(start + pageSize - 1, rows.length - 1);
+  for (var j = start; j <= end; j++) {
+    rows[j].style.display = "";
+  }
+
+  // Thay đổi trạng thái của các nút phân trang
+   var firstButton = document.querySelector('button[name="first"]');
+  var prevButton = document.querySelector('button[name="prev"]');
+  var nextButton = document.querySelector('button[name="next"]');
+  var lastButton = document.querySelector('button[name="last"]');
+
+  /* firstButton.disabled = currentPage === 1;
+  prevButton.disabled = currentPage === totalPages;
+  nextButton.disabled = currentPage === totalPages;
+  lastButton.disabled = currentPage === 1; */
+} 
+
+// Sự kiện click của nút "First"
+var firstButton = document.querySelector('button[name="first"]');
+firstButton.addEventListener("click", function () {
+  currentPage = 1;
+  paginateTable();
+});
+
+// Sự kiện click của nút "Prev"
+var prevButton = document.querySelector('button[name="prev"]');
+prevButton.addEventListener("click", function () {
+  currentPage--;
+  paginateTable();
+});
+
+// Sự kiện click của nút "Next"
+var nextButton = document.querySelector('button[name="next"]');
+nextButton.addEventListener("click", function () {
+  currentPage++;
+  paginateTable();
+});
+
+// Sự kiện click của nút "Last"
+var lastButton = document.querySelector('button[name="last"]');
+lastButton.addEventListener("click", function () {
+  currentPage = totalPages;
+  paginateTable();
+});
+
+// Gọi hàm phân trang khi trang web được tải
+window.addEventListener("load", function () {
+  paginateTable();
+});
+
+
+
+</script>
 </body>
 </html>

@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
-import com.poly.service.UserService;
+import com.poly.service.B64Session;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.poly.DAO.LikesDAO;
 import com.poly.Entities.Likes;
 import com.poly.Entities.Users;
 
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ProfileController {
@@ -40,10 +40,14 @@ public class ProfileController {
 //	@Autowired
 //	LikesDAO lDAO;
 	
+	@Autowired
+	B64Session b64s;
+	
 	
 	@GetMapping("user/profile/account")
 	public String viewAccount(Model m) {
 		m.addAttribute("url", "account");
+		m.addAttribute("userLogin", b64s.getUserLogin());
 		return "user/profile";
 	}
 	

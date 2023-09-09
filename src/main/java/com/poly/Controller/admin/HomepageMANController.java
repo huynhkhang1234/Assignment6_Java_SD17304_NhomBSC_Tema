@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.DAO.Order_detailsDAO;
 import com.poly.DAO.OrdersDAO;
+import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Order_details;
 import com.poly.Entities.Orders;
+import com.poly.Entities.Users;
+import com.poly.service.B64Session;
 import com.poly.utils.XDate;
 
 @Controller
@@ -30,6 +33,9 @@ public class HomepageMANController {
 	
 	@Autowired
 	Order_detailsDAO odDAO;
+	
+	@Autowired
+	B64Session b64s;
 	
 	@GetMapping("/index")
 	public String view(Model m) {
@@ -59,12 +65,16 @@ public class HomepageMANController {
 
 	    String startDate = XDate.toString(new Date(), "yyyy-MM-dd");
 	    String endDate = XDate.toString(XDate.getDateAfter(10), "yyyy-MM-dd");
-
+	    
+	    // Tìm User đã đăng nhập vào trang web
+	    m.addAttribute("userLogin", b64s.getUserLogin());
+	    
 	    m.addAttribute("listO", listO);
 	    m.addAttribute("startDate", startDate);
 	    m.addAttribute("endDate", endDate);
 	    m.addAttribute("doanhThu", doanhThu);
 	    m.addAttribute("soLuong", soLuong);
+	    
 
 	    return "admin/index";
 	}

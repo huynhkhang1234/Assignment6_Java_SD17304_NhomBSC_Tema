@@ -1,13 +1,13 @@
-package com.poly.Controller.user;
+package com.poly.RestController;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,12 +29,15 @@ import com.poly.Entities.MailModel;
 import com.poly.Entities.Users;
 import com.poly.utils.MailerService;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+
+
+@SpringBootApplication
 @CrossOrigin("*")
 @RestController
 public class SendMailRest {
@@ -63,12 +66,13 @@ public class SendMailRest {
 	public ResponseEntity<MailModel> send(Model m, @RequestBody MailModel mail) throws IOException {
 		MimeMessage message = sender.createMimeMessage();
 		System.out.println(mail.getTo());
-		Optional<Users> u = uDAO.findByEmail(mail.getTo());
+		Users u = uDAO.findByEmail(mail.getTo());
 		
 		if(u != null ) {
 			
 		mail.setFrom("hotrovienBSCTeam@gmail.com");
-		mail.setBody("Thông tin tài khoản hiện tại của bạn:"+"  ==> Tên đăng nhập : " + u.get().getUser_names() + " ==> Mật khẩu của bạn là: " + u.get().getPass_words());
+		
+		mail.setBody("Thông tin tài khoản hiện tại của bạn:\r\n "+"  ==> Tên đăng nhập : " + u.getUser_names() + "==> Mật khẩu của bạn là: " + u.getPass_words());
 		try {
 
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");

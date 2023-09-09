@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.poly.DAO.DiscountsDAO;
 import com.poly.DAO.ProductsDAO;
 import com.poly.Entities.Products;
+import com.poly.service.B64Session;
 import com.poly.service.CartItem;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CartController {
@@ -30,9 +31,12 @@ public class CartController {
 
 	@Autowired
 	DiscountsDAO discountRepo;
-
+	@Autowired
+	B64Session b64s;
 	@GetMapping("/user/cart")
 	public String view(Model model) {
+		model.addAttribute("username", b64s.getUserName());	
+		model.addAttribute("userLogin", b64s.getUserLogin());	
 		Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
 		if (cart == null) {
 			cart = new HashMap<Integer, CartItem>();

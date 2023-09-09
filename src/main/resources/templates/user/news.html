@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="myApp" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -35,7 +34,7 @@
 	kiểm tra -->
 
 	<!-- Header Start -->
-
+	<header th:replace="~{/user/component/_header :: header}" ></header>
 	<!-- Header End -->
 
 	<main>
@@ -111,7 +110,7 @@
 						<div class="col-md-7 ">
 							<div class="content__news d-flex flex-column h-100 ps-4">
 								<div class="content__news-date">
-									Ngày đăng: {{getHourDiff(news)}} giờ trước - 
+									Ngày đăng: {{getHourDiff(item)}} giờ trước - 
                              		{{item.create_date | date: 'dd/MM/yyyy'}}
 								</div>
 								<div class="my-auto">
@@ -140,8 +139,8 @@
 	</main>
 
 
-	<!-- Footer Start -->
-
+	 <!-- Footer Start -->
+	<footer th:replace="/user/component/_footer :: _footer" ></footer>
 	<!-- Footer End -->
 
 	<!-- Link To Base JS -->

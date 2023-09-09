@@ -12,8 +12,8 @@ import com.poly.Entities.Products;
 import com.poly.Entities.Users;
 import com.poly.utils.XDate;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class LikeController {

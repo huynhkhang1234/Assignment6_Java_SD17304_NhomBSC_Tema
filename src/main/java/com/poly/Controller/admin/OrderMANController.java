@@ -16,6 +16,7 @@ import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
 import com.poly.Entities.Order_details;
 import com.poly.Entities.Orders;
+import com.poly.service.B64Session;
 
 @Controller
 public class OrderMANController {
@@ -24,6 +25,9 @@ public class OrderMANController {
 	
 	@Autowired
 	Order_detailsDAO daoD;
+	
+	@Autowired
+	B64Session b64s;
 	
 	@GetMapping("/admin/order")
 	public String view( Model model) {
@@ -34,8 +38,8 @@ public class OrderMANController {
 		List<Orders> list =dao.findAll();
 		model.addAttribute("list", list);
 		
-//		List<Order_details> listD = daoD.findByOrderId(null)
-		
+		// Tìm User đã đăng nhập vào trang web
+		model.addAttribute("userLogin", b64s.getUserLogin());
 
 		return "admin/order";
 	}

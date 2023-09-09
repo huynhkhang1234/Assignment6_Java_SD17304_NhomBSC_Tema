@@ -16,8 +16,8 @@ public class FavoriteService {
 	@Autowired
     private LikesDAO likeRepo;
 	
-	public List<Optional<Likes>> getAllFavoriteByUser(Integer user_id) {
-		List<Optional<Likes>> listFav = likeRepo.findAllLikesByUserIDAndIslikeTrue(user_id);
+	public List<Likes> getAllFavoriteByUser(Integer user_id) {
+		List<Likes> listFav = likeRepo.findAllLikesByUserIDAndIslikeTrue(user_id);
 		return listFav;
 	}
     

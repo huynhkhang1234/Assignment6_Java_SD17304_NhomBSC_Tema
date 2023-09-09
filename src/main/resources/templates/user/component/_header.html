@@ -1,16 +1,16 @@
-<header class="header">
-    <nav class="my-navbar">
+<header class="header" xmlns:th="http://www.thymeleaf.org">
+    <nav class="my-navbar" th:fragment="_header">
         <div class="container d-grid">
-            <a href="/user/index" class="brand d-flex gap-2">
-                <img src="/images/favicon.svg" alt="" style="width: 36px;">
+            <a th:href="@{/user/index}" class="brand d-flex gap-2">
+                <img th:src="@{/images/favicon.svg}" alt="" style="width: 36px;">
                 <span>Brand</span>
             </a>
             <ul class="nav-menu">
                 <li class="active-link">
-                    <a href="/user/index" title="Trang chủ">Trang chủ</a>
+                    <a th:href="@{/user/index}" title="Trang chủ">Trang chủ</a>
                 </li>
                 <li>
-                    <a href="/user/shop" title="Mua sắm <.">Mua sắm <i class="bi bi-chevron-down"></i></a>
+                    <a th:href="@{/user/shop}" title="Mua sắm <.">Mua sắm <i class="bi bi-chevron-down"></i></a>
                     <div class="my-dropdown-menu">
                         <div class="container d-flex" style="grid-gap: 40px;">
                             <div class="right-section d-grid gap-2" style="grid-template-columns: repeat(5, 1fr);">
@@ -151,7 +151,7 @@
 							</div>
 						</div>
 					</div></li>
-				<li><a href="/user/produc" title="Sản phẩm <.">Sản phẩm <i
+				<li><a href="@{/user/produc}" title="Sản phẩm <.">Sản phẩm <i
 						class="bi bi-chevron-down"></i></a>
 					<div class="my-dropdown-menu">
 						<div class="container d-grid" style="grid-gap: 40px;">
@@ -214,13 +214,14 @@
 
 
 
-			<div class="header__user-actions d-flex" ng-include="'component/_header-actived.html'">
-				<!-- <div ng-if="userCurrent != null">
-					<ng-include src="/user/component/_header-actived.html"></ng-include>
-				</div>
-				<div ng-if="userCurrent == null">
-					<ng-include src="'component/_header-default.html'"></ng-include>
-				</div> -->
+			<div class="header__user-actions d-flex">
+				<th:block th:if="${session.userLogin}">
+					<div th:replace="/user/component/_header-user :: header-actived" ></div>
+
+				</th:block>
+				<th:block th:unless="${session.userLogin}">
+					<div th:replace="/user/component/_header-user :: header-default" ></div>
+				</th:block>
 			</div>
 
 			<i class="bi bi-list toggle-navbar"></i>
@@ -228,7 +229,7 @@
 	</nav>
 	<div class="search-box container">
         <form action="/product/page" method="POST">
-            <input name="keyword" value="keyword" placeholder="Tìm kiếm ở đây...">
+            <input name="keyword" ng-model="searchKeyword" placeholder="Tìm kiếm ở đây...">
         </form>
     </div>
 </header>

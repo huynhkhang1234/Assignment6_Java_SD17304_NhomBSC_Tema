@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<html ng-app="myApp" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -47,7 +47,7 @@
 	kiểm tra -->
 
 	<!-- Header Start -->
-
+	<header th:replace="~{/user/component/_header :: header}" ></header>
 	<!-- Header End -->
 
 	<main>
@@ -166,8 +166,8 @@
 	</main>
 
 
-	<!-- Footer Start -->
-
+	 <!-- Footer Start -->
+	<footer th:replace="/user/component/_footer :: _footer" ></footer>
 	<!-- Footer End -->
 
 	<!-- Link To Base JS -->

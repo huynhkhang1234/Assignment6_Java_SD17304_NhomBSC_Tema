@@ -1,4 +1,4 @@
-package com.poly.Controller.user;
+package com.poly.RestController;
 
 import java.util.Date;
 import java.util.List;
@@ -17,10 +17,6 @@ import com.poly.DAO.NewsDAO;
 import com.poly.Entities.Categories_news;
 import com.poly.Entities.News;
 
-import com.poly.DAO.NewsDAO;
-import com.poly.Entities.Categories_news;
-import com.poly.Entities.News;
-
 @CrossOrigin("*")
 @RestController
 public class NewsRestController {
@@ -34,30 +30,11 @@ public class NewsRestController {
 		return ResponseEntity.ok(listNews);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@GetMapping("/api/user/news/detail/{id}")
 	public String detail(Model m, @PathVariable("id") Integer id) {
 		News entity = new News();
 		
-		entity = dao.getById(id);
+		entity = dao.getOne(id);
 		
 		m.addAttribute("news", entity);
 		return "user/news-detail";
