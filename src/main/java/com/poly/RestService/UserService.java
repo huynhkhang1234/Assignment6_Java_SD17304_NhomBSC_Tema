@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.poly.DAO.UsersDAO;
 import com.poly.Entities.Users;
+
 @Service	
 public class UserService implements UserDetailsService {
 	@Autowired

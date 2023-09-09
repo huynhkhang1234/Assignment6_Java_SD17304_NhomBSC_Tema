@@ -16,6 +16,50 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 	$scope.currentPage = 1;
 	//kiểm tra lần đầu.
 	$scope.isFirstTime = true;
+	///set trang thái checkbox.
+	$scope.selectAll = true;
+	//hàm để check tất cả đơn hàng có trong giỏ hàng.
+	$scope.$watch('cart.items', function() {//tất cả check box có trong giỏ hàng.
+		angular.forEach($scope.cart.items, function(item) {
+			item.checked = true;
+
+		});
+
+	});
+	///hàm check toàn bộ
+	// Toggle all checkboxes
+	$scope.toggleAllCheckboxes = function() {
+		//nếu như chọn thì tiền như củ
+		if ($scope.selectAll == true) {
+			localStorage.removeItem("sumMoneyCheck");
+		} else {
+			//set bằng 0.
+			var json = JSON.stringify(0);
+			localStorage.setItem("sumMoneyCheck", json);
+		}
+
+		angular.forEach($scope.cart.items, function(item) {
+			item.checked = $scope.selectAll;
+
+		});
+	};
+
+	// Watch for changes in individual checkboxes
+	//thay đổi check theo check tổng.
+	$scope.$watch('cart.items', function(newItems) {//tất cả check box có trong giỏ hàng.
+		console.log('dữ liệu' + newItems)
+		//tổng check
+		var allChecked = true;
+
+		angular.forEach(newItems, function(item) {
+			if (!item.checked) {
+				allChecked = false;
+			}
+		});
+
+		$scope.selectAll = allChecked;
+	}, true);
+
 	// hàm sử lí hóa đơn...
 	//phần này là điều hướng trang
 
@@ -92,6 +136,7 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 	$scope.cart = {
 
 		items: [],
+		items2: [],
 		// hiện thị thông tin xem nhanh sản phẩm.
 		deltail_Product: []
 		,
@@ -118,11 +163,22 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 		saveToLocal() {
 			var json = JSON.stringify(angular.copy(this.items));
 			localStorage.setItem("cart", json);
+
+		},
+		saveToLocal2() {
+			var json = JSON.stringify(angular.copy(this.items));
+			localStorage.setItem("cart2", json);
+
 		}
 		, readToLocal() {
 			var json = localStorage.getItem("cart");
 
 			this.items = json ? JSON.parse(json) : [];
+
+			var json2 = localStorage.getItem("cart2");
+
+			this.items2 = json ? JSON.parse(json2) : [];
+
 		},
 		clear() {
 			this.items = [];
@@ -150,7 +206,7 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 						} else {
 							resp.data.salePirce = resp.data.price;
 						}
-
+						resp.data.isSelected = true;
 						this.items.push(resp.data);
 						this.saveToLocal();
 						this.showNotification();
@@ -163,6 +219,28 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 				}, 1000);
 
 			}
+		},
+		add2(id) {
+		
+				var item = this.items.find(item => item.id == id);
+				
+					$http.get(`/rest/product/${id}`).then(resp => {
+						
+						resp.data.qty = item.qty;
+						if (resp.data.discounts != null || resp.data.discounts > 0) {
+							resp.data.salePirce = resp.data.price - (resp.data.price * (resp.data.discounts.price_discounts / 100));
+						} else {
+							resp.data.salePirce = resp.data.price;
+						}
+						resp.data.isSelected = true;					
+						this.saveToLocal2();
+						//this.showNotification();
+					})
+
+				
+				
+
+			
 		},
 		showNotification() {
 			var notification = document.getElementById("idtt");
@@ -178,9 +256,26 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 
 		//tính tổng tiền
 		get amount() {
-			return this.items
-				.map(item => item.qty * item.salePirce)
-				.reduce((sum, qty) => sum += qty, 0);
+			var json = localStorage.getItem("sumMoneyCheck");
+			if (json != null) {
+
+				if (json >= 0) {
+					return json;
+				}
+				/* else {
+					return this.items
+					.map(item => item.qty * item.salePirce)
+					.reduce((sum, qty) => sum += qty, 0);
+				}*/
+			} else {
+				console.log('ko có json tiền')
+				return this.items
+					.map(item => item.qty * item.salePirce)
+					.reduce((sum, qty) => sum += qty, 0);
+			}
+
+
+
 		},
 		//hàm xóa
 		delete(id) {
@@ -189,6 +284,23 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 			this.saveToLocal();
 		}
 		,
+		updateSelectedItems(id) {
+
+			var item = this.items.find(item => item.id == id);
+		
+			item.isSelected = !item.isSelected;
+			//alert( item.isSelected )
+			if (item.isSelected == false) {
+								
+				this.add2(id);
+
+			} else {
+				alert('co')
+			}
+
+
+		},
+
 		cong(id) {
 			this.add(id);
 		},
@@ -249,17 +361,17 @@ app.controller("ctrl", function($scope, $http, $location, $timeout) {
 					console.log(error);
 				});
 			} else {
-				
-					var notification = document.getElementById("idtt");
-					notification.className = "notification";
 
-					notification.textContent = 'Vui lòng chọn sản phẩm !';
-					document.body.appendChild(notification);
-					setTimeout(function() {
-						notification.style.animation = "fadeOut 2s ease-in-out forwards";
-					}, 2000);
-				
-				
+				var notification = document.getElementById("idtt");
+				notification.className = "notification";
+
+				notification.textContent = 'Vui lòng chọn sản phẩm !';
+				document.body.appendChild(notification);
+				setTimeout(function() {
+					notification.style.animation = "fadeOut 2s ease-in-out forwards";
+				}, 2000);
+
+
 			}
 
 		}

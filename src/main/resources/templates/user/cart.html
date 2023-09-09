@@ -50,6 +50,11 @@ input:disabled {
 					<caption>Danh sách sản phẩm</caption>
 					<thead class="table-dark text-center">
 						<tr>
+							<th scope="col" class="col-md-2">
+							
+<input  type="checkbox" ng-model="selectAll" ng-change="toggleAllCheckboxes()"> Check All
+
+							</th>
 							<th scope="col" class="col-md-2">Hình</th>
 							<th scope="col" class="col-md-2">Tên</th>
 							<th scope="col" class="col-md-2">Giá</th>
@@ -62,6 +67,10 @@ input:disabled {
 
 						<!-- ------------------------vòng lập---------------------------------------------- -->						 																					
 							<tr ng-repeat="item in cart.items">
+							  <td>
+						      <input ng-click="deleteCheckBox()"  style="background: red" type="checkbox" ng-model="item.checked" ng-change="cart.updateSelectedItems(item.id)">
+						    </td>
+						
 							<td class="pro-thumbnail"><a href="#"> <img
 										th:src="@{/images/product-img/{{item.images}}}" alt="" height="70px;">
 								</a></td> 
@@ -142,7 +151,7 @@ input:disabled {
 										
 									</span>
 							</div>
-							<a  href="/user/cart/checkout"
+							<a  href="/user/cart/checkout" ng-click="luuTien()"
 								class="btn btn-warning w-100 mt-4 fw-bolder">Tiến hành đặt
 								hàng</a>
 						</div>
@@ -164,221 +173,7 @@ input:disabled {
 	<th:block th:include="/user/component/_linkJS::jsLinks" />
 	
 
-	<script src="https:code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>	
-function onUp(id,price) {
-			// lấy số lượng của input số lượng
-			var quantityInput = document.getElementById(id);			
-			var quantity = parseInt(quantityInput.value);
-			//l
-			var priceID = document.getElementById('td'+id);
-			//tăng lên
-			  quantity++;
-			//số lượng input sao khi tăng
-			  quantityInput.value = quantity.toString();
-			// sử lí giá tiền * sl
-			var orderquantity =  quantityInput.value ;
-			var orderprice = price; 							
-				// Định nghĩa symbol mới cho đơn vị tiền tệ là "VNĐ"
-			var currencySymbol = "VNĐ";
-			var currencyFormatter = new Intl.NumberFormat({
-				  style: 'currency',
-				  currency: 'VND',
-				  currencyDisplay: 'symbol',
-				  // Sử dụng symbol mới thay cho ký hiệu mặc định
-				  // Chú ý rằng dấu cách trước symbol sẽ không được thêm tự động
-				  currencySymbol: currencySymbol,
-				});				
-			var formattedCurrency = currencyFormatter.format(price *orderquantity);
-				priceID.textContent = formattedCurrency+"VNĐ";
-				//xóa đi enable == 1/
-			var button =  document.getElementById('bt'+id);
-				 button.removeAttribute("disabled");
-				// set đến tổng tiền của đơn hàng tăng 				
-				  if(quantity >=1){
-					// dựa them nút lick chuôt tăng lên
-			var setMoney = document.getElementById("setMoney");
-			var showSumMoney = document.getElementById("showSumMoney");
-					
-			var result =  parseFloat(setMoney.textContent)+ parseFloat(orderprice);				
-						setMoney.textContent = result;
-						///chuyển đổi tiền tệ
-							var resulFormatMoney = formatMoney(result);
-						
-						////tiền tạm 
-			var moneyT = document.getElementById("moneyT");
-						moneyT.innerHTML = resulFormatMoney;
-						/// chuyển về tiền tổng
-						showSumMoney.textContent = resulFormatMoney;
-			var button =  document.getElementById('bt'+id);
-						 button.removeAttribute("disabled");
-				}  
-				// sử lí code ajax								
-						 $.ajax({							 
-							url : "/shop/user/addCart",
-							type : "POST",
-							data : JSON.stringify({
-								id : id	,
-								price:price								
-							}),
-						contentType : "application/json",
-							success : function(data) {
-								 /* alert("Thêm số lượng thành công"); */ 
-							 },
-							error : function(data) {
-								 alert("Lỗi thêm số lượng thất bại thất bại"); 
-							}
-						});  
-					
-				
-		}
-		
-		/* function orderPrice(price) {
-			var price = document.getElementById(price);	
-			alert(price);
-		} */
-		
-function onDown(id,price){
-		var quantityInput = document.getElementById(id);
-		var priceID = document.getElementById('td'+id);
-		const inputValue = event.target.value;	
-		 var quantity = parseInt(quantityInput.value);
-		if(quantity == 1){
- 			 var button = document.getElementById('bt'+id);
-			 button.setAttribute("disabled", true);
- 		} else{
- 			  if (quantity > 1) {
- 				    quantity--;
- 				    quantityInput.value = quantity.toString();
- 				    
- 				// sử lí giá tiền * sl
- 					var orderquantity =  quantityInput.value ;
- 					var orderprice = price; 								
- 						// Định nghĩa symbol mới cho đơn vị tiền tệ là "VNĐ"
- 						var currencySymbol = "VNĐ";
- 						var currencyFormatter = new Intl.NumberFormat({
- 						  style: 'currency',
- 						  currency: 'VND',
- 						  currencyDisplay: 'symbol',
- 						  // Sử dụng symbol mới thay cho ký hiệu mặc định
- 						  // Chú ý rằng dấu cách trước symbol sẽ không được thêm tự động
- 						  currencySymbol: currencySymbol,
- 						});
- 						var formattedCurrency = currencyFormatter.format(price *orderquantity);
- 						priceID.textContent = formattedCurrency+"VNĐ";
- 						// set đến tổng tiền của đơn hàng giảm 
- 						if(quantity >= 1){						
- 							 var setMoney = document.getElementById("setMoney");
- 							var showSumMoney = document.getElementById("showSumMoney");
- 								var result =  parseFloat(setMoney.textContent)- parseFloat(orderprice);				
- 									 setMoney.textContent = result;
- 									///chuyển đổi tiền tệ
- 									var resulFormatMoney = formatMoney(result);
- 									//tiền tạm
- 									var moneyT = document.getElementById("moneyT");
- 									moneyT.innerHTML = resulFormatMoney;
- 									showSumMoney.textContent = resulFormatMoney;
- 						}  
- 					} 
-					
-					// sử lí code ajax		
-					$.ajax({
-						url : "/shop/user/disCart",
-						type : "POST",
-						data : JSON.stringify({
-							id : id	,
-							price: price
-						}),
-					contentType : "application/json",
-						success : function(data) {
-							 /* alert("Thêm số lượng thành công"); */ 
-						},
-						error : function(data) {
-							 alert("Lỗi thêm số lượng thất bại thất bại"); 
-						}
-					}); 
-	
- 				  }	
- 				
-			 						  	
-}
-		//click vào input sửa vô lượng
-function inputClick(id) {
-			const input = document.getElementById(id);
-			input.addEventListener('input', (event) => {
-			    // Thực hiện các hành động khi click vào input
-			     const inputValue = event.target.value;			 
-			    if(inputValue <= 0){
-			    	alert('Sản phẩm số lượng không hợp lệ');
-			    	input.value = 1;
-			    }
-			});
-		}
-		///xoa du lieu san pham
-function orderdelete(id,total,price,quantity,cartNumber){
-	var quantityPresent = document.getElementById(id);
-			//xóa số lượng cart có trong giỏ hàng
-		var cartNumber2 = document.getElementById("cartIcon");
-		cartNumber2.innerHTML = parseInt(cartNumber2.innerHTML) - 1;
-			
-		
-			//lấy danh cart để lọc			
-			var cartItems = document.querySelectorAll('#cart');
-			//alert(cartItems);
-			// đối tượng cần xóa			
-		var productIdToRemove = id;	
-			for (var i = 0; i < cartItems.length; i++) {
-			  var productId = Number(cartItems[i].getAttribute('data-product-id'));
-			  if (productId === productIdToRemove) {
-			    // Xóa phần tử tại vị trí i trong mảng cartItems
-			  //  alert('Vi trị xóa là: ' + productId);			   			   
-			     cartItems[i].remove();
-			     //console.log(cartItems.length);
-			    break;
-			  }
-			}
-			 											
-	/// lấy tổng số lượng hiện tại 		 	
-	var soLuong = parseInt(quantityPresent.value);
-	// tính cái giá tiền trên jsp
-	 var setMoney = document.getElementById("setMoney");
-	 var showSumMoney = document.getElementById("showSumMoney");
-	var orderMoney = setMoney.innerText-(price * soLuong);							
-	setMoney.innerHTML  = orderMoney;
-	///chuyển đổi tiền tệ
-		var resulFormatMoney = formatMoney(orderMoney);
-	//tiền tạm	
-	var moneyT = document.getElementById("moneyT");
-	moneyT.innerHTML = resulFormatMoney;
-	showSumMoney.innerHTML  = resulFormatMoney;
-	////////////////////////////////					
-		 	$.ajax({			
-				url: '/delete/cart',
-				type: 'post',
-				data: JSON.stringify({
-					id: id,
-					quantity:soLuong
-				}),
-				contentType : "application/json",				
-				success: function (data) {					
-				alert('Xóa thành công');									
-				},				
-				error: function (data) {					
-					alert('Xóa thất bại');					
-				}							
-			});			
-		} 
-		
-		 function formatMoney(money){
-			 var number = money; 									
-			var formattedNumber = number.toLocaleString('en-US').replace(",", ".");
-			 
-			return formattedNumber = formattedNumber.replace(/\./g, ',').replace(".", ".") + " VNĐ";							
-			}
-		 
-	</script>
-	
-
+	<!-- <script src="https:code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script th:src="@{/angular.js/shop.js}"></script>
 
 	
